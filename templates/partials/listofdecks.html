@@ -1,0 +1,8 @@
+{% if currentdeck != None %}
+    <option value = "{{ currentdeck.id }}">{{currentdeck.name}}</option>
+{% else %}
+    <option value="na">-------</option>
+{% endif %}
+{% for deck in listofdecks %}
+<option value="{{ deck.id }}">{{ deck.name }}</option>
+{% endfor %}

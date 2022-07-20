@@ -1,0 +1,75 @@
+{% extends 'main.html' %} {% block content %} {% load crispy_forms_tags %}
+
+<h1 class="center m-3">MTGO League Tracker</h1>
+
+
+<div class="row">
+  <div class="col-sm-9">
+    <!-- Current League Card -->
+    {% if currentleague %}
+      {% if currentleague.isFinished is not True %}
+      <h2 class="center">Add Matches to your open league:</h2>
+        {% include 'matchform.html' %}
+      {% else %}
+        <h2 class="center">Your most recent league:</h2>
+          {% include 'matchform.html' %}
+      {% endif %}
+    {% endif %}
+    <div class="card">
+      <div class="card-body center">
+        <button
+          class="btn btn-primary  mt-2, mb-2"
+          _="on click toggle .hidden on #leagueform"
+        >
+          New League
+        </button>
+        <form method="post" enctype="multipart/form-data" id="leagueform" class="hidden">
+          {% csrf_token %}
+          <div class="form-group">
+            <div class="container thick">
+              <div class="row">
+                <div class="col center thick" id="listofformats" hx-include="#id_mtgFormat" hx-trigger="change, load" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
+                  {{league_form.mtgFormat|as_crispy_field}}
+                </div>
+                <div class="col center" id="listofdecks" hx-trigger="change, load" hx-include="#id_myDeck" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
+                  {{league_form.myDeck|as_crispy_field}}
+                </div>
+                <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
+                  {{league_form.myFlavor|as_crispy_field}}
+                </div>
+              </div>
+            </div>
+          <button class="btn btn-primary mt-3" type="submit" name="league_form">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+    <h2 class="ok center m-5">Your Past Leagues</h2>
+    {% include 'partials/leagues.html' %}
+  </div>
+  <div class="col-3">
+    <h2 class="center">Select Box:</h2>
+    <label for="formatselect">Select Format</label>
+    <select
+      name="formatselect"
+      id="fselect"
+      hx-trigger="change,load"
+      hx-get="{% url 'leaguescore' %}"
+      hx-target="#league-section"
+    >
+      {% for mtgformats in mtgformats %}
+      {% if mtgformats.id == currentleague.mtgFormat.id %}
+        <option value="{{mtgformats.id}}" selected>{{mtgformats.name}}</option>
+      {% else %}
+        <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+      {% endif %}
+      <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+      {% endfor %}
+    </select>
+    {% include 'partials/leaguetrack.html' %}
+  </div>
+</div>
+
+
+{% endblock %}

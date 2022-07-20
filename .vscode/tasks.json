@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run Server",
+      "dependsOn": ["Run Livereload", "Run Django Server", "Start Chrome"],
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Run Livereload",
+      "command": "python manage.py livereload",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "group": "servergroup"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Run Django Server",
+      "command": "python manage.py runserver",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "group": "servergroup"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Start Chrome",
+      "command": "start chrome http://127.0.0.1:8000/",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false,
+        "close": true,
+        "group": "servergroup"
+      }
+    }
+  ]
+}

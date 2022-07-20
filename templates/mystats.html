@@ -1,0 +1,67 @@
+{% extends 'main.html' %} {% block content %} 	
+<div class="text-center mt-2"><h3>Meta Stats for MTGO Legacy Leagues</h3></div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Seach Tools:</h5>
+        <div class="row">
+            <div class="col-sm-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Data for deck:</h5>
+                    <select id="deckname" name="deckname" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#timeframe, #filteroutunplayed">
+                    <option value={{filterdeck.id}} selected>{{filterdeck}}</option>
+                    {% for deck in mydecks %}
+                        <option value={{deck.id}}>{{deck.name}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Data for the past:</h5>
+                    <select id="timeframe" name="timeframe" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#deckname, #filteroutunplayed">
+                        <option value=7>One Week</option>
+                        <option value=14>Two Weeks</option>
+                        <option value=21>Three Weeks</option>
+                        <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+                        <option value=30>One Month</option>
+                        <option value=60>Two Months</option>
+                        <option value=90 selected>Three Months</option>
+                        <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+                        <option value=180>Six Months</option>
+                        <option value=365>One Year</option>
+                        <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+                        <option value=90000>All Time</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card">
+                    <div class="card-body">
+                        <input class="form-check-input" type="checkbox" name="checkbox" value="8" id="filteroutunplayed" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#timeframe, #deckname">
+                        <label class="form-check-label" for="filteractivedecks"><small>Hide decks I haven't played against</small> </label> 
+                    </div>
+                </div>
+              </div>
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-9">
+            {% include 'partials/statstable.html' %}
+        </div>
+        <div class="col-3">
+            Column
+        </div>
+    </div>
+</div>
+
+
+    <small>* meta numbers are aggrigated from all user's and all matches's reported opponents</small>
+{% endblock content %}
