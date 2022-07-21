@@ -18,7 +18,10 @@ DEBUG = True
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-ALLOWED_HOSTS = ["tirelesstracker.herokuapp.com"]
+ALLOWED_HOSTS = [
+    "tirelesstracker.herokuapp.com",
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -32,6 +35,7 @@ INSTALLED_APPS = [
     'livereload',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'storages',
 
     'leagues.apps.LeaguesConfig',
     'users.apps.UsersConfig',
@@ -120,6 +124,15 @@ STATIC_URL = 'static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = "magictracker-files"
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
