@@ -15,14 +15,17 @@ class UserRegistrerForm(UserCreationForm):
 
 class ProfileUpdateForm(forms.ModelForm):
 
-    recentFormat = forms.ModelChoiceField(
-        queryset=MtgFormat.objects.all(), label='format')
-
     class Meta:
         model = Profile
         fields = [
             'recentFormat',
             'recentDeck',
             'recentFlavor',
-            'mtgoUserName'
+            'mtgoUserName',
         ]
+        labels = {
+            "recentFormat": "Format",
+            "recentDeck": "Deck",
+            'recentFlavor': "Varient",
+            'mtgoUserName': "MTGO user name"
+        }

@@ -27,6 +27,7 @@ def profile(request):
     ffu = request.user.profile.mtgoUserName
 
     if request.method == 'POST':
+        print("request here", request.POST)
         p_form = ProfileUpdateForm(
             request.POST, instance=request.user.profile)
 
@@ -37,7 +38,7 @@ def profile(request):
         p_form = ProfileUpdateForm(
             instance=request.user, initial={'recentFormat': fff, 'recentDeck': ffd, 'recentFlavor': ffl, 'mtgoUserName': ffu})
         p_form.fields['recentFormat'].widget.attrs.update(
-            {'name': 'mtgFormat', 'hx-trigger': 'change, load', 'hx-get': "/listofdecks", 'hx-swap': 'innerHTML', 'hx-target': '#id_recentDeck'})
+            {'name': 'recentFormat', 'hx-trigger': 'change, load', 'hx-get': "/listofdecks", 'hx-swap': 'innerHTML', 'hx-target': '#id_recentDeck'})
         p_form.fields['recentDeck'].widget.attrs.update(
             {'hx-trigger': 'change, load', 'hx-get': "/listofflavors", 'hx-swap': 'innerHTML', 'hx-target': '#id_recentFlavor'})
     context = {

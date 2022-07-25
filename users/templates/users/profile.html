@@ -1,18 +1,73 @@
 {% extends "main.html" %} {% load crispy_forms_tags %} {% block content %}
-<div class="content-section">
-  <div class="media">
-    <div class="media-body">
-      <h2 class="account-heading">{{ user.username }}</h2>
-      <p class="text-secondary">{{ user.email }}</p>
-    </div>
-  </div>
-  <h3>Forms here</h3>
-  <form method="POST" id="profileupdateform">
-    {% csrf_token %}
-    {{p_form|crispy}}
-    <button type="submit" class="btn btn-primary mt-2">Save</button>
-  </form>
+<body onload="checkProfileReady()"></body>
+<h2 class="m-4">Profile</h2>
 
+<div class="card m-2 border-success border-5" style="width: 38rem;">
+  <div class="card-header">
+    Personal Info
+  </div>
+  <div class="card-body">
+    
+    <p class="text-secondary">username: {{ user.username }}</p>
+    <p class="text-secondary">email: {{ user.email }}</p>
+
+  </div>
 </div>
+
+<div class="card m-2 border-success border-5" style="width: 38rem;" id="mtgoinfo">
+  <div class="card-header"> 
+    MTGO Info
+  </div>
+  <div class="card-body">
+    
+    <form method="POST" id="profileupdateform" name="profileupdateform">
+      {% csrf_token %}
+      {{p_form|crispy}}
+      <button type="submit" class="btn btn-primary mt-2">Save</button>
+    </form>
+
+  </div>
+</div>
+{% if user.profile.recentDeck == None %}
+  <div class="m-2">
+    <p>Please update your mtgo info, it's necessary to use the main site.</p>
+    <p>If you dont' know what deck you're going to be playing, just pick any, you can change it later.</p>
+  </div>
+{% else %}
+<div class="m-2">
+  <a href="{% url 'home' %}">Link to homepage</a>
+</div>
+{% endif %}
+
+<script>
+  function checkProfileReady() {
+  var empt1 = document.profileupdateform.recentFormat.value;
+  if (empt1 == ""){
+    console.log("recentFormat empty");
+    var card = document.getElementById("mtgoinfo")
+    card.classList.add("border-danger")
+  }
+  var empt2 = document.profileupdateform.recentDeck.value;
+  if (empt2 == ""){
+    console.log("recentDeck empty");
+    var card = document.getElementById("mtgoinfo")
+    card.classList.add("border-danger")
+  }
+  var empt3 = document.profileupdateform.recentFlavor.value;
+  if (empt3 == ""){
+    console.log("recentFlavor empty");
+    var card = document.getElementById("mtgoinfo")
+    card.classList.add("border-danger")
+  }
+  var empt4 = document.profileupdateform.mtgoUserName.value;
+  if (empt4 == ""){
+    console.log("mtgoUserName empty");
+    var card = document.getElementById("mtgoinfo")
+    card.classList.add("border-danger")
+  }
+  
+
+} 
+</script>
 
 {% endblock content %}

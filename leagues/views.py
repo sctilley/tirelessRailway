@@ -123,65 +123,36 @@ def statstable(request):
 
 
 def home(request):
-    leagues = League.objects.all()
     user = request.user
-    openLeagues = League.objects.filter(user=user, isFinished=False)
-    closedLeagues = League.objects.filter(user=user, isFinished=True)
-    recentformat = user.profile.recentFormat
-    mtgformats = MtgFormat.objects.all()
-    decks = Deck.objects.all()
-    myactiveformat = MtgFormat(1)
-    myactivedeck = user.profile.recentDeck
-    myclosedleagues = closedLeagues.filter(myDeck=myactivedeck)
-    userleagues = League.objects.filter(user=user)
-    usermatches = Match.objects.filter(user=user)
-    usernamelist = Match.objects.all().values(
-        "theirname").distinct().order_by(Lower("theirname"))
-
-    try:
-        currentleague = League.objects.filter(user=user).latest('date')
-    except:
-        currentleague = League.objects.none()
-
-    fiveohs = 0
-    fourones = 0
-    threetwos = 0
-    twothrees = 0
-    onefours = 0
-    ohfives = 0
-    fiveohsper = 0
-    fouronesper = 0
-    threetwosper = 0
-    twothreesper = 0
-    onefoursper = 0
-    ohfivesper = 0
-
-    for league in userleagues.filter(myDeck=myactivedeck):
-        if league.isFinished == True:
-            wins = league.matches.filter(didjawin=1).count()
-            if wins == 5:
-                fiveohs += 1
-            elif wins == 4:
-                fourones += 1
-            elif wins == 3:
-                threetwos += 1
-            elif wins == 2:
-                twothrees += 1
-            elif wins == 1:
-                onefours += 1
-            else:
-                ohfives += 1
-
-    closedLeaguesNum = closedLeagues.filter(myDeck=myactivedeck).count()
-
-    if closedLeaguesNum > 0:
-        fiveohsper = (fiveohs / closedLeaguesNum)*100
-        fouronesper = (fourones / closedLeaguesNum)*100
-        threetwosper = (threetwos / closedLeaguesNum)*100
-        twothreesper = (twothrees / closedLeaguesNum)*100
-        onefoursper = (onefours / closedLeaguesNum)*100
-        ohfivesper = (ohfives / closedLeaguesNum)*100
+    if user.profile.recentDeck == None:
+        return redirect('profile')
     else:
+        leagues = League.objects.all()
+        user = request.user
+        openLeagues = League.objects.filter(user=user, isFinished=False)
+        closedLeagues = League.objects.filter(user=user, isFinished=True)
+        recentformat = user.profile.recentFormat
+        mtgformats = MtgFormat.objects.all()
+        decks = Deck.objects.all()
+        myactiveformat = MtgFormat(1)
+        myactivedeck = user.profile.recentDeck
+        myclosedleagues = closedLeagues.filter(myDeck=myactivedeck)
+        userleagues = League.objects.filter(user=user)
+        usermatches = Match.objects.filter(user=user)
+        usernamelist = Match.objects.all().values(
+            "theirname").distinct().order_by(Lower("theirname"))
+
+        try:
+            currentleague = League.objects.filter(user=user).latest('date')
+        except:
+            currentleague = League.objects.none()
+
+        fiveohs = 0
+        fourones = 0
+        threetwos = 0
+        twothrees = 0
+        onefours = 0
+        ohfives = 0
         fiveohsper = 0
         fouronesper = 0
         threetwosper = 0
@@ -189,139 +160,173 @@ def home(request):
         onefoursper = 0
         ohfivesper = 0
 
-    matchwinpercentage = 0
-    matchcount = 0
-    matcheswon = 0
-    matcheslost = 0
-    gamewinpercentage = 0
-    gamesplayed = 0
-    gameswon = 0
-    gameslost = 0
+        for league in userleagues.filter(myDeck=myactivedeck):
+            if league.isFinished == True:
+                wins = league.matches.filter(didjawin=1).count()
+                if wins == 5:
+                    fiveohs += 1
+                elif wins == 4:
+                    fourones += 1
+                elif wins == 3:
+                    threetwos += 1
+                elif wins == 2:
+                    twothrees += 1
+                elif wins == 1:
+                    onefours += 1
+                else:
+                    ohfives += 1
 
-    num_matches = Match.objects.filter(mtgFormat=myactiveformat).count()
-    game1wins = usermatches.filter(game1=1, myDeck=myactivedeck).count()
-    game1losses = usermatches.filter(game1=0, myDeck=myactivedeck).count()
-    game2wins = usermatches.filter(game2=1, myDeck=myactivedeck).count()
-    game2losses = usermatches.filter(game2=0, myDeck=myactivedeck).count()
-    game3wins = usermatches.filter(game3=1, myDeck=myactivedeck).count()
-    game3losses = usermatches.filter(game3=0, myDeck=myactivedeck).count()
+        closedLeaguesNum = closedLeagues.filter(myDeck=myactivedeck).count()
 
-    if usermatches.filter(myDeck=myactivedeck).count() > 0:
-        matchwinpercentage = ((usermatches.filter(didjawin=1, myDeck=myactivedeck).count(
-        )/usermatches.filter(myDeck=myactivedeck).count()))*100
-    else:
+        if closedLeaguesNum > 0:
+            fiveohsper = (fiveohs / closedLeaguesNum)*100
+            fouronesper = (fourones / closedLeaguesNum)*100
+            threetwosper = (threetwos / closedLeaguesNum)*100
+            twothreesper = (twothrees / closedLeaguesNum)*100
+            onefoursper = (onefours / closedLeaguesNum)*100
+            ohfivesper = (ohfives / closedLeaguesNum)*100
+        else:
+            fiveohsper = 0
+            fouronesper = 0
+            threetwosper = 0
+            twothreesper = 0
+            onefoursper = 0
+            ohfivesper = 0
+
         matchwinpercentage = 0
-
-    if usermatches.filter(myDeck=myactivedeck).count() > 0:
-        gamewinpercentage = ((usermatches.filter(game1=1, myDeck=myactivedeck).count() + usermatches.filter(game2=1, myDeck=myactivedeck).count() +
-                              usermatches.filter(game3=1, myDeck=myactivedeck).count())/(game1wins + game1losses + game2wins + game2losses + game3wins + game3losses))*100
-    else:
+        matchcount = 0
+        matcheswon = 0
+        matcheslost = 0
         gamewinpercentage = 0
+        gamesplayed = 0
+        gameswon = 0
+        gameslost = 0
 
-    # forms
-    initial_data = {
-        'mtgFormat': user.profile.recentFormat,
-        'myDeck': user.profile.recentDeck,
-        'myFlavor': user.profile.recentFlavor,
-    }
-    league_form = LeagueForm(initial=initial_data)
+        num_matches = Match.objects.filter(mtgFormat=myactiveformat).count()
+        game1wins = usermatches.filter(game1=1, myDeck=myactivedeck).count()
+        game1losses = usermatches.filter(game1=0, myDeck=myactivedeck).count()
+        game2wins = usermatches.filter(game2=1, myDeck=myactivedeck).count()
+        game2losses = usermatches.filter(game2=0, myDeck=myactivedeck).count()
+        game3wins = usermatches.filter(game3=1, myDeck=myactivedeck).count()
+        game3losses = usermatches.filter(game3=0, myDeck=myactivedeck).count()
 
-    Leagueinlineformset = inlineformset_factory(
-        League, Match, form=MatchForm, extra=5, can_delete=False, max_num=5)
-    try:
-        currentleague = League.objects.filter(user=user).latest('date')
-        formset = Leagueinlineformset(instance=currentleague)
-    except League.DoesNotExist:
-        currentleague = 0
-        formset = Leagueinlineformset()
+        if usermatches.filter(myDeck=myactivedeck).count() > 0:
+            matchwinpercentage = ((usermatches.filter(didjawin=1, myDeck=myactivedeck).count(
+            )/usermatches.filter(myDeck=myactivedeck).count()))*100
+        else:
+            matchwinpercentage = 0
 
-    if request.method == "POST":
-        if 'drop' in request.POST:
-            currentleague.isFinished = 1
-            currentleague.save()
-            return redirect('home')
+        if usermatches.filter(myDeck=myactivedeck).count() > 0:
+            gamewinpercentage = ((usermatches.filter(game1=1, myDeck=myactivedeck).count() + usermatches.filter(game2=1, myDeck=myactivedeck).count() +
+                                  usermatches.filter(game3=1, myDeck=myactivedeck).count())/(game1wins + game1losses + game2wins + game2losses + game3wins + game3losses))*100
+        else:
+            gamewinpercentage = 0
 
-        if 'league_form' in request.POST:
-            league_form = LeagueForm(request.POST)
-            if league_form.is_valid():
-                league = league_form.save(commit=False)
-                league.user = request.user
-                league.mtgoUserName = user.profile.mtgoUserName
-                user.profile.recentFormat = league.mtgFormat
-                user.profile.recentDeck = league.myDeck
-                user.profile.recentFlavor = league.myFlavor
-                user.profile.save()
+        # forms
+        initial_data = {
+            'mtgFormat': user.profile.recentFormat,
+            'myDeck': user.profile.recentDeck,
+            'myFlavor': user.profile.recentFlavor,
+        }
+        league_form = LeagueForm(initial=initial_data)
 
-                league.save()
+        Leagueinlineformset = inlineformset_factory(
+            League, Match, form=MatchForm, extra=5, can_delete=False, max_num=5)
+        try:
+            currentleague = League.objects.filter(user=user).latest('date')
+            formset = Leagueinlineformset(instance=currentleague)
+        except League.DoesNotExist:
+            currentleague = 0
+            formset = Leagueinlineformset()
 
-                return redirect("home")
-
-        if 'matchformset' in request.POST:
-            formset = Leagueinlineformset(request.POST, instance=currentleague)
-            if formset.is_valid():
-                new_instances = formset.save(commit=False)
-                for new_instance in new_instances:
-                    new_instance.user = request.user
-                    new_instance.mtgFormat = currentleague.mtgFormat
-                    new_instance.myDeck = currentleague.myDeck
-                    new_instance.theirArchetype = new_instance.theirDeck.archetype
-
-                    if new_instance.game1 + new_instance.game2 + new_instance.game3 >= 2:
-                        new_instance.didjawin = 1
-                    else:
-                        new_instance.didjawin = 0
-
-                    if new_instance.game1 == new_instance.game2:
-                        new_instance.game3 = None
-
-                    new_instance.save()
-
-                    if currentleague.matches.count() >= 5:
-                        currentleague.isFinished = 1
-                        currentleague.save()
-
+        if request.method == "POST":
+            if 'drop' in request.POST:
+                currentleague.isFinished = 1
+                currentleague.save()
                 return redirect('home')
-            else:
-                print("errors be here")
 
-    formatdecks = Match.objects.filter(mtgFormat=myactiveformat)
-    num_matches = Match.objects.filter(mtgFormat=myactiveformat).count()
+            if 'league_form' in request.POST:
+                league_form = LeagueForm(request.POST)
+                if league_form.is_valid():
+                    league = league_form.save(commit=False)
+                    league.user = request.user
+                    league.mtgoUserName = user.profile.mtgoUserName
+                    user.profile.recentFormat = league.mtgFormat
+                    user.profile.recentDeck = league.myDeck
+                    user.profile.recentFlavor = league.myFlavor
+                    user.profile.save()
 
-    context = {
-        'openLeagues': openLeagues,
-        'league_form': league_form,
-        'currentleague': currentleague,
-        'matchformset': formset,
-        'mtgformats': mtgformats,
+                    league.save()
 
-        'myactivedeck': myactivedeck,
-        "fiveohs": fiveohs,
-        "fourones": fourones,
-        "threetwos": threetwos,
-        "twothrees": twothrees,
-        "onefours": onefours,
-        "ohfives": ohfives,
-        'fiveohsper': fiveohsper,
-        'fouronesper': fouronesper,
-        'threetwosper': threetwosper,
-        'twothreesper': twothreesper,
-        'onefoursper': onefoursper,
-        'ohfivesper': ohfivesper,
+                    return redirect("home")
 
-        'myclosedleagues': myclosedleagues,
+            if 'matchformset' in request.POST:
+                formset = Leagueinlineformset(
+                    request.POST, instance=currentleague)
+                if formset.is_valid():
+                    new_instances = formset.save(commit=False)
+                    for new_instance in new_instances:
+                        new_instance.user = request.user
+                        new_instance.mtgFormat = currentleague.mtgFormat
+                        new_instance.myDeck = currentleague.myDeck
+                        new_instance.theirArchetype = new_instance.theirDeck.archetype
 
-        'matchcount': usermatches.filter(myDeck=myactivedeck).count(),
-        'matchwinpercentage': matchwinpercentage,
-        'matcheswon': usermatches.filter(didjawin=1, myDeck=myactivedeck).count(),
-        'matcheslost': usermatches.filter(didjawin=0, myDeck=myactivedeck).count(),
-        'gamesplayed': game1wins + game1losses + game2wins + game2losses + game3wins + game3losses,
-        'gameswon': game1wins + game2wins + game3wins,
-        'gameslost': game1losses + game2losses + game3losses,
-        'gamewinpercentage': gamewinpercentage,
-        'usernamelist': usernamelist,
-    }
+                        if new_instance.game1 + new_instance.game2 + new_instance.game3 >= 2:
+                            new_instance.didjawin = 1
+                        else:
+                            new_instance.didjawin = 0
 
-    return render(request, 'home.html', context)
+                        if new_instance.game1 == new_instance.game2:
+                            new_instance.game3 = None
+
+                        new_instance.save()
+
+                        if currentleague.matches.count() >= 5:
+                            currentleague.isFinished = 1
+                            currentleague.save()
+
+                    return redirect('home')
+                else:
+                    print("errors be here")
+
+        formatdecks = Match.objects.filter(mtgFormat=myactiveformat)
+        num_matches = Match.objects.filter(mtgFormat=myactiveformat).count()
+
+        context = {
+            'openLeagues': openLeagues,
+            'league_form': league_form,
+            'currentleague': currentleague,
+            'matchformset': formset,
+            'mtgformats': mtgformats,
+
+            'myactivedeck': myactivedeck,
+            "fiveohs": fiveohs,
+            "fourones": fourones,
+            "threetwos": threetwos,
+            "twothrees": twothrees,
+            "onefours": onefours,
+            "ohfives": ohfives,
+            'fiveohsper': fiveohsper,
+            'fouronesper': fouronesper,
+            'threetwosper': threetwosper,
+            'twothreesper': twothreesper,
+            'onefoursper': onefoursper,
+            'ohfivesper': ohfivesper,
+
+            'myclosedleagues': myclosedleagues,
+
+            'matchcount': usermatches.filter(myDeck=myactivedeck).count(),
+            'matchwinpercentage': matchwinpercentage,
+            'matcheswon': usermatches.filter(didjawin=1, myDeck=myactivedeck).count(),
+            'matcheslost': usermatches.filter(didjawin=0, myDeck=myactivedeck).count(),
+            'gamesplayed': game1wins + game1losses + game2wins + game2losses + game3wins + game3losses,
+            'gameswon': game1wins + game2wins + game3wins,
+            'gameslost': game1losses + game2losses + game3losses,
+            'gamewinpercentage': gamewinpercentage,
+            'usernamelist': usernamelist,
+        }
+
+        return render(request, 'home.html', context)
 
 
 def decks(request):
@@ -398,12 +403,14 @@ def listofdecks(request):
         currentformat = user.profile.recentFormat.id
     except:
         currentformat = 999
+
     if lformat:
+
         formatvaluechecker = int(lformat)
     else:
         formatvaluechecker = 0
 
-    if 'mtgFormat' in request.GET and currentformat == formatvaluechecker:
+    if ('mtgFormat' or 'recentFormat' in request.GET) and (currentformat == formatvaluechecker):
         currentdeck = user.profile.recentDeck
         listofdecks = Deck.objects.filter(mtgFormat=lformat).order_by('name')
     else:

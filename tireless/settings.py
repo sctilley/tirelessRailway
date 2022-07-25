@@ -152,7 +152,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = 'profile'
+# user = request.user
+# if user.last_login == None:
+#     LOGIN_REDIRECT_URL = 'profile'
+# else:
+#     LOGIN_REDIRECT_URL = 'home'
+
+LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
 # SMTP Configuration
