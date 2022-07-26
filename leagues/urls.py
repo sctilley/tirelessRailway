@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
+from django.conf import settings
 
 urlpatterns = [
     path('', views.home, name="home"),
@@ -7,6 +10,8 @@ urlpatterns = [
     path('mystats/', views.mystats, name="mystats"),
     path('leaguedetail/<int:pk>', views.leaguedetail, name="leaguedetail"),
     path('landingpage/', views.landingpage, name="landingpage"),
+    path("favicon.ico", RedirectView.as_view(
+        url=staticfiles_storage.url("favicon.ico"))),
 ]
 
 htmx_urlpatters = [
