@@ -131,7 +131,9 @@
                            </div>
                            
                         </div>
-                        <a href="{% url 'leaguedetail' league.id %}" class="btn btn-secondary">edit</a>
+                        {% if league.user == user %}
+                           <a href="{% url 'leaguedetail' league.id %}" class="btn btn-secondary">edit</a>
+                        {% endif %}
                         <span class="mx-3"><em>lifeisaresource.com</em></span>
                      </div>
                </article>

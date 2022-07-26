@@ -45,7 +45,21 @@
         </form>
       </div>
     </div>
-    <h2 class="ok center m-5">Your Past Leagues</h2>
+    <h2 class="ok center m-5">Your Past Leagues: 
+      <select
+      name="formatselect"
+      id="fselect"
+      hx-trigger="change,load"
+      hx-get="{% url 'leaguescore' %}"
+      hx-target="#league-section"
+    >
+      <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
+      {% for mtgformats in mtgformats %}
+        <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+      {% endfor %}
+    </select>
+      
+    </h2>
     {% include 'partials/leagues.html' %}
   </div>
   <div class="col-3">

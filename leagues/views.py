@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.utils.timezone import timedelta
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 
 def leaguedelete(request, pk):
@@ -193,6 +194,20 @@ def statstable(request):
     return render(request, 'partials/statstable.html', context)
 
 
+def landingpage(request):
+
+    leagues = League.objects.all()
+    mtgformats = MtgFormat.objects.all()
+
+    context = {
+        'mtgformats': mtgformats,
+
+    }
+
+    return render(request, "landingpage.html", context)
+
+
+@login_required(login_url='landingpage')
 def home(request):
     user = request.user
     if user.profile.recentDeck == None:
@@ -589,6 +604,17 @@ def leaguescore(request):
     lformat = request.GET['formatselect']
     user = request.user
     leaguescore = League.objects.filter(user=user, mtgFormat=lformat, isFinished=True).annotate(wins=Count(
+        "matches", filter=Q(matches__didjawin=1))).order_by("-date")
+
+    context = {
+        'leaguescore': leaguescore,
+    }
+    return render(request, 'partials/leagues.html', context)
+
+
+def leaguescoreAll(request):
+    lformat = request.GET['formatselect']
+    leaguescore = League.objects.filter(mtgFormat=lformat, isFinished=True).annotate(wins=Count(
         "matches", filter=Q(matches__didjawin=1))).order_by("-date")
 
     context = {

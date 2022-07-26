@@ -20,24 +20,32 @@
       <!-- Navbar brand -->
       <a class="navbar-brand mt-2 mt-lg-0" href="#"> </a>
       <!-- Left links -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">League Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'decks' %}">Deck Database</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Statistics & Metagame
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="{% url 'mystats' %}">My deck & the Meta</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-      </ul>
+      {% if user.is_authenticated %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">League Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'decks' %}">Deck Database</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Statistics & Metagame
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="{% url 'mystats' %}">My deck & the Meta</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+        </ul>
+      {% else %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <p>Life is a Resource</p>
+          </li>
+        </ul>
+      {% endif %}
       <!-- Left links -->
     </div>
     <!-- Collapsible wrapper -->

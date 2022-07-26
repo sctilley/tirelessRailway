@@ -6,10 +6,12 @@ urlpatterns = [
     path('decks/', views.decks, name="decks"),
     path('mystats/', views.mystats, name="mystats"),
     path('leaguedetail/<int:pk>', views.leaguedetail, name="leaguedetail"),
+    path('landingpage/', views.landingpage, name="landingpage"),
 ]
 
 htmx_urlpatters = [
     path('leaguescore/', views.leaguescore, name='leaguescore'),
+    path('leaguescoreAll/', views.leaguescoreAll, name='leaguescoreAll'),
     path('listofdecks/', views.listofdecks, name='listofdecks'),
     path('listofdecksArche/', views.listofdecksArche, name='listofdecksArche'),
     path('listofflavors/', views.listofflavors, name='listofflavors'),

@@ -1,0 +1,57 @@
+{% extends 'main.html' %} {% block content %} {% load crispy_forms_tags %}
+
+<div class="card m-2" style="width: 75rem;">
+    <div class="card-header center">
+        <h2>Welcome</h2>
+    </div>
+    <div class="card-body">
+        <div class="card-body center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-lg" name="cancel">login</a>
+                    </div>
+                    <div class="col-sm">
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg" name="cancel">register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card m-2" style="width: 75rem;">
+    <div class="card-header center">
+        <h2>About Us</h2>
+    </div>
+    <div class="card-body">
+        <div class="card-body">
+            <p>
+                This site is dedicated to keeping track of all our mtgo leagues and matches. In order to use it you must create an account first. But below you can take a look at some of our user's recent leagues.
+            </p>
+
+        </div>
+    </div>
+</div>
+
+<h2 class="ok center mt-5">Some Past Leagues: </h2>
+    <div class="ok center mb-5">
+        <select
+        name="formatselect"
+        id="fselect"
+        hx-trigger="change,load"
+        hx-get="{% url 'leaguescoreAll' %}"
+        hx-target="#league-section"
+      >
+        {% for mtgformats in mtgformats %}
+          <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+ 
+    
+  
+
+{% include 'partials/leagues.html' %}
+
+{% endblock content %}
