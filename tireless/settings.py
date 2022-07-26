@@ -173,3 +173,6 @@ EMAIL_HOST_USER = 'lifeisaresource@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 django_heroku.settings(locals())
+
+if os.getcwd() == '/app':
+    DEBUG = False
