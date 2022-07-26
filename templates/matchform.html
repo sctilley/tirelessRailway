@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card m-2">
   <div class="card-body">
     <h4 class="card-title center">{{currentleague.myDeck}} 
       {% if currentleague.myFlavor.name != "none/stock" %}
@@ -63,8 +63,9 @@
       </table>
       <div class="container">
         <div class="row mt-2">
-          <div class="col-9" id="namereceptor">
-            <small>*Date is automatically set to now, and Archetype is automatically set to match your opponent's deck, after you fill it in, but you can edit these manually if you need to.</small>
+          <div class="col-9 center mt-2" id="namereceptor">
+            <small><p class="text-start">Date and Archetype are filled out automatically, but you can manually change them if you want to.</p></small>
+            <small><p class="text-start">Your opponent's name will be automatically checked against our database, to see if we have a record of them.</p></small>
           </div>
           <div class="col">
             <button type="submit" class="btn btn-danger" style="float: right;" name="drop">drop</button>

@@ -3,6 +3,7 @@ from django.utils import timezone
 from PIL import Image
 from django.contrib.auth.models import User
 from leagues.utils import image_resize
+from django.urls import reverse
 
 
 class MtgFormat(models.Model):
@@ -63,6 +64,9 @@ class League(models.Model):
 
     def __str__(self):
         return f'{self.mtgFormat} League with {self.myDeck} by {self.mtgoUserName} on {self.date}'
+
+    def get_absolute_url(self):
+        return reverse('leaguedetail', kwargs={'pk': self.pk})
 
 
 class Match(models.Model):

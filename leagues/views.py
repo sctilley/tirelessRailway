@@ -8,6 +8,77 @@ from django.db.models import Count, F, Q, Case, When, Exists, OuterRef
 from django.utils import timezone
 from django.utils.timezone import timedelta
 from django.db.models.functions import Lower
+from django.shortcuts import get_object_or_404
+
+
+def leaguedelete(request, pk):
+    user = request.user
+    league = get_object_or_404(League, pk=pk, user=request.user)
+    matchcount = league.matches.count()
+    wincount = league.matches.filter(didjawin=1).count()
+
+    if request.method == "POST":
+        league.delete()
+        print("deleted")
+        return redirect('home')
+
+    context = {
+        "league": league,
+        "wincount": wincount,
+    }
+
+    return render(request, "deleted.html", context)
+
+
+def leaguedetail(request, pk):
+    user = request.user
+    league = get_object_or_404(League, pk=pk, user=request.user)
+    lformat = league.mtgFormat
+
+    matchcount = league.matches.count()
+    wincount = league.matches.filter(didjawin=1).count()
+    print("matchcount", matchcount, wincount)
+
+    Leagueinlineformset = inlineformset_factory(
+        League, Match, form=MatchForm, extra=5, can_delete=False, max_num=5)
+
+    formset = Leagueinlineformset(instance=league)
+
+    if request.method == "POST":
+        print("post:", request.POST)
+        if 'matchformset' in request.POST:
+            formset = Leagueinlineformset(
+                request.POST, instance=league)
+            if formset.is_valid():
+                new_instances = formset.save(commit=False)
+                for new_instance in new_instances:
+                    new_instance.user = request.user
+                    new_instance.mtgFormat = league.mtgFormat
+                    new_instance.myDeck = league.myDeck
+                    new_instance.theirArchetype = new_instance.theirDeck.archetype
+
+                    if new_instance.game1 + new_instance.game2 + new_instance.game3 >= 2:
+                        new_instance.didjawin = 1
+                    else:
+                        new_instance.didjawin = 0
+
+                    if new_instance.game1 == new_instance.game2:
+                        new_instance.game3 = None
+
+                    new_instance.save()
+                    league.save()
+
+                return redirect(league.get_absolute_url())
+            else:
+                print("errors be here")
+
+    context = {
+        'league': league,
+        'wincount': wincount,
+        'matchformset': formset,
+    }
+
+    return render(request, "leaguedetail.html", context)
 
 
 def metastats(request):
@@ -330,7 +401,7 @@ def home(request):
 
 
 def decks(request):
-    decks = Deck.objects.all()
+    decks = Deck.objects.all().order_by('-name')
     user = request.user
 
     initial_data = {
@@ -410,7 +481,10 @@ def listofdecks(request):
     else:
         formatvaluechecker = 0
 
-    if ('mtgFormat' or 'recentFormat' in request.GET) and (currentformat == formatvaluechecker):
+    has_format = 'mtgFormat' in request.GET or 'recentFormat' in request.GET
+    format_matches = currentformat == formatvaluechecker
+
+    if has_format and format_matches:
         currentdeck = user.profile.recentDeck
         listofdecks = Deck.objects.filter(mtgFormat=lformat).order_by('name')
     else:

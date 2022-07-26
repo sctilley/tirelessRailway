@@ -36,7 +36,7 @@
                      
                     </div>
                     <div class="col-1">
-                     <a href="#">edit</a>
+                     <!-- <a href="{% url 'leaguedetail' league.id %}" class="btn btn-secondary">edit</a> -->
                     </div>
                   </div>
                 </div>
@@ -58,11 +58,10 @@
                               </div>
                               <h2 class="article-title">
                                  {{ league.myDeck }}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}
-                              
                               </h2>
                               <img class="rounded-circle deck-img" src="{{ league.myDeck.image.url }}" />
                            </div>
-                           <div class="col-2">
+                           <div class="col-2 center">
                               <div class="supercenter">
                                  {% if league.wins == 5 %}
                                     5-0
@@ -130,7 +129,10 @@
                                  </ol>
                               </div>
                            </div>
+                           
                         </div>
+                        <a href="{% url 'leaguedetail' league.id %}" class="btn btn-secondary">edit</a>
+                        <span class="mx-3"><em>lifeisaresource.com</em></span>
                      </div>
                </article>
             </div>

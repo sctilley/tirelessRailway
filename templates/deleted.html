@@ -1,0 +1,123 @@
+{% extends 'main.html' %} {% block content %} {% load crispy_forms_tags %}
+
+<div class="card" style="width: 75rem;">
+    <div class="card-header">
+        <h2>Delete League</h2>
+    </div>
+    <div class="card-body">
+        <div class="card-body center">
+            <div class="container">
+                <div class="row">
+                <div class="col-sm">
+                    <form method="post">
+                        {% csrf_token %}
+                        <p>Are you sure you want to Delete this league? This action can not be undone.</p>
+                        <p>All the matches in this league will be deleted with it.</p>
+                        <input type="submit" class="btn btn-danger btn-lg" value="delete" id="deletebutton" name="delete">
+                    </form>
+                </div>
+
+                <div class="col-sm">
+                    <p>&nbsp;</p>
+                    <a href="{% url 'home' %}" class="btn btn-secondary btn-lg" name="cancel">cancel / take me home</a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+<div class="card m-2" style="width: 75rem;">
+    <div class="card-header center">
+      League
+    </div>
+    <div class="card-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-3 center">
+                <div class="mtbig">
+                    <h6>{{ league.mtgFormat}} </h6>
+                </div>
+                <h2 class="article-title">
+                    {{ league.myDeck }}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}
+                
+                </h2>
+                <img class="rounded-circle deck-img" src="{{ league.myDeck.image.url }}" />
+                </div>
+                <div class="col-2">
+                <div class="supercenter">
+                    {% if wincount == 5 %}
+                        5-0
+                    {% elif wincount == 4 %}
+                        4-1
+                    {% elif wincount == 3 %}
+                        3-2
+                    {% elif wincount == 2 %}
+                        2-3
+                    {% elif wincount == 1 %}
+                        1-4
+                    {% elif wincount == 0 %}
+                        0-5
+                    {% else %}
+                        {{league.wins}}
+                    {% endif %}
+                </div>
+                </div>
+                <div class="col-7">
+                <div class="center">
+                    <ol class="nobottom">
+                        {% for match in league.matches.all %}
+                            <div class="table-responsive-sm">
+                            <table class="table table-hover table-borderless smalltable">
+                                <tr>
+                                    <td class="ccen" style="width: 5%">{{ forloop.counter }}.</td>
+                                    <td style="width: 75%">
+                                        <div class="center">{{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</div>
+                                        <div class="smalltext center"><em>{{ match.theirname }}</em></div>
+                                    </td>
+                                    <td class="ccen" style="width: 10%">
+                                        {% if match.didjawin == 1 %}
+                                        Win
+                                        {% else %}
+                                        Loss 
+                                        {% endif %}
+                                    </td>
+                                    <td class="ccen" style="width: 10">
+                                        {% if match.game1 == 1 %}
+                                        {% if match.game2 == 1 %}
+                                            2 -0
+                                        {% else %}
+                                            {% if match.game3 == 1 %}
+                                                2-1
+                                            {% else %}
+                                                1-2
+                                            {% endif %}
+                                        {% endif %}
+                                        {% else %}
+                                        {% if match.game2 == 1 %}
+                                            {% if match.game3 == 1 %}
+                                                2-1
+                                            {% else %}
+                                                1-2
+                                            {% endif %}
+                                        {% else %}
+                                            0-2
+                                        {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                            </div>
+                        {% endfor %}       
+                    </ol>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

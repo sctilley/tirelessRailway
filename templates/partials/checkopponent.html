@@ -3,16 +3,16 @@
         <div class="row">
             {% if getdeck %}
             <div class="col-9">
-                <p>your opponent, {{getdeck.theirname}}, was last on: 
+                <p class="text-start">Your opponent, {{getdeck.theirname}}, was last on: 
                     <strong>
                         {{getdeck.theirDeck.name}}
                         {% if getdeck.theirFlavor.name != "none/stock" %}
                             -- {{getdeck.theirFlavor}}
-                        {% endif %}.
-                    </strong>
+                        {% endif %}
+                    </strong>.
                 </p>
-                <p>
-                    reported on: {{getdeck.date|date:"F d, Y"}}, by {{getdeck.user}}
+                <p class="text-start">
+                    Seen on: {{getdeck.date|date:"F d, Y"}}, by {{getdeck.user}}
                 </p>
             </div>
             <div class="col-3">
@@ -26,7 +26,7 @@
                 </button>
             </div>
             {% else %}
-            <p>Deck not found</p>
+            <p class="text-start">We've never seen this opponent before</p>
             {% endif %}
         </div>
 
