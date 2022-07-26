@@ -63,24 +63,6 @@
     {% include 'partials/leagues.html' %}
   </div>
   <div class="col-3">
-    <h2 class="center">Select Box:</h2>
-    <label for="formatselect">Select Format</label>
-    <select
-      name="formatselect"
-      id="fselect"
-      hx-trigger="change,load"
-      hx-get="{% url 'leaguescore' %}"
-      hx-target="#league-section"
-    >
-      {% for mtgformats in mtgformats %}
-      {% if mtgformats.id == currentleague.mtgFormat.id %}
-        <option value="{{mtgformats.id}}" selected>{{mtgformats.name}}</option>
-      {% else %}
-        <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
-      {% endif %}
-      <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
-      {% endfor %}
-    </select>
     {% include 'partials/leaguetrack.html' %}
   </div>
 </div>
