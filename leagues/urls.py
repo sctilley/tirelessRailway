@@ -10,8 +10,6 @@ urlpatterns = [
     path('mystats/', views.mystats, name="mystats"),
     path('leaguedetail/<int:pk>', views.leaguedetail, name="leaguedetail"),
     path('landingpage/', views.landingpage, name="landingpage"),
-    path("favicon.ico", RedirectView.as_view(
-        url=staticfiles_storage.url("favicon.ico"))),
 ]
 
 htmx_urlpatters = [
