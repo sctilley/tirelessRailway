@@ -108,3 +108,7 @@ table.smalltable {
 .good-green{
   background-color: rgba(80, 237, 12, 0.941);
 }
+
+.float-right {
+  float: right;
+}

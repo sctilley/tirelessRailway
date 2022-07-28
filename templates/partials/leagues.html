@@ -60,6 +60,7 @@
                                  {{ league.myDeck }}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}
                               </h2>
                               <img class="rounded-circle deck-img" src="{{ league.myDeck.image.url }}" />
+                              <span class="mx-3"><em>lifeisaresource.com</em></span>
                            </div>
                            <div class="col-2 center">
                               <div class="supercenter">
@@ -125,16 +126,16 @@
                                              </tr>
                                           </table>
                                        </div>
-                                    {% endfor %}       
+                                    {% endfor %}  
+                                    {% if league.user == user %}
+                                       <a href="{% url 'leaguedetail' league.id %}" class="float-right">edit</a>
+                                    {% endif %}   
                                  </ol>
                               </div>
                            </div>
                            
                         </div>
-                        {% if league.user == user %}
-                           <a href="{% url 'leaguedetail' league.id %}" class="btn btn-secondary">edit</a>
-                        {% endif %}
-                        <span class="mx-3"><em>lifeisaresource.com</em></span>
+                        
                      </div>
                </article>
             </div>
