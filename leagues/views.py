@@ -346,7 +346,8 @@ def home(request):
         Leagueinlineformset = inlineformset_factory(
             League, Match, form=MatchForm, extra=5, can_delete=False, max_num=5)
         try:
-            currentleague = League.objects.filter(user=user).latest('date')
+            currentleague = League.objects.filter(
+                user=user).latest('dateCreated')
             formset = Leagueinlineformset(instance=currentleague)
         except League.DoesNotExist:
             currentleague = 0
