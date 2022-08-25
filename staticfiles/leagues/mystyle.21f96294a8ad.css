@@ -1,9 +1,5 @@
-body {
-  background-color: rgb(255, 196, 237);
-}
-
 h2 {
-  color: rgb(220, 16, 43);
+  color: rgb(67, 43, 226);
 }
 
 .deck-mini-img {
@@ -111,4 +107,19 @@ table.smalltable {
 
 .good-green{
   background-color: rgba(80, 237, 12, 0.941);
+}
+
+.float-right {
+  float: right;
+}
+
+table.htmx {
+  width: 50%;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+}
+
+
+.big-text {
+  font-size: large;
 }

@@ -55,7 +55,7 @@ class League(models.Model):
         MtgFormat, null=True, on_delete=models.CASCADE, related_name="mformat")
     mtgoUserName = models.CharField(max_length=40, null=True)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    date = models.DateTimeField(default=timezone.now)
+    dateCreated = models.DateTimeField(default=timezone.now)
     myDeck = models.ForeignKey(
         Deck, null=True, on_delete=models.CASCADE, related_name="mydeckname")
     myFlavor = models.ForeignKey(

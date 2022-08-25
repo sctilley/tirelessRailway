@@ -12,6 +12,33 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 
+def test(request):
+    decks = Deck.objects.all().order_by('-name')
+    user = request.user
+    filterdeck = user.profile.recentDeck
+    filterformat = user.profile.recentFormat
+    formatdecks = Match.objects.filter(mtgFormat=filterformat)
+    num_matches = Match.objects.filter(mtgFormat=filterformat).count()
+    mytopdeckslegacy = formatdecks.filter(mtgFormat=filterformat).values("theirDeck__name").annotate(
+        popularity=Count("theirDeck"),
+        percentpopularity=100 * F("popularity") / num_matches, mynumgames=Count("theirDeck",
+                                                                                filter=Q(user=user, myDeck=filterdeck)),
+        mywingames=Count("theirDeck", filter=Q(user=user,
+                                               myDeck=filterdeck, didjawin=1)),
+        mwp=Case(When(mynumgames=0, then=0), default=100 *
+                 F("mywingames") / F("mynumgames")),
+    ).order_by("-popularity")[:40]
+
+    context = {
+        'decks': decks,
+        'mytopdeckslegacy': mytopdeckslegacy,
+        'filterdeck': filterdeck,
+
+    }
+
+    return render(request, 'test.html', context)
+
+
 def leaguedelete(request, pk):
     user = request.user
     league = get_object_or_404(League, pk=pk, user=request.user)

@@ -1,4 +1,4 @@
-<div class="card m-2">
+<div class="card m-2 leaguecard">
   <div class="card-body">
     <h4 class="card-title center">{{currentleague.myDeck}} 
       {% if currentleague.myFlavor.name != "none/stock" %}
@@ -16,11 +16,11 @@
             {% for field in form.visible_fields %}
             <th class="center">
               {% if field.name == "game1" %}
-                1
+              <span title="These are games 1, 2, and 3. Tick the box if you won that game">1</span>
               {% elif field.name == "game2" %}
-                2
+              <span title="These are games 1, 2, and 3. Tick the box if you won that game">2</span>
               {% elif field.name == "game3" %}
-                3
+              <span title="These are games 1, 2, and 3. Tick the box if you won that game">3</span>
               {% else %}
                 {{ field.label }}
               {% endif %}
@@ -32,7 +32,7 @@
         <tbody>
           <tr>
             <td>{{ forloop.counter }}</td>
-            {% for field in form %}
+            {% for field in form.visible_fields %}
             <td class="center">
               {% if field.name == "date" %}
                 <button type='button' _="on click toggle .hidden on me then toggle .hidden on next .hidden">date</button>

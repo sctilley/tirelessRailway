@@ -10,6 +10,7 @@ urlpatterns = [
     path('mystats/', views.mystats, name="mystats"),
     path('leaguedetail/<int:pk>', views.leaguedetail, name="leaguedetail"),
     path('landingpage/', views.landingpage, name="landingpage"),
+    path('test/', views.test, name="test"),
 ]
 
 htmx_urlpatters = [

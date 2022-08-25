@@ -112,3 +112,18 @@ table.smalltable {
 .float-right {
   float: right;
 }
+
+table.htmx {
+  width: 50%;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+}
+
+
+.big-text {
+  font-size: large;
+}
+
+/* .leaguecard {
+  min-width: 80%;
+} */

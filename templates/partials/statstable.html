@@ -5,8 +5,8 @@
         <th scope="col">Deck Name</th>
         <th scope="col">Meta Share*</th>
         <th scope="col">My Win % </th>
-        <th>Wins</th>
-        <th>Played</th>  
+        <th>Played</th>
+        <th>Wins</th>  
         </tr>
     </thead>
     <tbody id="tablebodyplace">
@@ -24,10 +24,10 @@
                         <td>{{ deck.mwp }}% &nbsp;&nbsp; </td>
 
                         <td>
-                            {{deck.mywingames}}
+                            {{ deck.mynumgames }}
                         </td>
                         <td>
-                            {{ deck.mynumgames }}
+                            {{deck.mywingames}}
                         </td>
                     </tr>
                 {% endif %}
