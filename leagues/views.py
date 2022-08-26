@@ -135,10 +135,10 @@ def mystats(request):
     num_matches = Match.objects.filter(mtgFormat=filterformat).count()
     startdate = timezone.now()
     enddate = startdate - timedelta(days=90)
-    num_decks = formatdecks.filter(date__gte=enddate).count()
+    num_decks = formatdecks.filter(dateCreated__gte=enddate).count()
 
     mydecks = Deck.objects.filter(
-        Exists(League.objects.filter(user=user, myDeck=OuterRef('pk')))).order_by('-date')
+        Exists(League.objects.filter(user=user, myDeck=OuterRef('pk')))).order_by('-dateCreated')
 
     mytopdeckslegacy = formatdecks.filter(mtgFormat=filterformat).values("theirDeck__name").annotate(
         popularity=Count("theirDeck"),
@@ -193,7 +193,7 @@ def statstable(request):
     num_matches = Match.objects.filter(mtgFormat=filterformat).count()
     startdate = timezone.now()
     enddate = startdate - timedelta(days=timeframe)
-    num_decks = formatdecks.filter(date__gte=enddate).count()
+    num_decks = formatdecks.filter(dateCreated__gte=enddate).count()
 
     mydecks = League.objects.filter(mtgFormat=filterformat).values(
         "myDeck__name").distinct()
@@ -201,9 +201,9 @@ def statstable(request):
     mytopdeckslegacy = formatdecks.filter(mtgFormat=filterformat).values("theirDeck__name").annotate(
         popularity=Count("theirDeck"),
         percentpopularity=100 * F("popularity") / num_matches, mynumgames=Count("theirDeck",
-                                                                                filter=Q(user=user, myDeck=filterdeck, date__gte=enddate)),
+                                                                                filter=Q(user=user, myDeck=filterdeck, dateCreated__gte=enddate)),
         mywingames=Count("theirDeck", filter=Q(user=user,
-                                               myDeck=filterdeck, date__gte=enddate, didjawin=1)),
+                                               myDeck=filterdeck, dateCreated__gte=enddate, didjawin=1)),
         mwp=Case(When(mynumgames=0, then=0), default=100 *
                  F("mywingames") / F("mynumgames")),
     ).order_by("-popularity")[:50]
@@ -256,7 +256,8 @@ def home(request):
             "theirname").distinct().order_by(Lower("theirname"))
 
         try:
-            currentleague = League.objects.filter(user=user).latest('date')
+            currentleague = League.objects.filter(
+                user=user).latest('dateCreated')
         except:
             currentleague = League.objects.none()
 
@@ -461,7 +462,7 @@ def decks(request):
 
             if deck_form.is_valid():
                 deck = deck_form.save(commit=False)
-                deck.date = datetime.datetime.now()
+                deck.dateCreated = datetime.datetime.now()
                 deck.save()
                 vt = request.POST['varienttext']
 
@@ -586,7 +587,7 @@ def listofflavors(request):
 
 def listofflavorsformatch(request):
     user = request.user
-    currentleague = League.objects.filter(user=user).latest('date')
+    currentleague = League.objects.filter(user=user).latest('dateCreated')
 
     for key, value in request.GET.items():
 
@@ -632,7 +633,7 @@ def leaguescore(request):
     lformat = request.GET['formatselect']
     user = request.user
     leaguescore = League.objects.filter(user=user, mtgFormat=lformat, isFinished=True).annotate(wins=Count(
-        "matches", filter=Q(matches__didjawin=1))).order_by("-date")
+        "matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
 
     context = {
         'leaguescore': leaguescore,
@@ -643,7 +644,7 @@ def leaguescore(request):
 def leaguescoreAll(request):
     lformat = request.GET['formatselect']
     leaguescore = League.objects.filter(mtgFormat=lformat, isFinished=True).annotate(wins=Count(
-        "matches", filter=Q(matches__didjawin=1))).order_by("-date")
+        "matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
 
     context = {
         'leaguescore': leaguescore,
@@ -664,7 +665,7 @@ def checkopponent(request):
     fromformat = Match.objects.filter(mtgFormat=recentFormat)
 
     try:
-        getdeck = fromformat.filter(theirname=username).latest('date')
+        getdeck = fromformat.filter(theirname=username).latest('dateCreated')
         print("deck", getdeck.theirDeck.id)
         print("flavor", getdeck.theirFlavor.id)
     except:

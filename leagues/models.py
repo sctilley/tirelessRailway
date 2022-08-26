@@ -28,7 +28,7 @@ class Deck(models.Model):
         MtgFormat, null=True, on_delete=models.CASCADE)
     archetype = models.ForeignKey(
         Archetype, null=True, on_delete=models.CASCADE)
-    date = models.DateTimeField(default=timezone.now)
+    dateCreated = models.DateTimeField(default=timezone.now)
     image = models.ImageField(default='defaultdeck.jpg', upload_to='deckpics')
 
     def __str__(self):
@@ -71,7 +71,7 @@ class League(models.Model):
 
 class Match(models.Model):
 
-    date = models.DateTimeField(default=timezone.now)
+    dateCreated = models.DateTimeField(default=timezone.now)
     theirname = models.CharField(null=True, max_length=100)
     theirArchetype = models.ForeignKey(
         Archetype(), verbose_name="Their Archetype", null=True, on_delete=models.CASCADE, related_name="theirarchetype")
