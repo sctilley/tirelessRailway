@@ -63,7 +63,7 @@ class League(models.Model):
     isFinished = models.BooleanField('finished', default=False)
 
     def __str__(self):
-        return f'{self.mtgFormat} League with {self.myDeck} by {self.mtgoUserName} on {self.date}'
+        return f'{self.mtgFormat} League with {self.myDeck} by {self.mtgoUserName} on {self.dateCreated}'
 
     def get_absolute_url(self):
         return reverse('leaguedetail', kwargs={'pk': self.pk})

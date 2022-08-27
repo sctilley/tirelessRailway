@@ -3,6 +3,7 @@ from .models import League, Match, Flavor, Deck, Archetype, MtgFormat
 from django.contrib.auth.models import User
 from datetime import datetime, date
 from django.forms import inlineformset_factory
+from crispy_forms.helper import FormHelper
 
 
 class MatchForm(forms.ModelForm):
@@ -21,14 +22,14 @@ class MatchForm(forms.ModelForm):
         queryset=Deck.objects.filter(mtgFormat=1).order_by('name'), label='deck', widget=forms.Select(attrs={'hx-trigger': 'change', 'hx-get': '/listofflavors', 'hx-target': 'next select', 'hx-swap': 'innerHTML'}))
     theirFlavor = forms.ModelChoiceField(
         required=False, queryset=Flavor.objects.all(), label='variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavorsformatch', 'hx-target': 'this', 'hx-include': 'previous select'}))
-    date = forms.DateField(initial=date.today(), widget=forms.DateInput(
+    dateCreated = forms.DateField(initial=date.today(), widget=forms.DateInput(
         attrs={'class': 'hidden', 'type': 'date', 'max': datetime.now().date()}))
 
     class Meta:
         model = Match
 
         fields = (
-            'date',
+            'dateCreated',
             'theirname',
             'theirArchetype',
             'theirDeck',

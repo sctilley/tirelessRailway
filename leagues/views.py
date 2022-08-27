@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Flavor, League, Match, Deck, MtgFormat, Archetype
@@ -6,7 +7,7 @@ from django.forms import inlineformset_factory
 import datetime
 from django.db.models import Count, F, Q, Case, When, Exists, OuterRef
 from django.utils import timezone
-from django.utils.timezone import timedelta
+from django.utils.timezone import timedelta, make_aware
 from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -376,8 +377,11 @@ def home(request):
                     return redirect("home")
 
             if 'matchformset' in request.POST:
+
                 formset = Leagueinlineformset(
                     request.POST, instance=currentleague)
+
+                print("herehhhhh")
                 if formset.is_valid():
                     new_instances = formset.save(commit=False)
                     for new_instance in new_instances:
@@ -403,6 +407,7 @@ def home(request):
                     return redirect('home')
                 else:
                     print("errors be here")
+                    print(formset.errors)
 
         formatdecks = Match.objects.filter(mtgFormat=myactiveformat)
         num_matches = Match.objects.filter(mtgFormat=myactiveformat).count()

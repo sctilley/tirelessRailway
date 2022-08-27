@@ -32,7 +32,11 @@
           {% endif %}
           <tbody>
             <tr>
-              <td>{{ forloop.counter }}</td>
+              <td>{{ forloop.counter }}
+                {% for hidden in form.hidden_fields %}
+                  {{ hidden }}
+                {% endfor %}
+              </td>
               {% for field in form.visible_fields %}
               <td class="center">
                 {% if field.name == "date" %}
