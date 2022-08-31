@@ -85,7 +85,7 @@
                                     {% for match in league.matches.all %}
                                        <div class="table-responsive-sm">
                                           <table class="table table-hover table-borderless smalltable">
-                                             <tr>
+                                             <tr class="nopad">
                                                 <td class="ccen" style="width: 5%">{{ forloop.counter }}.</td>
                                                 <td style="width: 75%">
                                                    <div class="center">{{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</div>

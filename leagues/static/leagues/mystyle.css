@@ -12,10 +12,9 @@ td.ccen {
   height: 50px;
   vertical-align: middle;
   width: 10px;
+  padding: 0 !important;
 }
-tr.littlepoint {
-  padding: 0px;
-}
+
 div.smalltext {
   font-size: smaller;
 }
@@ -36,17 +35,13 @@ table.smalltable {
   border-collapse: collapse;
 }
 
-th, td {
-  padding: 0;
-}
-
-.mtbig {
-    margin-top: 15px;
+table.smalltable td {
+  padding: 3px !important;
 }
 
 
 .supercenter {
-    margin-top: 80px;
+    margin-top: 70px;
     text-align: center;
     font-size: 400%;
 

@@ -8,9 +8,9 @@
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{forloop.counter}}" aria-expanded="false" aria-controls="flush-collapse{{forloop.counter}}">
                <div class="container">
                   <div class="row">
-                    <div class="col-3">
+                    <div class="col-4">
                      <img class="rounded-circle deck-mini-img" src="{{ league.myDeck.image.url }}" />
-                        <b>{{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} &#8226; {{league.myFlavor}}{% endif %}</b>
+                        <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}</b>
                     </div>
                     <div class="col-3">
                      <span class="text-muted mr-2 center">{{ league.date|date:"F d, Y" }}</span>
@@ -49,14 +49,11 @@
                <div class="container">
                   <div class="row">
                      <div class="col-3 center">
-                        <div class="mtbig">
-                           <h6>{{ league.mtgFormat}} </h6>
-                        </div>
                         <h2>
                            {{ league.myDeck }}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}
                         </h2>
                         <img class="rounded-circle deck-img my-3" src="{{ league.myDeck.image.url }}" />
-                        <span><em>lifeisaresource.com</em></span>
+                        <br><span><em>lifeisaresource.com</em></span>
                         {% if league.user == user %}
                            <br><a href="{% url 'leaguedetail' league.id %}">edit league</a>
                         {% endif %}   
