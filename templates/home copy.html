@@ -56,7 +56,7 @@
           hx-trigger="change,load"
           hx-get="{% url 'leaguescore' %}"
           hx-target="#league-section"
-          >
+        >
           <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
           {% for mtgformats in mtgformats %}
             <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
@@ -69,23 +69,7 @@
 
     </div>
     <div class="d-none d-xl-block">
-      <div class="card m-5">
-        <div class="card-header text-center">
-          <h2>
-            {{currentleague.myDeck}}</h2>
-            <select
-            name="varientselect"
-            id="vselect"
-            hx-trigger="change,load"
-            hx-get="{% url 'stats50s' %}"
-            hx-target="#stats50scolumn"
-            >
-              <option value="hampster">all varients</option>
-        </div>
-      </div>
-      <div id="stats50scolumn">
-        stats here
-      </div>
+      {% include 'partials/leaguetrack.html' %}
     </div>
 </div>
 

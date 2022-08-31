@@ -15,6 +15,7 @@ urlpatterns = [
 
 htmx_urlpatters = [
     path('leaguescore/', views.leaguescore, name='leaguescore'),
+    path('stats50s/', views.stats50s, name='stats50s'),
     path('leaguescoreAll/', views.leaguescoreAll, name='leaguescoreAll'),
     path('listofdecks/', views.listofdecks, name='listofdecks'),
     path('listofdecksArche/', views.listofdecksArche, name='listofdecksArche'),

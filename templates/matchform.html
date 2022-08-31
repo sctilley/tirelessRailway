@@ -39,10 +39,9 @@
               </td>
               {% for field in form.visible_fields %}
               <td class="center">
-                {% if field.name == "date" %}
+                {% if field.name == "dateCreated" %}
                   <button type='button' _="on click toggle .hidden on me then toggle .hidden on next .hidden">date</button>
                   {{ field.errors.as_ul }}
-                  {{ field }}
                 {% elif field.name == "theirArchetype" %} 
                   <button type='button' _="on click toggle .hidden on me then toggle .hidden on next .hidden">Archetype</button>
                   {{ field.errors.as_ul }}

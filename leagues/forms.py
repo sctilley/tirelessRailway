@@ -5,6 +5,32 @@ from datetime import datetime, date
 from django.forms import inlineformset_factory
 from crispy_forms.helper import FormHelper
 
+# attrs={'class': 'hidden'}
+
+
+class SplitDateTimeWidget(forms.SplitDateTimeWidget):
+    """
+    A widget that splits datetime input into two <input type="text"> boxes,
+    and uses HTML5 'date' and 'time' inputs.
+    """
+
+    def __init__(self, attrs=None, date_format=None, time_format=None, date_attrs=None, time_attrs=None):
+        date_attrs = date_attrs or {}
+        time_attrs = time_attrs or {}
+        if "type" not in date_attrs:
+            date_attrs["type"] = "date"
+        if "type" not in time_attrs:
+            time_attrs["type"] = "time"
+
+        attrs = {'class': 'hidden'}
+        return super().__init__(
+            attrs=attrs, date_format=date_format, time_format=time_format, date_attrs=date_attrs, time_attrs=time_attrs
+        )
+
+
+class SplitDateTimeField(forms.SplitDateTimeField):
+    widget = SplitDateTimeWidget()
+
 
 class MatchForm(forms.ModelForm):
 
@@ -22,8 +48,7 @@ class MatchForm(forms.ModelForm):
         queryset=Deck.objects.filter(mtgFormat=1).order_by('name'), label='deck', widget=forms.Select(attrs={'hx-trigger': 'change', 'hx-get': '/listofflavors', 'hx-target': 'next select', 'hx-swap': 'innerHTML'}))
     theirFlavor = forms.ModelChoiceField(
         required=False, queryset=Flavor.objects.all(), label='variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavorsformatch', 'hx-target': 'this', 'hx-include': 'previous select'}))
-    dateCreated = forms.DateField(initial=date.today(), widget=forms.DateInput(
-        attrs={'class': 'hidden', 'type': 'date', 'max': datetime.now().date()}))
+    dateCreated = SplitDateTimeField(required=False, label='Date Played')
 
     class Meta:
         model = Match

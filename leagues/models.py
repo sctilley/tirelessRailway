@@ -71,7 +71,7 @@ class League(models.Model):
 
 class Match(models.Model):
 
-    dateCreated = models.DateTimeField(default=timezone.now)
+    dateCreated = models.DateTimeField(default=timezone.now, null=True)
     theirname = models.CharField(null=True, max_length=100)
     theirArchetype = models.ForeignKey(
         Archetype(), verbose_name="Their Archetype", null=True, on_delete=models.CASCADE, related_name="theirarchetype")
