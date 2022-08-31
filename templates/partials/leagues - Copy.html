@@ -1,0 +1,147 @@
+
+<div class="container" id="league-section">
+    {% if leaguescore %}
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+        {% for league in leaguescore %}
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-heading{{forloop.counter}}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{forloop.counter}}" aria-expanded="false" aria-controls="flush-collapse{{forloop.counter}}">
+               <div class="container">
+                  <div class="row">
+                    <div class="col-3">
+                     <img class="rounded-circle deck-mini-img" src="{{ league.myDeck.image.url }}" />
+                        <b>{{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} &#8226; {{league.myFlavor}}{% endif %}</b>
+                    </div>
+                    <div class="col-3">
+                     <span class="text-muted mr-2 center">{{ league.date|date:"F d, Y" }}</span>
+                    </div>
+                    <div class="col-3">
+                     as: &nbsp {{ league.mtgoUserName }}
+                    </div>
+                    <div class="col">
+                     {% if league.wins == 5 %}
+                        5-0
+                     {% elif league.wins == 4 %}
+                        4-1
+                     {% elif league.wins == 3 %}
+                        3-2
+                     {% elif league.wins == 2 %}
+                        2-3
+                     {% elif league.wins == 1 %}
+                        1-4
+                     {% elif league.wins == 0 %}
+                        0-5
+                     {% else %}
+                        {{league.wins}}
+                     {% endif %}
+                     
+                    </div>
+                    <div class="col-1">
+                     <!-- <a href="{% url 'leaguedetail' league.id %}" class="btn btn-secondary">edit</a> -->
+                    </div>
+                  </div>
+                </div>
+
+            </button>
+          </h2>
+          <div id="flush-collapse{{forloop.counter}}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{forloop.counter}}" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body">
+               <article class="media content-section">
+                  <div class="media-body">
+                     <div class="container">
+                        <div class="row">
+                           <div class="col-3 center">
+                              <div class="mtbig">
+                                 <h6>{{ league.mtgFormat}} </h6>
+                              </div>
+                              <h2 class="article-title">
+                                 {{ league.myDeck }}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}
+                              </h2>
+                              <img class="rounded-circle deck-img" src="{{ league.myDeck.image.url }}" />
+                              <span class="mx-3"><em>lifeisaresource.com</em></span>
+                           </div>
+                           <div class="col-2 center">
+                              <div class="supercenter">
+                                 {% if league.wins == 5 %}
+                                    5-0
+                                 {% elif league.wins == 4 %}
+                                    4-1
+                                 {% elif league.wins == 3 %}
+                                    3-2
+                                 {% elif league.wins == 2 %}
+                                    2-3
+                                 {% elif league.wins == 1 %}
+                                    1-4
+                                 {% elif league.wins == 0 %}
+                                    0-5
+                                 {% else %}
+                                    {{league.wins}}
+                                 {% endif %}
+                              </div>
+                           </div>
+                           <div class="col-7">
+                              <div class="center">
+                                 <ol class="nobottom">
+                                    {% for match in league.matches.all %}
+                                       <div class="table-responsive-sm">
+                                          <table class="table table-hover table-borderless smalltable">
+                                             <tr>
+                                                <td class="ccen" style="width: 5%">{{ forloop.counter }}.</td>
+                                                <td style="width: 75%">
+                                                   <div class="center">{{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</div>
+                                                   <div class="smalltext center"><em>{{ match.theirname }}</em></div>
+                                                </td>
+                                                <td class="ccen" style="width: 10%">
+                                                   {% if match.didjawin == 1 %}
+                                                      Win
+                                                   {% else %}
+                                                      Loss 
+                                                   {% endif %}
+                                                </td>
+                                                <td class="ccen" style="width: 10">
+                                                   {% if match.game1 == 1 %}
+                                                      {% if match.game2 == 1 %}
+                                                         2 -0
+                                                      {% else %}
+                                                         {% if match.game3 == 1 %}
+                                                            2-1
+                                                         {% else %}
+                                                            1-2
+                                                         {% endif %}
+                                                      {% endif %}
+                                                   {% else %}
+                                                      {% if match.game2 == 1 %}
+                                                         {% if match.game3 == 1 %}
+                                                            2-1
+                                                         {% else %}
+                                                            1-2
+                                                         {% endif %}
+                                                      {% else %}
+                                                         0-2
+                                                      {% endif %}
+                                                   {% endif %}
+                                                </td>
+                                             </tr>
+                                          </table>
+                                       </div>
+                                    {% endfor %}  
+                                    {% if league.user == user %}
+                                       <a href="{% url 'leaguedetail' league.id %}" class="float-right">edit</a>
+                                    {% endif %}   
+                                 </ol>
+                              </div>
+                           </div>
+                           
+                        </div>
+                        
+                     </div>
+               </article>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+    <p>no leagues found</p>
+    {% endif %}
+</div>

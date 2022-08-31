@@ -11,6 +11,10 @@ h2 {
 td.ccen {
   height: 50px;
   vertical-align: middle;
+  width: 10px;
+}
+tr.littlepoint {
+  padding: 0px;
 }
 div.smalltext {
   font-size: smaller;
@@ -22,6 +26,18 @@ div.smalltext {
 
 table {
   border-spacing: 1px;
+  border-collapse: collapse;
+}
+
+table.smalltable {
+  border: 0px;
+  padding:0; 
+  margin:0;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0;
 }
 
 .mtbig {
@@ -63,11 +79,6 @@ font-size: smaller;
 .center {
   text-align: center;
 }
-
-table {
-border-spacing: 1px;
-}
-
 
 .thick{
   font-weight: bold;
