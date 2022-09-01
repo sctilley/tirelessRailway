@@ -42,13 +42,13 @@ class MatchForm(forms.ModelForm):
     game3 = forms.BooleanField(label='three', required=False, widget=forms.CheckboxInput(
         attrs={'class': 'largerCheckbox', 'title': 'This is game 3. Tick the box if you won that game'}))
     theirname = forms.CharField(
-        label="their user name", widget=forms.TextInput(attrs={'list': 'usernamelist', 'hx-get': '/checkopponent', 'hx-target': '#namereceptor'}))
+        label="Their Username", widget=forms.TextInput(attrs={'list': 'usernamelist', 'hx-get': '/checkopponent', 'hx-target': '#namereceptor'}))
     theirArchetype = forms.ModelChoiceField(
         queryset=Archetype.objects.all(), label='Archetype', required=False, widget=forms.Select(attrs={'class': 'hidden', 'hx-get': '/listofdecksArche', 'hx-target': 'next select', 'hx-swap': 'innerHTML', 'title': "This is option, if you don't select it it will be automatically assinged to match the deck"}))
     theirDeck = forms.ModelChoiceField(
-        queryset=Deck.objects.filter(mtgFormat=1).order_by('name'), label='deck', widget=forms.Select(attrs={'hx-trigger': 'change', 'hx-get': '/listofflavors', 'hx-target': 'next select', 'hx-swap': 'innerHTML'}))
+        queryset=Deck.objects.filter(mtgFormat=1).order_by('name'), label='Their Deck', widget=forms.Select(attrs={'hx-trigger': 'change', 'hx-get': '/listofflavors', 'hx-target': 'next select', 'hx-swap': 'innerHTML'}))
     theirFlavor = forms.ModelChoiceField(
-        required=False, queryset=Flavor.objects.all(), label='variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavorsformatch', 'hx-target': 'this', 'hx-include': 'previous select'}))
+        required=False, queryset=Flavor.objects.all(), label='Variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavorsformatch', 'hx-target': 'this', 'hx-include': 'previous select'}))
     dateCreated = SplitDateTimeField(
         required=False, label='Date Played')
 
