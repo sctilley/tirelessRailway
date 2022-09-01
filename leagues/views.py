@@ -111,50 +111,23 @@ def leaguedetail(request, pk):
     return render(request, "leaguedetail.html", context)
 
 
-def metastats(request):
-    # mytopdeckslegacy = formatdecks.filter(mtgFormat=filterformat).values("theirDeck__name").annotate(
-    #     popularity=Count("theirDeck"),
-    #     percentpopularity=100 * F("popularity") / num_matches, mynumgames=Count("theirDeck", filter=Q(user=user)),
-    #     mywingames=Count("theirDeck", filter=Q(user=user, didjawin=1)),
-    #     mwp=Case(When(mynumgames=0, then=0), default=100 *
-    #              F("mywingames") / F("mynumgames")),
-    # ).order_by("-popularity")[:50]
+def mymatches(request):
+
     context = {
 
     }
-    return render(request, 'mystats.html', context)
+    return render(request, 'mymatches.html', context)
 
 
 def mystats(request):
-    leagues = League.objects.all()
     user = request.user
-
     filterdeck = user.profile.recentDeck
-    filterformat = user.profile.recentFormat
     checkfilter = False
-
-    formatdecks = Match.objects.filter(mtgFormat=filterformat)
-    num_matches = Match.objects.filter(mtgFormat=filterformat).count()
-    startdate = timezone.now()
-    enddate = startdate - timedelta(days=90)
-    num_decks = formatdecks.filter(dateCreated__gte=enddate).count()
 
     mydecks = Deck.objects.filter(
         Exists(League.objects.filter(user=user, myDeck=OuterRef('pk')))).order_by('-dateCreated')
 
-    mytopdeckslegacy = formatdecks.filter(mtgFormat=filterformat).values("theirDeck__name").annotate(
-        popularity=Count("theirDeck"),
-        percentpopularity=100 * F("popularity") / num_matches, mynumgames=Count("theirDeck",
-                                                                                filter=Q(user=user, myDeck=filterdeck)),
-        mywingames=Count("theirDeck", filter=Q(user=user,
-                                               myDeck=filterdeck, didjawin=1)),
-        mwp=Case(When(mynumgames=0, then=0), default=100 *
-                 F("mywingames") / F("mynumgames")),
-    ).order_by("-popularity")[:40]
-
     context = {
-        'mytopdeckslegacy': mytopdeckslegacy,
-        'num_decks': num_decks,
         'filterdeck': filterdeck,
         'mydecks': mydecks,
         'checkfilter': checkfilter,
@@ -186,8 +159,6 @@ def statstable(request):
 
     print(deckvalue, timeframe, checkfilter)
 
-    user = request.user
-
     filterdeck = deckvalue
     filterformat = user.profile.recentFormat
 
@@ -197,15 +168,20 @@ def statstable(request):
     enddate = startdate - timedelta(days=timeframe)
     num_decks = formatdecks.filter(dateCreated__gte=enddate).count()
 
+    targetdecks = Match.objects.filter(
+        mtgFormat=filterformat, dateCreated__gte=enddate)
+
     mydecks = League.objects.filter(mtgFormat=filterformat).values(
         "myDeck__name").distinct()
 
-    mytopdeckslegacy = formatdecks.filter(mtgFormat=filterformat).values("theirDeck__name").annotate(
+    mytopdeckslegacy = targetdecks.values("theirDeck__name").annotate(
         popularity=Count("theirDeck"),
         percentpopularity=100 * F("popularity") / num_matches, mynumgames=Count("theirDeck",
-                                                                                filter=Q(user=user, myDeck=filterdeck, dateCreated__gte=enddate)),
+                                                                                filter=Q(user=user, myDeck=filterdeck)),
         mywingames=Count("theirDeck", filter=Q(user=user,
-                                               myDeck=filterdeck, dateCreated__gte=enddate, didjawin=1)),
+                                               myDeck=filterdeck, didjawin=1)),
+        mylossgames=Count("theirDeck", filter=Q(user=user,
+                                                myDeck=filterdeck, didjawin=0)),
         mwp=Case(When(mynumgames=0, then=0), default=100 *
                  F("mywingames") / F("mynumgames")),
     ).order_by("-popularity")[:50]

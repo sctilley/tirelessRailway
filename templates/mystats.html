@@ -9,7 +9,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Data for deck:</h5>
-                    <select id="deckname" name="deckname" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#timeframe, #filteroutunplayed">
+                    <select id="deckname" name="deckname" hx-trigger="load, change" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#timeframe, #filteroutunplayed">
                     <option value={{filterdeck.id}} selected>{{filterdeck}}</option>
                     {% for deck in mydecks %}
                         <option value={{deck.id}}>{{deck.name}}</option>
@@ -56,12 +56,11 @@
         <div class="col-9">
             {% include 'partials/statstable.html' %}
         </div>
-        <div class="col-3">
-            Column
-        </div>
+
     </div>
 </div>
 
 
     <small>* meta numbers are aggrigated from all user's and all matches's reported opponents</small>
+
 {% endblock content %}

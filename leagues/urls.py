@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.home, name="home"),
     path('decks/', views.decks, name="decks"),
     path('mystats/', views.mystats, name="mystats"),
+    path('mymatches/', views.mymatches, name="mymatches"),
     path('leaguedetail/<int:pk>', views.leaguedetail, name="leaguedetail"),
     path('landingpage/', views.landingpage, name="landingpage"),
     path('test/', views.test, name="test"),

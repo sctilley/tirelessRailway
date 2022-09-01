@@ -1,3 +1,5 @@
+
+
 <table class="table table-striped table-hover" id="statstable">
     <thead>
         <tr>
@@ -6,7 +8,8 @@
         <th scope="col">Meta Share*</th>
         <th scope="col">My Win % </th>
         <th>Played</th>
-        <th>Wins</th>  
+        <th>Wins</th>
+        <th>Losses</th>  
         </tr>
     </thead>
     <tbody id="tablebodyplace">
@@ -29,6 +32,9 @@
                         <td>
                             {{deck.mywingames}}
                         </td>
+                        <td>
+                            {{deck.mylossgames}}
+                        </td>
                     </tr>
                 {% endif %}
             {% endfor %}
@@ -49,10 +55,14 @@
                 {% endif %}
 
                 <td>
-                    {{deck.mywingames}}
+                    {{ deck.mynumgames }}
                 </td>
                 <td>
-                    {{ deck.mynumgames }}
+                    {{deck.mywingames}}
+                </td>
+
+                <td>
+                    {{deck.mylossgames}}
                 </td>
             </tr>
             {% endfor %}
@@ -67,3 +77,11 @@
             </tfoot>
         </tbody>
 </table>
+{% if num_decks > 100 %}
+    <div>hello</div>
+    <script>
+        $(document).ready( function () {
+        $('#statstable').DataTable();
+        } );
+    </script>
+{% endif %}

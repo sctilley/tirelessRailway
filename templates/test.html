@@ -1,46 +1,56 @@
 {% extends 'main.html' %} {% block content %} {% load crispy_forms_tags %}
 <h1>test</h1>
 
-<div class="d-flex bd-highlight">
-  <div class="p-2 flex-grow-1 bd-highlight">Flex item</div>
-  <div class="p-2 d-none d-xxl-block">Flex item 2</div>
-</div>
-
-
 <script type="text/hyperscript">
-    behavior Sortable
-      on click from <th/>
-        -- get all the headers and the index of the column
-        set headers to <th/> in me
-        set col to headers.indexOf(target)
-        
-        -- get the table body and the rows as an array
-        set tbody to the first <tbody/> in me
-        set rowArray to (<tr/> in tbody) as Array
-  
-        -- if this is a first click on this header
-        -- clear the data-ascending attribute on any other header
-        if target @data-ascending is null
-          remove @data-ascending from headers
+  behavior Sortable
+    on click from <th/>
+      -- get all the headers and the index of the column
+      set headers to <th/> in me
+      set col to headers.indexOf(target)
+      
+      -- get the table body and the rows as an array
+      set tbody to the first <tbody/> in me
+      set rowArray to (<tr/> in tbody) as Array
+
+      -- if this is a first click on this header
+      -- clear the data-ascending attribute on any other header
+      if target @data-ascending is null
+        remove @data-ascending from headers
+        log "test1 sucess"
+      end
+      
+      -- sort the array depending on the ascending header
+      if target @data-ascending is 'true'
+        set target @data-ascending to 'false'
+        if the target's @data-numeric is "true"
+          rowArray.sort(\ row1, row2 -> row1.children[col].innerText as Int <
+                                        row2.children[col].innerText as Int )
+                                        log "test2 data-numeric"
+        otherwise              
+          rowArray.sort(\ row1, row2 -> row1.children[col].innerText <
+                                        row2.children[col].innerText )
+                                        log "test3 NOT data-numeric"
         end
-        
-        -- sort the array depending on the ascending header
-        if target @data-ascending is 'true'
-          set target @data-ascending to 'false'
-          rowArray.sort(\ row1, row2 -> (row2.children[col].innerText) - (row1.children[col].innerText) )
-          log "test4 sucess"
-        else
-          set target @data-ascending to 'true'
-          rowArray.sort(\ row1, row2 -> (row1.children[col].innerText) - (row2.children[col].innerText) ) 
-          log "test5 sucess"     
+      else
+        set target @data-ascending to 'true'
+        if the target's @data-numeric is "true"
+          rowArray.sort(\ row1, row2 -> row1.children[col].innerText as Int >
+                                        row2.children[col].innerText as Int )
+                                        log "test4 data-numeric"
+        otherwise              
+          rowArray.sort(\ row1, row2 -> row1.children[col].innerText >
+                                        row2.children[col].innerText )
+                                        log "test5 NOT data-numeric"
+
         end
-        
-        -- merge back into the tbody
-        for row in rowArray
-          tbody.append(row)
-        end
-      end  
-    end
+      end
+      
+      -- merge back into the tbody
+      for row in rowArray
+        tbody.append(row)
+      end
+    end  
+  end
 </script>
     
 <table class="htmx" _="install Sortable">
