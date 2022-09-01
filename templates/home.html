@@ -68,17 +68,17 @@
       </div>
 
     </div>
-    <div class="d-none d-xl-block">
+    <div class="">
       <div class="card m-5">
         <div class="card-header text-center">
           <h2>
-            {{currentleague.myDeck}} test</h2>
+            {{currentleague.myDeck}}</h2>
             <select
             name="varientselect"
             id="vselect"
             hx-trigger="change,load"
             hx-get="{% url 'stats50s' %}"
-            hx-target="#stats50scolumn2"
+            hx-target="#stats50scolumn"
             >
               <option value="hampster">all varients</option>
         </div>
