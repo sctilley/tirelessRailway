@@ -360,7 +360,7 @@ def decks(request):
 
             if deck_form.is_valid():
                 deck = deck_form.save(commit=False)
-                deck.dateCreated = datetime.datetime.now()
+                deck.dateCreated = datetime.now()
                 deck.save()
                 vt = request.POST['varienttext']
 
