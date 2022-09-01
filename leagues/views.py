@@ -239,10 +239,11 @@ def landingpage(request):
 @login_required(login_url='landingpage')
 def home(request):
     user = request.user
+
     if user.profile.recentDeck == None:
         return redirect('profile')
     else:
-        leagues = League.objects.all()
+        flavors = Flavor.objects.all()
         recentformat = user.profile.recentFormat
         mtgformats = MtgFormat.objects.all()
         userleagues = League.objects.filter(user=user)
@@ -255,6 +256,17 @@ def home(request):
                 user=user).latest('dateCreated')
         except:
             currentleague = League.objects.none()
+
+        uservarients = flavors.filter(deck=user.profile.recentDeck)
+        print(uservarients)
+
+        allleagues = League.objects.all()
+        for league in allleagues:
+            leagueflavor = league.myFlavor
+            for match in league.matches.all():
+                print("matchhere!!", match)
+                match.myFlavor = leagueflavor
+                match.save()
 
         # forms
         initial_data = {
@@ -307,6 +319,7 @@ def home(request):
                         new_instance.user = request.user
                         new_instance.mtgFormat = currentleague.mtgFormat
                         new_instance.myDeck = currentleague.myDeck
+                        new_instance.myFlavor = currentleague.myFlavor
                         new_instance.theirArchetype = new_instance.theirDeck.archetype
 
                         if not new_instance.dateCreated:
@@ -336,7 +349,7 @@ def home(request):
             'currentleague': currentleague,
             'matchformset': formset,
             'mtgformats': mtgformats,
-            'usernamelist': usernamelist,
+            'uservarients': uservarients,
         }
 
         return render(request, 'home.html', context)
@@ -528,24 +541,13 @@ def listofarchetypes(request):
 
 
 def stats50s(request):
-    leagues = League.objects.all()
-    user = request.user
-    closedLeagues = League.objects.filter(user=user, isFinished=True)
-    mtgformats = MtgFormat.objects.all()
-    decks = Deck.objects.all()
-    myactivedeck = user.profile.recentDeck
-    myclosedleagues = closedLeagues.filter(myDeck=myactivedeck)
-    userleagues = League.objects.filter(user=user)
-    usermatches = Match.objects.filter(user=user)
-    usernamelist = Match.objects.all().values(
-        "theirname").distinct().order_by(Lower("theirname"))
+    if "varientselect" in request.GET:
+        varientselected = int(request.GET.get('varientselect'))
+        print("varientselected:", varientselected)
 
-    try:
-        currentleague = League.objects.filter(
-            user=user).latest('dateCreated')
-    except:
-        currentleague = League.objects.none()
-
+        if varientselected > 0:
+            targetflavor = Flavor.objects.get(pk=varientselected)
+            print("target flavor is:", targetflavor)
     fiveohs = 0
     fourones = 0
     threetwos = 0
@@ -559,7 +561,23 @@ def stats50s(request):
     onefoursper = 0
     ohfivesper = 0
 
-    for league in userleagues.filter(myDeck=myactivedeck):
+    leagues = League.objects.all()
+    user = request.user
+    myactivedeck = user.profile.recentDeck
+
+    userleagues = League.objects.filter(user=user, isFinished=1)
+
+    targetleagues = userleagues.filter(myDeck=myactivedeck)
+    targetmatches = Match.objects.filter(user=user, myDeck=myactivedeck)
+
+    if varientselected > 0:
+        targetleagues = userleagues.filter(myFlavor=targetflavor)
+        print(targetmatches)
+        targetmatches = Match.objects.filter(
+            user=user, myDeck=myactivedeck, myFlavor=targetflavor)
+        print(targetmatches)
+
+    for league in targetleagues:
         if league.isFinished == True:
             wins = league.matches.filter(didjawin=1).count()
             if wins == 5:
@@ -575,7 +593,7 @@ def stats50s(request):
             else:
                 ohfives += 1
 
-    closedLeaguesNum = closedLeagues.filter(myDeck=myactivedeck).count()
+    closedLeaguesNum = targetleagues.count()
 
     if closedLeaguesNum > 0:
         fiveohsper = (fiveohs / closedLeaguesNum)*100
@@ -601,22 +619,22 @@ def stats50s(request):
     gameswon = 0
     gameslost = 0
 
-    game1wins = usermatches.filter(game1=1, myDeck=myactivedeck).count()
-    game1losses = usermatches.filter(game1=0, myDeck=myactivedeck).count()
-    game2wins = usermatches.filter(game2=1, myDeck=myactivedeck).count()
-    game2losses = usermatches.filter(game2=0, myDeck=myactivedeck).count()
-    game3wins = usermatches.filter(game3=1, myDeck=myactivedeck).count()
-    game3losses = usermatches.filter(game3=0, myDeck=myactivedeck).count()
+    game1wins = targetmatches.filter(game1=1, myDeck=myactivedeck).count()
+    game1losses = targetmatches.filter(game1=0, myDeck=myactivedeck).count()
+    game2wins = targetmatches.filter(game2=1, myDeck=myactivedeck).count()
+    game2losses = targetmatches.filter(game2=0, myDeck=myactivedeck).count()
+    game3wins = targetmatches.filter(game3=1, myDeck=myactivedeck).count()
+    game3losses = targetmatches.filter(game3=0, myDeck=myactivedeck).count()
 
-    if usermatches.filter(myDeck=myactivedeck).count() > 0:
-        matchwinpercentage = ((usermatches.filter(didjawin=1, myDeck=myactivedeck).count(
-        )/usermatches.filter(myDeck=myactivedeck).count()))*100
+    if targetmatches.count() > 0:
+        matchwinpercentage = ((targetmatches.filter(didjawin=1).count(
+        )/targetmatches.count()))*100
     else:
         matchwinpercentage = 0
 
-    if usermatches.filter(myDeck=myactivedeck).count() > 0:
-        gamewinpercentage = ((usermatches.filter(game1=1, myDeck=myactivedeck).count() + usermatches.filter(game2=1, myDeck=myactivedeck).count() +
-                              usermatches.filter(game3=1, myDeck=myactivedeck).count())/(game1wins + game1losses + game2wins + game2losses + game3wins + game3losses))*100
+    if targetmatches.count() > 0:
+        gamewinpercentage = ((targetmatches.filter(game1=1).count() + targetmatches.filter(game2=1).count() +
+                              targetmatches.filter(game3=1).count())/(game1wins + game1losses + game2wins + game2losses + game3wins + game3losses))*100
     else:
         gamewinpercentage = 0
 
@@ -634,12 +652,12 @@ def stats50s(request):
         'onefoursper': onefoursper,
         'ohfivesper': ohfivesper,
 
-        'myclosedleagues': myclosedleagues,
+        'targetleagues': targetleagues,
 
-        'matchcount': usermatches.filter(myDeck=myactivedeck).count(),
+        'matchcount': targetmatches.count(),
         'matchwinpercentage': matchwinpercentage,
-        'matcheswon': usermatches.filter(didjawin=1, myDeck=myactivedeck).count(),
-        'matcheslost': usermatches.filter(didjawin=0, myDeck=myactivedeck).count(),
+        'matcheswon': targetmatches.filter(didjawin=1).count(),
+        'matcheslost': targetmatches.filter(didjawin=0).count(),
         'gamesplayed': game1wins + game1losses + game2wins + game2losses + game3wins + game3losses,
         'gameswon': game1wins + game2wins + game3wins,
         'gameslost': game1losses + game2losses + game3losses,
