@@ -258,15 +258,6 @@ def home(request):
             currentleague = League.objects.none()
 
         uservarients = flavors.filter(deck=user.profile.recentDeck)
-        print(uservarients)
-
-        allleagues = League.objects.all()
-        for league in allleagues:
-            leagueflavor = league.myFlavor
-            for match in league.matches.all():
-                print("matchhere!!", match)
-                match.myFlavor = leagueflavor
-                match.save()
 
         # forms
         initial_data = {
