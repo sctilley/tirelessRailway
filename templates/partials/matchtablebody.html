@@ -7,10 +7,30 @@
     <td>{{match.myFlavor}}</td>
     <td>{{match.theirDeck}}</td>
     <td>{{match.theirFlavor}}</td>
-    <td>{{match.didjawin}}</td>
-    <td>{{match.game1}}</td>
-    <td>{{match.game2}}</td>
-    <td>{{match.game3}}</td>
+    {% if match.didjawin == True %}
+    <td>win</td>
+    {% else %}
+    <td>loss</td>
+    {% endif %}
+    {% if match.game1 == True %}
+    <td>win</td>
+    {% else %}
+    <td>loss</td>
+    {% endif %}
+    {% if match.game2 == True %}
+    <td>win</td>
+    {% else %}
+    <td>loss</td>
+    {% endif %}
+    {% if match.game3 == True %}
+        <td>win</td>
+    {% else %}
+        {% if match.game3 == False %}
+            <td>loss</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+    {% endif %}
     <td><a href="{% url 'leaguedetail' match.league.id %}">{{match.league.id}}</a></td>
 </tr>
 {% endfor %}
