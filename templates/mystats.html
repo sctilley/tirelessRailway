@@ -1,39 +1,5 @@
 {% extends 'main.html' %} {% block content %} 	
-<script type="text/hyperscript">
-  behavior Sortable
-    on click from <th/>
-      -- get all the headers and the index of the column
-      set headers to <th/> in me
-      set col to headers.indexOf(target)
-      
-      -- get the table body and the rows as an array
-      set tbody to the first <tbody/> in me
-      set rowArray to (<tr/> in tbody) as Array
 
-      -- if this is a first click on this header
-      -- clear the data-ascending attribute on any other header
-      if target @data-ascending is null
-        remove @data-ascending from headers
-      end
-      
-      -- sort the array depending on the ascending header
-      if target @data-ascending is 'true'
-        set target @data-ascending to 'false'
-        rowArray.sort(\ row1, row2 -> (row2.children[col].innerText) - (row1.children[col].innerText) )
-        log "test4 sucess"
-      else
-        set target @data-ascending to 'true'
-        rowArray.sort(\ row1, row2 -> (row1.children[col].innerText) - (row2.children[col].innerText) ) 
-        log "test5 sucess"     
-      end
-      
-      -- merge back into the tbody
-      for row in rowArray
-        tbody.append(row)
-      end
-    end  
-  end
-</script>
 
 <div class="text-center mt-2"><h3>Meta Stats for MTGO Legacy Leagues</h3></div>
 
@@ -97,8 +63,42 @@
 </div>
 
 
-    <small>* meta numbers are aggrigated from all user's and all matches's reported opponents</small>
+<small>* meta numbers are aggrigated from all user's and all matches's reported opponents</small>
+<script type="text/hyperscript">
+  behavior Sortable
+    on click from <th/>
+      -- get all the headers and the index of the column
+      set headers to <th/> in me
+      set col to headers.indexOf(target)
+      
+      -- get the table body and the rows as an array
+      set tbody to the first <tbody/> in me
+      set rowArray to (<tr/> in tbody) as Array
 
+      -- if this is a first click on this header
+      -- clear the data-ascending attribute on any other header
+      if target @data-ascending is null
+        remove @data-ascending from headers
+      end
+      
+      -- sort the array depending on the ascending header
+      if target @data-ascending is 'true'
+        set target @data-ascending to 'false'
+        rowArray.sort(\ row1, row2 -> (row2.children[col].innerText) - (row1.children[col].innerText) )
+        log "test4 sucess"
+      else
+        set target @data-ascending to 'true'
+        rowArray.sort(\ row1, row2 -> (row1.children[col].innerText) - (row2.children[col].innerText) ) 
+        log "test5 sucess"     
+      end
+      
+      -- merge back into the tbody
+      for row in rowArray
+        tbody.append(row)
+      end
+    end  
+  end
+</script>
 <script>
     // Quick and simple export target #table_id into a csv
   function download_table_as_csv(table_id, separator = ',') {
