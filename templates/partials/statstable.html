@@ -1,12 +1,12 @@
 
 
-<table class="table table-striped table-hover" id="statstable" _="install Sortable">
-    <thead>
+<table class="table table-striped table-bordered table-hover mx-3" id="statstable" _="install Sortable" style="max-width: 800px">
+    <thead class="center">
         <tr>
-        <th scope="col">Meta rank</th>
+        <th scope="col">Meta</th>
         <th scope="col">Deck Name</th>
         <th scope="col">Meta Share*</th>
-        <th scope="col">My Win % </th>
+        <th scope="col">Win % </th>
         <th>Played</th>
         <th>Wins</th>
         <th>Losses</th>  
@@ -17,22 +17,22 @@
             {% for deck in mytopdeckslegacy %}
                 {% if deck.mynumgames != 0 %}
                     <tr>
-                        <th scope="row">{{ forloop.counter }}</th>
+                        <th scope="row" class="center">{{ forloop.counter }}</th>
                         <td>{{ deck.theirDeck__name }}</td>
                         {% if deck.percentpopularity > 9 %}
                             <td>{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} decks </small></td>
                         {% else %}
-                            <td>&nbsp;{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} deck{% if deck.popularity > 1 %}s{% endif %} </small></td>
+                            <td class="center">&nbsp;{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} deck{% if deck.popularity > 1 %}s{% endif %} </small></td>
                         {% endif %}
-                        <td>{{ deck.mwp }}</td>
+                        <td class="center">{{ deck.mwp }}</td>
 
-                        <td>
+                        <td class="center">
                             {{ deck.mynumgames }}
                         </td>
-                        <td>
+                        <td class="center">
                             {{deck.mywingames}}
                         </td>
-                        <td>
+                        <td class="center">
                             {{deck.mylossgames}}
                         </td>
                     </tr>
@@ -41,27 +41,27 @@
             {% else %}
             {% for deck in mytopdeckslegacy %}
             <tr>
-                <th scope="row">{{ forloop.counter }}</th>
+                <th scope="row" class="center">{{ forloop.counter }}</th>
                 <td>{{ deck.theirDeck__name }}</td>
                 {% if deck.percentpopularity > 9 %}
-                    <td>{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} decks </small></td>
+                    <td class="center">{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} decks </small></td>
                 {% else %}
-                    <td>&nbsp;{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} deck{% if deck.popularity > 1 %}s{% endif %} </small></td>
+                    <td class="center">&nbsp;{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} deck{% if deck.popularity > 1 %}s{% endif %} </small></td>
                 {% endif %}
                 {% if deck.mynumgames == 0 %}
                     <td>--</td>
                 {% else %}
-                    <td>{{ deck.mwp }}</td>
+                    <td class="center">{{ deck.mwp }}</td>
                 {% endif %}
 
-                <td>
+                <td class="center">
                     {{ deck.mynumgames }}
                 </td>
-                <td>
+                <td class="center">
                     {{deck.mywingames}}
                 </td>
 
-                <td>
+                <td class="center">
                     {{deck.mylossgames}}
                 </td>
             </tr>

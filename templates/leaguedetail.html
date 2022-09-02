@@ -3,18 +3,43 @@
 
 <div class="card m-2">
     <div class="card-header center">
-      League
+        <div class="row">
+            <div class="col-4">
+             <img class="rounded-circle deck-mini-img" src="{{ league.myDeck.image.url }}" />
+                <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}</b>
+            </div>
+            <div class="col-3">
+             <span class="text-muted mr-2 center">{{ league.dateCreated|date:"F d, Y" }}</span>
+            </div>
+            <div class="col-3">
+             as: &nbsp {{ league.mtgoUserName }}
+            </div>
+            <div class="col">
+             {% if league.wins == 5 %}
+                5-0
+             {% elif league.wins == 4 %}
+                4-1
+             {% elif league.wins == 3 %}
+                3-2
+             {% elif league.wins == 2 %}
+                2-3
+             {% elif league.wins == 1 %}
+                1-4
+             {% elif league.wins == 0 %}
+                0-5
+             {% else %}
+                {{league.wins}}
+             {% endif %}
+             
+            </div>
+          </div>
     </div>
     <div class="card-body">
         <div class="container">
             <div class="row">
                 <div class="col-3 center">
-                <div class="mtbig">
-                    <h6>{{ league.mtgFormat}} </h6>
-                </div>
-                <h2 class="article-title">
+                <h2>
                     {{ league.myDeck }}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}
-                
                 </h2>
                 <img class="rounded-circle deck-img" src="{{ league.myDeck.image.url }}" />
                 </div>

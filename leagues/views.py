@@ -121,6 +121,9 @@ def mymatches(request):
 
 def mystats(request):
     user = request.user
+    flavors = Flavor.objects.all()
+    currentleague = League.objects.filter(user=user).latest('dateCreated')
+    uservarients = flavors.filter(deck=user.profile.recentDeck)
     filterdeck = user.profile.recentDeck
     checkfilter = False
 
@@ -131,6 +134,8 @@ def mystats(request):
         'filterdeck': filterdeck,
         'mydecks': mydecks,
         'checkfilter': checkfilter,
+        'currentleague': currentleague,
+        'uservarients': uservarients,
     }
 
     return render(request, 'mystats.html', context)
@@ -152,6 +157,7 @@ def statstable(request):
     timeframe = 90
     user = request.user
     deckvalue = user.profile.recentDeck
+    currentleague = user.profile
     print(request.GET)
 
     try:

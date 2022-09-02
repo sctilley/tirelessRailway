@@ -51,15 +51,38 @@
               </div>
         </div>
     </div>
+</div>
+
+<div class="d-flex flex-row justify-content-center">
+  <div>
+    {% include 'partials/statstable.html' %}
   </div>
+  <div class="d-none d-lg-block">
+    <div class="card mx-5 mt-5">
+      <div class="card-header text-center">
+        <h2>
+          {{currentleague.myDeck}}</h2>
+          <select
+          name="varientselect"
+          id="vselect"
+          hx-trigger="change,load"
+          hx-get="{% url 'stats50s' %}"
+          hx-target="#stats50scolumn"
+          >
+            <option value="0">all varients</option>
+            {% for flavor in uservarients %}
+            <option value="{{flavor.id}}">{{flavor.name}}</option>
+            {% endfor %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-9">
-            {% include 'partials/statstable.html' %}
-        </div>
-
+          
+          
+          </select>
+      </div>
     </div>
+      <div id="stats50scolumn">
+        stats here
+      </div>
+  </div>
 </div>
 
 
