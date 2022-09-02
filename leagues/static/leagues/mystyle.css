@@ -118,16 +118,8 @@ table.htmx {
   font-size: large;
 }
 
-th {
-  background-color: #444;
-  color: #eee;
-}
 
 th:hover {
   cursor: pointer;
 }
 
-td, th {
-  padding: 5px;
-  border: 1px solid #ddd;  
-}
