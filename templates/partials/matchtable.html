@@ -1,0 +1,21 @@
+<table class="table table-striped table-hover" id="statstable" _="install Sortable">
+    <thead>
+        <tr>
+            <th>Number</th>
+            <th>Date/Time</th>
+            <th>Format</th>
+            <th>My Deck</th>
+            <th>My Varient</th>
+            <th>Their Deck</th>
+            <th>Their Varient</th>
+            <th>Match Win</th>
+            <th>Game One</th>
+            <th>Game Two</th>
+            <th>Game Three</th>
+            <th>League ID</th>
+        </tr>
+    </thead>
+    <tbody id="contents" hx-trigger="load" hx-get="{% url 'matchtablebody' %}" hx-target="this">
+
+    </tbody>
+</table>

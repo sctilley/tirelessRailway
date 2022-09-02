@@ -27,6 +27,7 @@ htmx_urlpatters = [
     path('checkopponent/', views.checkopponent, name='checkopponent'),
     path('statstable/', views.statstable, name='statstable'),
     path('leaguedelete/<int:pk>', views.leaguedelete, name='leaguedelete'),
+    path('matchtablebody/', views.matchtablebody, name='matchtablebody'),
 
 ]
 

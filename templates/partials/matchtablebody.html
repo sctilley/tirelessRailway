@@ -1,0 +1,16 @@
+{% for match in usermatches reversed %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{match.dateCreated}}</td>
+    <td>{{match.mtgFormat}}</td>
+    <td>{{match.myDeck}}</td>
+    <td>{{match.myFlavor}}</td>
+    <td>{{match.theirDeck}}</td>
+    <td>{{match.theirFlavor}}</td>
+    <td>{{match.didjawin}}</td>
+    <td>{{match.game1}}</td>
+    <td>{{match.game2}}</td>
+    <td>{{match.game3}}</td>
+    <td><a href="{% url 'leaguedetail' match.league.id %}">{{match.league.id}}</a></td>
+</tr>
+{% endfor %}

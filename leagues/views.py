@@ -136,6 +136,18 @@ def mystats(request):
     return render(request, 'mystats.html', context)
 
 
+def matchtablebody(request):
+    user = request.user
+    usermatches = Match.objects.filter(user=user)
+
+    context = {
+        'usermatches': usermatches,
+
+    }
+
+    return render(request, "partials/matchtablebody.html", context)
+
+
 def statstable(request):
     timeframe = 90
     user = request.user
@@ -197,7 +209,6 @@ def statstable(request):
     }
 
     return render(request, 'partials/statstable.html', context)
-
 
 
 def landingpage(request):
