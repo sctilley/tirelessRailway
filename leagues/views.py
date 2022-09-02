@@ -199,6 +199,7 @@ def statstable(request):
     return render(request, 'partials/statstable.html', context)
 
 
+
 def landingpage(request):
 
     leagues = League.objects.all()

@@ -13,7 +13,7 @@
                         <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}</b>
                     </div>
                     <div class="col-3">
-                     <span class="text-muted mr-2 center">{{ league.date|date:"F d, Y" }}</span>
+                     <span class="text-muted mr-2 center">{{ league.dateCreated|date:"F d, Y" }}</span>
                     </div>
                     <div class="col-3">
                      as: &nbsp {{ league.mtgoUserName }}
@@ -135,6 +135,6 @@
         {% endfor %}
       </div>
     {% else %}
-    <p>no leagues found</p>
+    <p>no leagues found yet...</p>
     {% endif %}
 </div>
