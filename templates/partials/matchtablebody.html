@@ -1,6 +1,6 @@
 {% for match in usermatches reversed %}
 <tr>
-    <td>{{ forloop.counter }}</td>
+    <td>{{ forloop.revcounter }}</td>
     <td>{{match.dateCreated}}</td>
     <td>{{match.mtgFormat}}</td>
     <td>{{match.myDeck}}</td>

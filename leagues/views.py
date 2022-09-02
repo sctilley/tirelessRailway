@@ -138,7 +138,7 @@ def mystats(request):
 
 def matchtablebody(request):
     user = request.user
-    usermatches = Match.objects.filter(user=user)
+    usermatches = Match.objects.filter(user=user).order_by('dateCreated')
 
     context = {
         'usermatches': usermatches,
