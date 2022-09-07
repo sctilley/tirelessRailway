@@ -3,7 +3,7 @@
 
 <div class="text-center mt-2"><h3>Meta Stats for MTGO Legacy Leagues</h3></div>
 
-<div class="card">
+<div class="card" name="searchtools">
     <div class="card-body">
         <h5 class="card-title">Seach Tools:</h5>
         <div class="row">
@@ -11,12 +11,17 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Data for deck:</h5>
-                    <select id="deckname" name="deckname" hx-trigger="load, change" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#timeframe, #filteroutunplayed">
+                    <select id="deckname" name="deckname" hx-trigger="load, change delay:300ms" hx-get="{% url 'statstable' %}" hx-target="#metatable"  hx-include="#timeframe, #filteroutunplayed, #varientselect">
                     <option value={{filterdeck.id}} selected>{{filterdeck}}</option>
                     {% for deck in mydecks %}
                         <option value={{deck.id}}>{{deck.name}}</option>
                     {% endfor %}
                     </select>
+                    <div hx-trigger="load, change from:#deckname" hx-get="{% url 'listofflavors' %}" hx-include="#deckname" hx-swap="innerHTML" hx-target="#varientselect" >
+                      <select id="varientselect" name="varientselect" hx-get="{% url 'statstable' %}" hx-target="#metatable" hx-include="#deckname, #filteroutunplayed, #timeframe">
+                        <option value="0" selected>All Varients</option>
+                      </select>
+                    </div>
                 </div>
               </div>
             </div>
@@ -24,7 +29,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Data for the past:</h5>
-                    <select id="timeframe" name="timeframe" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#deckname, #filteroutunplayed">
+                    <select id="timeframe" name="timeframe" hx-get="{% url 'statstable' %}" hx-target="#metatable" hx-include="#deckname, #filteroutunplayed, #varientselect">
                         <option value=7>One Week</option>
                         <option value=14>Two Weeks</option>
                         <option value=21>Three Weeks</option>
@@ -44,7 +49,7 @@
             <div class="col-sm-3">
                 <div class="card">
                     <div class="card-body">
-                        <input class="form-check-input" type="checkbox" name="checkbox" value="8" id="filteroutunplayed" hx-get="{% url 'statstable' %}" hx-target="#statstable" hx-swap="outerHTML" hx-include="#timeframe, #deckname">
+                        <input class="form-check-input" type="checkbox" name="checkbox" value="8" id="filteroutunplayed" hx-get="{% url 'statstable' %}" hx-target="#metatable" hx-include="#timeframe, #deckname, #varientselect">
                         <label class="form-check-label" for="filteractivedecks"><small>Hide decks I haven't played against</small> </label> 
                     </div>
                 </div>
@@ -54,36 +59,18 @@
 </div>
 
 <div class="d-flex flex-row justify-content-center">
-  <div>
-    {% include 'partials/statstable.html' %}
+  <div id="metatable">
+    table here
   </div>
-  <div class="d-none d-lg-block">
-    <div class="card mx-5 mt-5">
-      <div class="card-header text-center">
-        <h2>
-          {{currentleague.myDeck}}</h2>
-          <select
-          name="varientselect"
-          id="vselect"
-          hx-trigger="change,load"
-          hx-get="{% url 'stats50s' %}"
-          hx-target="#stats50scolumn"
-          >
-            <option value="0">all varients</option>
-            {% for flavor in uservarients %}
-            <option value="{{flavor.id}}">{{flavor.name}}</option>
-            {% endfor %}
 
-          
-          
-          </select>
-      </div>
-    </div>
-      <div id="stats50scolumn">
-        stats here
-      </div>
+  <div class="d-none d-lg-block" id="table50stats">
+    50 card here
   </div>
+  <input class="form-check-input" type="checkbox" name="checkbox" value="8" id="testtrigger" hx-trigger="myEvent">
+  <label class="form-check-label" for="filteractivedecks"><small>test trigger</small> </label> 
+  <div hx-trigger="myEvent from:body" hx-get="/example"></div>
 </div>
+
 
 
 <small>* meta numbers are aggrigated from all user's and all matches's reported opponents</small>

@@ -123,3 +123,7 @@ th:hover {
   cursor: pointer;
 }
 
+div.league-card {
+  max-width: 1200px;
+  min-width: 1000px;
+}

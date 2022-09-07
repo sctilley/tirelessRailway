@@ -9,8 +9,16 @@
     {% if listofflavors == None %}
     <option value = "">--------</option>
     {% else %}
-        {% for flavor in listofflavors %}
+        {% if allvarients == True %}
+            <option value = "0">All Varients</option>
+            {% for flavor in listofflavors %}
+                <option value="{{ flavor.id }}">{{ flavor.name }}</option>
+            {% endfor %}
+        {% else %}
+            {% for flavor in listofflavors %}
             <option value="{{ flavor.id }}">{{ flavor.name }}</option>
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
+
     {% endif %}
 {% endif %}

@@ -14,6 +14,33 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
 
+def challenge(request):
+    decks = Deck.objects.all().order_by('-name')
+    user = request.user
+    filterdeck = user.profile.recentDeck
+    filterformat = user.profile.recentFormat
+    formatdecks = Match.objects.filter(mtgFormat=filterformat)
+    num_matches = Match.objects.filter(mtgFormat=filterformat).count()
+    mytopdeckslegacy = formatdecks.filter(mtgFormat=filterformat).values("theirDeck__name").annotate(
+        popularity=Count("theirDeck"),
+        percentpopularity=100 * F("popularity") / num_matches, mynumgames=Count("theirDeck",
+                                                                                filter=Q(user=user, myDeck=filterdeck)),
+        mywingames=Count("theirDeck", filter=Q(user=user,
+                                               myDeck=filterdeck, didjawin=1)),
+        mwp=Case(When(mynumgames=0, then=0), default=100 *
+                 F("mywingames") / F("mynumgames")),
+    ).order_by("-popularity")[:40]
+
+    context = {
+        'decks': decks,
+        'mytopdeckslegacy': mytopdeckslegacy,
+        'filterdeck': filterdeck,
+
+    }
+
+    return render(request, 'challenge.html', context)
+
+
 def test(request):
     decks = Deck.objects.all().order_by('-name')
     user = request.user
@@ -157,6 +184,7 @@ def statstable(request):
     timeframe = 90
     user = request.user
     deckvalue = user.profile.recentDeck
+    deckflavor = user.profile.recentFlavor
     currentleague = user.profile
     print(request.GET)
 
@@ -170,12 +198,18 @@ def statstable(request):
     except:
         timeframe = 90
 
+    try:
+        varientselect = int(request.GET.get('varientselect'))
+    except:
+        varientselect = 0
+
     if "checkbox" in request.GET:
         checkfilter = True
     else:
         checkfilter = False
 
-    print(deckvalue, timeframe, checkfilter)
+    print("deckvalue:", deckvalue, "timeframe:", timeframe,
+          "varientselect:", varientselect, "checkfilter:", checkfilter)
 
     filterdeck = deckvalue
     filterformat = user.profile.recentFormat
@@ -192,17 +226,32 @@ def statstable(request):
     mydecks = League.objects.filter(mtgFormat=filterformat).values(
         "myDeck__name").distinct()
 
+    if varientselect > 0:
+        filterprofile = {
+            "user": user,
+            "myDeck": filterdeck,
+            "myFlavor": varientselect,
+
+        }
+    else:
+        filterprofile = {
+            "user": user,
+            "myDeck": filterdeck,
+
+        }
+
     mytopdeckslegacy = targetdecks.values("theirDeck__name").annotate(
         popularity=Count("theirDeck"),
         percentpopularity=100 * F("popularity") / num_matches, mynumgames=Count("theirDeck",
-                                                                                filter=Q(user=user, myDeck=filterdeck)),
-        mywingames=Count("theirDeck", filter=Q(user=user,
-                                               myDeck=filterdeck, didjawin=1)),
-        mylossgames=Count("theirDeck", filter=Q(user=user,
-                                                myDeck=filterdeck, didjawin=0)),
+                                                                                filter=Q(**filterprofile)),
+        mywingames=Count("theirDeck", filter=Q(**filterprofile, didjawin=1)),
+        mylossgames=Count("theirDeck", filter=Q(**filterprofile, didjawin=0)),
         mwp=Case(When(mynumgames=0, then=0), default=100 *
                  F("mywingames") / F("mynumgames")),
     ).order_by("-popularity")[:50]
+
+    currentleague = League.objects.filter(
+        user=user).latest('dateCreated')
 
     context = {
         'mytopdeckslegacy': mytopdeckslegacy,
@@ -211,10 +260,11 @@ def statstable(request):
         'mydecks': mydecks,
         'checkfilter': checkfilter,
         'num_decks': num_decks,
+        'currentleague': currentleague
 
     }
 
-    return render(request, 'partials/statstable.html', context)
+    return render(request, 'partials/statspagebackend.html', context)
 
 
 def landingpage(request):
@@ -442,6 +492,7 @@ def listofflavors(request):
     user = request.user
     listofflavors = None
     specialflavor = None
+    allvarients = False
 
     if "mtgFormat" in request.GET:
         mtgformat = int(request.GET.get('mtgFormat'))
@@ -466,16 +517,19 @@ def listofflavors(request):
                     listofflavors = Flavor.objects.filter(
                         deck=ldeck).order_by('-isdefault')
 
-                else:
-                    specialflavor = None
+                elif "deckname" in request.GET:
+                    allvarients = True
 
             except:
                 listofflavors = None
                 specialflavor = None
+                allvarients = False
+    print("listofflavors", listofflavors, "all varients:", allvarients)
 
     context = {
         'listofflavors': listofflavors,
         'specialflavor': specialflavor,
+        'allvarients': allvarients,
     }
 
     return render(request, 'partials/listofflavors.html', context)
@@ -526,6 +580,11 @@ def listofarchetypes(request):
 
 
 def stats50s(request):
+    homecheck = 0
+
+    if "deckname" in request.GET:
+        deckname = int(request.GET.get('deckname'))
+
     if "varientselect" in request.GET:
         varientselected = int(request.GET.get('varientselect'))
         print("varientselected:", varientselected)
@@ -533,6 +592,23 @@ def stats50s(request):
         if varientselected > 0:
             targetflavor = Flavor.objects.get(pk=varientselected)
             print("target flavor is:", targetflavor)
+        else:
+            targetflavor = 0
+    if "hvarientselect" in request.GET:
+        varientselected = int(request.GET.get('hvarientselect'))
+        homecheck = 5
+        print("hvarientselected:", varientselected, homecheck)
+
+        if varientselected > 0:
+            targetflavor = Flavor.objects.get(pk=varientselected)
+            print("target flavor is:", targetflavor)
+        else:
+            targetflavor = 0
+    else:
+        print("no varientselected in request.GET", request.GET)
+        varientselected = 0
+        targetflavor = 0
+
     fiveohs = 0
     fourones = 0
     threetwos = 0
@@ -552,8 +628,15 @@ def stats50s(request):
 
     userleagues = League.objects.filter(user=user, isFinished=1)
 
-    targetleagues = userleagues.filter(myDeck=myactivedeck)
-    targetmatches = Match.objects.filter(user=user, myDeck=myactivedeck)
+    try:
+        print("deckname::::", deckname)
+        myactivedeck = Deck.objects.get(pk=deckname)
+        targetleagues = userleagues.filter(myDeck=myactivedeck)
+        targetmatches = Match.objects.filter(user=user, myDeck=myactivedeck)
+    except:
+        myactivedeck = user.profile.recentDeck
+        targetleagues = userleagues.filter(myDeck=myactivedeck)
+        targetmatches = Match.objects.filter(user=user, myDeck=myactivedeck)
 
     if varientselected > 0:
         targetleagues = userleagues.filter(myFlavor=targetflavor)
@@ -647,6 +730,10 @@ def stats50s(request):
         'gameswon': game1wins + game2wins + game3wins,
         'gameslost': game1losses + game2losses + game3losses,
         'gamewinpercentage': gamewinpercentage,
+
+        'myactivedeck': myactivedeck,
+        'targetflavor': targetflavor,
+        'homecheck': homecheck,
     }
 
     return render(request, 'partials/stats50s.html', context)
@@ -703,8 +790,6 @@ def checkopponent(request):
 
     return render(request, 'partials/checkopponent.html', context)
 
-
-def homebackup(request):
     user = request.user
     if user.profile.recentDeck == None:
         return redirect('profile')

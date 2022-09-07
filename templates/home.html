@@ -1,6 +1,6 @@
 {% extends 'main.html' %} {% block content %} {% load crispy_forms_tags %}
 
-<h1 class="center m-3">MTGO League Tracker</h1>
+<h1 class="center m-3" id="homecheck" name="homecheck" value="5">MTGO League Tracker</h1>
 
 
 <div class="d-flex">
@@ -74,11 +74,12 @@
           <h2>
             {{currentleague.myDeck}}</h2>
             <select
-            name="varientselect"
+            name="hvarientselect"
             id="vselect"
             hx-trigger="change,load"
             hx-get="{% url 'stats50s' %}"
             hx-target="#stats50scolumn"
+            hx-include="#homecheck"
             >
               <option value="0">all varients</option>
               {% for flavor in uservarients %}
