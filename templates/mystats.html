@@ -11,7 +11,7 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Data for deck:</h5>
-                    <select id="deckname" name="deckname" hx-trigger="load, change delay:300ms" hx-get="{% url 'statstable' %}" hx-target="#metatable"  hx-include="#timeframe, #filteroutunplayed, #varientselect">
+                    <select id="deckname" name="deckname" hx-trigger="load, change delay:400ms" hx-get="{% url 'statstable' %}" hx-target="#metatable"  hx-include="#timeframe, #filteroutunplayed, #varientselect">
                     <option value={{filterdeck.id}} selected>{{filterdeck}}</option>
                     {% for deck in mydecks %}
                         <option value={{deck.id}}>{{deck.name}}</option>
