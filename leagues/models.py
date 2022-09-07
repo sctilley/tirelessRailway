@@ -122,4 +122,4 @@ class Match(models.Model):
         Tournament, null=True, on_delete=models.CASCADE, related_name="matches")
 
     def __str__(self):
-        return str(self.theirname)
+        return f'Match vs: {self.theirname} by {self.user} on {self.dateCreated} (league id {self.league.pk})'
