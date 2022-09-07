@@ -1,18 +1,15 @@
 
-{% if homecheck > 0 %}
-{% else %}
-    <div class="card-header text-center">
-        <h2 name="varientselect" id="varientselect" hx-trigger="change" hx-get="{% url 'stats50s' %}" hx-target="#stats50scolumn" hx-include="#varientselect, #deckname">
-            {{myactivedeck.name}}
-            {{homecheck}}
-        </h2>
-        {% if targetflavor != "none/stock" %}
-            <h3>{{targetflavor.name}}</h3>
-        {% endif %}
-    </div>
-{% endif %}
-
 <div class="card mx-5">
+  <div class="card">
+    <div class="card-header text-center">
+      <h2>{{myactivedeck.name}}</h2>
+      {% if targetflavor == 0 %}
+      <h3>All Varients</h3>
+      {% elif targetflavor != "none/stock" %}
+      <h3>{{targetflavor.name}}</h3>
+      {% endif %}
+    </div>
+  </div>
     <div class="card-body">
       <table class="table table-striped">
         <thead>

@@ -186,7 +186,6 @@ def statstable(request):
     deckvalue = user.profile.recentDeck
     deckflavor = user.profile.recentFlavor
     currentleague = user.profile
-    print(request.GET)
 
     try:
         deckvalue = int(request.GET.get('deckname'))
@@ -208,8 +207,8 @@ def statstable(request):
     else:
         checkfilter = False
 
-    print("deckvalue:", deckvalue, "timeframe:", timeframe,
-          "varientselect:", varientselect, "checkfilter:", checkfilter)
+    # print("deckvalue:", deckvalue, "timeframe:", timeframe,
+    #       "varientselect:", varientselect, "checkfilter:", checkfilter)
 
     filterdeck = deckvalue
     filterformat = user.profile.recentFormat
@@ -580,7 +579,8 @@ def listofarchetypes(request):
 
 
 def stats50s(request):
-    homecheck = 0
+    user = request.user
+    print(request.GET)
 
     if "deckname" in request.GET:
         deckname = int(request.GET.get('deckname'))
@@ -594,20 +594,10 @@ def stats50s(request):
             print("target flavor is:", targetflavor)
         else:
             targetflavor = 0
-    if "hvarientselect" in request.GET:
-        varientselected = int(request.GET.get('hvarientselect'))
-        homecheck = 5
-        print("hvarientselected:", varientselected, homecheck)
-
-        if varientselected > 0:
-            targetflavor = Flavor.objects.get(pk=varientselected)
-            print("target flavor is:", targetflavor)
-        else:
-            targetflavor = 0
     else:
         print("no varientselected in request.GET", request.GET)
-        varientselected = 0
-        targetflavor = 0
+        varientselected = user.profile.recentFlavor.pk
+        targetflavor = user.profile.recentFlavor
 
     fiveohs = 0
     fourones = 0
@@ -623,7 +613,7 @@ def stats50s(request):
     ohfivesper = 0
 
     leagues = League.objects.all()
-    user = request.user
+
     myactivedeck = user.profile.recentDeck
 
     userleagues = League.objects.filter(user=user, isFinished=1)
@@ -640,10 +630,8 @@ def stats50s(request):
 
     if varientselected > 0:
         targetleagues = userleagues.filter(myFlavor=targetflavor)
-        print(targetmatches)
         targetmatches = Match.objects.filter(
             user=user, myDeck=myactivedeck, myFlavor=targetflavor)
-        print(targetmatches)
 
     for league in targetleagues:
         if league.isFinished == True:
@@ -733,7 +721,6 @@ def stats50s(request):
 
         'myactivedeck': myactivedeck,
         'targetflavor': targetflavor,
-        'homecheck': homecheck,
     }
 
     return render(request, 'partials/stats50s.html', context)
