@@ -18,33 +18,46 @@
         <div class="container">
           <div class="card">
             <div class="card-body center">
-              <button
+              {% if currentleague.isFinished is not True %}
+                <div>(Please finish your current league before starting a new one)</div>
+              {% else %}
+                <button
                 class="btn btn-primary btn-lg mt-2, mb-2"
                 _="on click toggle .hidden on #leagueform"
               >
                 New League
-              </button>
-              <form method="post" enctype="multipart/form-data" id="leagueform" class="hidden">
-                {% csrf_token %}
-                <div class="form-group">
-                  <div class="container thick">
-                    <div class="row">
-                      <div class="col center thick" id="listofformats" hx-include="#id_mtgFormat" hx-trigger="change, load" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
-                        {{league_form.mtgFormat|as_crispy_field}}
-                      </div>
-                      <div class="col center" id="listofdecks" hx-trigger="change, load" hx-include="#id_myDeck" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
-                        {{league_form.myDeck|as_crispy_field}}
-                      </div>
-                      <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
-                        {{league_form.myFlavor|as_crispy_field}}
+                </button>
+                <form method="post" enctype="multipart/form-data" id="leagueform" class="hidden">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <div class="container thick mb-2">
+                      <div class="row">
+                        <div class="col center" id="listofformats" hx-include="#id_mtgFormat" hx-trigger="change, load" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
+                          {{league_form.mtgFormat|as_crispy_field}}
+                        </div>
+                        <div class="col center" id="listofdecks" hx-trigger="change, load" hx-include="#id_myDeck" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
+                          {{league_form.myDeck|as_crispy_field}}
+                        </div>
+                        <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
+                          {{league_form.myFlavor|as_crispy_field}}
+                        </div>
+                        <div class="col center hidden" id="listoftags">
+                          {{league_form.tag|as_crispy_field}}
+                          <a type="button" href="{% url 'profile' %}?sender=tags" name="firsttime" class="btn btn-outline-info mt-3" id="newtag">Add New Tag</a>
+                        </div>
+                        <div class="col center mt-4" id="tagdiv">
+                          <button type="button" class="btn btn-outline-primary mt-4, mb-2" _="on click toggle .hidden on #tagdiv then toggle .hidden on #listoftags">Use Tags </button>
+                          
+                        </div>
+
                       </div>
                     </div>
                   </div>
-                </div>
-                <button class="btn btn-primary mt-3" type="submit" name="league_form">
-                  Submit
-                </button>
-              </form>
+                  <button class="btn btn-primary" type="submit" name="league_form">
+                    Submit
+                  </button>
+                </form>
+              {% endif %}
             </div>
           </div>
         </div>

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegistrerForm, ProfileUpdateForm
 from django.contrib.auth.decorators import login_required
+from leagues.models import Tag
+from leagues.forms import TagForm
 
 
 def register(request):
@@ -25,9 +27,32 @@ def profile(request):
     ffd = request.user.profile.recentDeck
     ffl = request.user.profile.recentFlavor
     ffu = request.user.profile.mtgoUserName
+    tagbutton = False
+
+    user = request.user
+    usertags = Tag.objects.filter(user=user)
+    if usertags:
+        tagbutton = True
+
+    print("request", request.GET)
+    for key in request.GET:
+        var = request.GET[key]
+        if var == "tags":
+            tagbutton = True
+
+    t_form = TagForm()
 
     if request.method == 'POST':
         print("request here", request.POST)
+
+        if "t_form" in request.POST:
+            t_form = TagForm(request.POST)
+            if t_form.is_valid():
+                tag = t_form.save(commit=False)
+                tag.user = request.user
+                tag.save()
+                return redirect('profile')
+
         p_form = ProfileUpdateForm(
             request.POST, instance=request.user.profile)
 
@@ -41,8 +66,12 @@ def profile(request):
             {'name': 'recentFormat', 'hx-trigger': 'change, load', 'hx-get': "/listofdecks", 'hx-swap': 'innerHTML', 'hx-target': '#id_recentDeck'})
         p_form.fields['recentDeck'].widget.attrs.update(
             {'hx-trigger': 'change, load', 'hx-get': "/listofflavors", 'hx-swap': 'innerHTML', 'hx-target': '#id_recentFlavor'})
+
     context = {
+        't_form': t_form,
         'p_form': p_form,
+        'usertags': usertags,
+        'tagbutton': tagbutton,
     }
 
     return render(request, 'users/profile.html', context)

@@ -73,7 +73,9 @@
               <small><p class="text-start">Your opponent's name will be automatically checked against our database, to see if we have a record of them.</p></small>
             </div>
             <div class="col">
-              <button type="submit" class="btn btn-danger" style="float: right;" name="drop">drop</button>
+              {% if currentleague %}
+                <a href="{% url 'leaguedetail' currentleague.id %}" class="btn btn-danger" style="float: right;" name="drop">drop</a>
+              {% endif %}
               <button type="submit" class="btn btn-primary me-2" style="float: right;" name="matchformset">save</button>
             </div>
           </div>

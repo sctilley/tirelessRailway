@@ -11,6 +11,8 @@ class Profile(models.Model):
     recentFlavor = models.ForeignKey(
         'leagues.Flavor', null=True, on_delete=models.CASCADE)
     mtgoUserName = models.CharField(null=True, max_length=80)
+    recentTag = models.ForeignKey(
+        'leagues.Tag', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.user.username} Profile'

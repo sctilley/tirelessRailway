@@ -1,43 +1,83 @@
 {% extends "main.html" %} {% load crispy_forms_tags %} {% block content %}
 <body onload="checkProfileReady()"></body>
-<h2 class="m-4">Profile</h2>
+<h2 class="m-4 center">Profile</h2>
+<div class="d-flex justify-content-evenly flex-wrap">
+  {% if tagbutton == True %}
+    <div>
+      <div class="card m-2 border-info border-5" style="width: 38rem;">
+        <div class="card-header center">
+          <h2>Tags</h2>
+        </div>
+        <div class="card-body">
+          <div class="center">
+            <button type="button" class="btn btn-primary mt-4, mb-2" _="on click toggle .hidden on me then toggle .hidden on #tform">New Tag </button>
+          </div>
+          <form method="POST" class="hidden" id="tform">
+            <div class="col">
+              {% csrf_token %}
+              {{t_form|crispy}}
+            </div>
+            <button type="submit" class="btn btn-primary center mt-2"  name="t_form">
+              Submit
+            </button>
+          </form>
+        </div>
+        <div class="card-header center">
+          <h2>Existing Tags</h2>
+        </div>
+        <div class="card-body">
+          {% for tag in usertags %}
+          <li>{{tag.name}}</li>
+          {% endfor %}
+        </div>
 
-<div class="card m-2 border-success border-5" style="width: 38rem;">
-  <div class="card-header">
-    Personal Info
-  </div>
-  <div class="card-body">
+      </div>
+    </div>
+  {% endif %}
+  <div>
+    <div class="card m-2 border-success border-5" style="width: 38rem;">
+      <div class="card-header">
+        Personal Info
+      </div>
+      <div class="card-body">
+        
+        <p class="text-secondary">username: {{ user.username }}</p>
+        <p class="text-secondary">email: {{ user.email }}</p>
     
-    <p class="text-secondary">username: {{ user.username }}</p>
-    <p class="text-secondary">email: {{ user.email }}</p>
-
-  </div>
-</div>
-
-<div class="card m-2 border-success border-5" style="width: 38rem;" id="mtgoinfo">
-  <div class="card-header"> 
-    MTGO Info
-  </div>
-  <div class="card-body">
+      </div>
+    </div>
     
-    <form method="POST" id="profileupdateform" name="profileupdateform">
-      {% csrf_token %}
-      {{p_form|crispy}}
-      <button type="submit" class="btn btn-primary mt-2">Save</button>
-    </form>
+    <div class="card m-2 border-success border-5" style="width: 38rem;" id="mtgoinfo">
+      <div class="card-header"> 
+        MTGO Info
+      </div>
+      <div class="card-body">
+        
+        <form method="POST" id="profileupdateform" name="profileupdateform">
+          {% csrf_token %}
+          {{p_form|crispy}}
+          <button type="submit" class="btn btn-primary mt-2">Save</button>
+        </form>
+    
+      </div>
+    </div>
+    {% if user.profile.recentDeck == None %}
+      <div class="m-2">
+        <p>Please update your mtgo info, it's necessary to use the main site.</p>
+        <p>If you dont' know what deck you're going to be playing, just pick any, you can change it later.</p>
+      </div>
+    {% else %}
+    <div class="m-2">
+      <a href="{% url 'home' %}">Link to homepage</a>
+    </div>
+    {% endif %}
+  </div>
 
-  </div>
+  
+
+
 </div>
-{% if user.profile.recentDeck == None %}
-  <div class="m-2">
-    <p>Please update your mtgo info, it's necessary to use the main site.</p>
-    <p>If you dont' know what deck you're going to be playing, just pick any, you can change it later.</p>
-  </div>
-{% else %}
-<div class="m-2">
-  <a href="{% url 'home' %}">Link to homepage</a>
-</div>
-{% endif %}
+
 
 <script>
   function checkProfileReady() {

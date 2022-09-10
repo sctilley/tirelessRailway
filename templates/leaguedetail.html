@@ -131,10 +131,13 @@
                     <button class="btn btn-primary btn-lg" name="edit" _="on click toggle .hidden on #editleague">change match info</button>
                 </div>
                 <div class="col-sm">
-                    <a href="{% url 'leaguedelete' league.id %}" class="btn btn-danger btn-lg" name="delete">delete league</a>                
+                        <a href="{% url 'leaguedelete' league.id %}" class="btn btn-danger btn-lg" name="delete">delete league</a>    
                 </div>
                 <div class="col-sm">
-                    <a href="{% url 'home' %}" class="btn btn-secondary btn-lg" name="cancel">cancel / take me home</a>
+                    <a href="{% url 'leaguedetail' league.id %}?drop" class="btn btn-danger btn-lg" name="drop">drop league</button>    
+                </div>
+                <div class="col-sm">
+                    <a href="{% url 'home' %}" class="btn btn-secondary btn-lg" name="cancel">cancel</a>
                 </div>
                 </div>
             </div>

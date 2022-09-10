@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Flavor, League, Match, Deck, MtgFormat, Archetype
+from .models import Flavor, League, Match, Deck, MtgFormat, Archetype, Tag
 from .forms import LeagueForm, MatchForm, DeckForm, FlavorForm
 from django.forms import inlineformset_factory
 import datetime
@@ -128,6 +128,22 @@ def leaguedetail(request, pk):
                 return redirect(league.get_absolute_url())
             else:
                 print("errors be here")
+
+    if request.method == "GET":
+        print("GET REQUEST", request.GET)
+
+        if 'drop' in request.GET:
+            print("DROOOOOOOOOOOOOOOOOOOOP")
+            league.isFinished = 1
+            league.save()
+            print("league.matches.count",
+                  league.matches.count())
+
+            if league.matches.count() == 0:
+                print("ZER0000000000000000000000000000000 mataches")
+                league.delete()
+
+            return redirect('home')
 
     context = {
         'league': league,
@@ -307,6 +323,7 @@ def home(request):
             'mtgFormat': user.profile.recentFormat,
             'myDeck': user.profile.recentDeck,
             'myFlavor': user.profile.recentFlavor,
+            'tag': user.profile.recentTag,
         }
         league_form = LeagueForm(initial=initial_data)
 
@@ -321,15 +338,11 @@ def home(request):
             formset = Leagueinlineformset()
 
         if request.method == "POST":
-            if 'drop' in request.POST:
-                currentleague.isFinished = 1
-                currentleague.save()
-                return redirect('home')
-
             if 'league_form' in request.POST:
                 league_form = LeagueForm(request.POST)
 
                 if league_form.is_valid():
+
                     league = league_form.save(commit=False)
                     league.user = request.user
                     league.mtgoUserName = user.profile.mtgoUserName
@@ -337,10 +350,10 @@ def home(request):
                     user.profile.recentDeck = league.myDeck
                     user.profile.recentFlavor = league.myFlavor
                     user.profile.save()
-
                     league.save()
+                    league_form.save_m2m()
 
-                    return redirect("home")
+                    return redirect('home')
 
             if 'matchformset' in request.POST:
 
@@ -523,7 +536,6 @@ def listofflavors(request):
                 listofflavors = None
                 specialflavor = None
                 allvarients = False
-    print("listofflavors", listofflavors, "all varients:", allvarients)
 
     context = {
         'listofflavors': listofflavors,
@@ -580,7 +592,7 @@ def listofarchetypes(request):
 
 def stats50s(request):
     user = request.user
-    print(request.GET)
+    print("Stats 50s here with a request.GET: ", request.GET)
 
     if "deckname" in request.GET:
         deckname = int(request.GET.get('deckname'))
@@ -598,6 +610,12 @@ def stats50s(request):
         print("no varientselected in request.GET", request.GET)
         varientselected = user.profile.recentFlavor.pk
         targetflavor = user.profile.recentFlavor
+
+    if "timeframe" in request.GET:
+        timeframe = int(request.GET.get('timeframe'))
+        startdate = timezone.now()
+        enddate = startdate - timedelta(days=timeframe)
+        print("TIMEFRAMEHEREEREREERE: ", timeframe, enddate)
 
     fiveohs = 0
     fourones = 0
@@ -619,19 +637,42 @@ def stats50s(request):
     userleagues = League.objects.filter(user=user, isFinished=1)
 
     try:
-        print("deckname::::", deckname)
         myactivedeck = Deck.objects.get(pk=deckname)
-        targetleagues = userleagues.filter(myDeck=myactivedeck)
-        targetmatches = Match.objects.filter(user=user, myDeck=myactivedeck)
+        print("success1")
     except:
         myactivedeck = user.profile.recentDeck
-        targetleagues = userleagues.filter(myDeck=myactivedeck)
-        targetmatches = Match.objects.filter(user=user, myDeck=myactivedeck)
+        print("fail1")
 
     if varientselected > 0:
-        targetleagues = userleagues.filter(myFlavor=targetflavor)
-        targetmatches = Match.objects.filter(
-            user=user, myDeck=myactivedeck, myFlavor=targetflavor)
+        try:
+            targetleagues = userleagues.filter(
+                myDeck=myactivedeck, myFlavor=targetflavor, dateCreated__gte=enddate)
+            targetmatches = Match.objects.filter(
+                user=user, myDeck=myactivedeck, myFlavor=targetflavor, dateCreated__gte=enddate)
+            print("Varient Selected > 0, Try...1")
+        except:
+            targetleagues = userleagues.filter(
+                myDeck=myactivedeck, myFlavor=targetflavor)
+            targetmatches = Match.objects.filter(
+                user=user, myDeck=myactivedeck, myFlavor=targetflavor)
+            print("Varient Selected > 0, Except...2")
+    else:
+        try:
+            targetleagues = userleagues.filter(
+                myDeck=myactivedeck, dateCreated__gte=enddate)
+            targetmatches = Match.objects.filter(
+                user=user, myDeck=myactivedeck, dateCreated__gte=enddate)
+            print("Varient Selected NOT > 0, Try...3")
+        except:
+            targetleagues = userleagues.filter(myDeck=myactivedeck)
+            targetmatches = Match.objects.filter(
+                user=user, myDeck=myactivedeck)
+            print("Varient Selected NOT > 0, Except...4")
+
+    print("myactivedeck is: ", myactivedeck)
+    print("targetflavor is: ", targetflavor)
+    print("Target matches: ", targetmatches)
+    print("Target leagues: ", targetleagues)
 
     for league in targetleagues:
         if league.isFinished == True:

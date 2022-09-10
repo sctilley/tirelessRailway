@@ -84,10 +84,10 @@
 
 <div class="d-none d-lg-block" id="table50stats" hx-swap-oob="true"> 
   <div class="">
-      <h2 name="varientselect" id="varientselect" hx-trigger="change from:#deckname, load" hx-get="{% url 'stats50s' %}" hx-target="#stats50scolumn" hx-include="#varientselect, #deckname">
+      <h2 name="varientselect" id="varientselect" hx-trigger="load" hx-get="{% url 'stats50s' %}" hx-target="#stats50scolumn" hx-include="#varientselect, #deckname, #timeframe"></h2>
   </div>
   <div class="card-body" id="stats50scolumn">
-
+    test
   </div>
     <!-- {% include 'partials/stats50s.html' %} -->
 </div>

@@ -1,11 +1,19 @@
 from django import forms
-from .models import League, Match, Flavor, Deck, Archetype, MtgFormat
+from .models import League, Match, Flavor, Deck, Archetype, MtgFormat, Tag
 from django.contrib.auth.models import User
 from datetime import datetime, date
 from django.forms import inlineformset_factory
 from crispy_forms.helper import FormHelper
 
-# attrs={'class': 'hidden'}
+
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+
+        fields = (
+            'name',
+            'explaination'
+        )
 
 
 class SplitDateTimeWidget(forms.SplitDateTimeWidget):
@@ -74,10 +82,12 @@ class LeagueForm(forms.ModelForm):
         queryset=Deck.objects.all(), label='My Deck', widget=forms.Select(attrs={}))
     myFlavor = forms.ModelChoiceField(
         queryset=Flavor.objects.all(), label='Varient', widget=forms.Select(attrs={}))
+    tag = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(), label='Tag', required=False, widget=forms.SelectMultiple)
 
     class Meta:
         model = League
-        fields = ('mtgFormat', 'myDeck', 'myFlavor')
+        fields = ('mtgFormat', 'myDeck', 'myFlavor', 'tag')
 
 
 class DeckForm(forms.ModelForm):
