@@ -18,7 +18,7 @@
         <div class="container">
           <div class="card">
             <div class="card-body center">
-              {% if currentleague.isFinished is True %}
+              {% if currentleague.isFinished is not False %}
                 <button class="btn btn-primary btn-lg mt-2, mb-2"_="on click toggle .hidden on #leagueform">
                 New League
                 </button>
@@ -52,7 +52,6 @@
                     Submit
                   </button>
                 </form>
-                
               {% else %}
                 <div>(Please finish your current league before starting a new one)</div>
               {% endif %}

@@ -319,9 +319,6 @@ def home(request):
         except:
             currentleague = League.objects.none()
 
-        print("currentleague: ", currentleague)
-        print("tag check", currentleague.tags.all())
-
         uservarients = flavors.filter(deck=user.profile.recentDeck)
 
         # forms
