@@ -50,7 +50,7 @@ class MatchForm(forms.ModelForm):
     game3 = forms.BooleanField(label='three', required=False, widget=forms.CheckboxInput(
         attrs={'class': 'largerCheckbox', 'title': 'This is game 3. Tick the box if you won that game'}))
     theirname = forms.CharField(
-        label="Their Username", widget=forms.TextInput(attrs={'list': 'usernamelist', 'hx-get': '/checkopponent', 'hx-target': '#namereceptor'}))
+        label="Their Username", widget=forms.TextInput(attrs={'list': 'usernamelist', 'autocomplete': 'off', 'hx-get': '/checkopponent', 'hx-target': '#namereceptor'}))
     theirArchetype = forms.ModelChoiceField(
         queryset=Archetype.objects.all(), label='Archetype', required=False, widget=forms.Select(attrs={'class': 'hidden', 'hx-get': '/listofdecksArche', 'hx-target': 'next select', 'hx-swap': 'innerHTML', 'title': "This is option, if you don't select it it will be automatically assinged to match the deck"}))
     theirDeck = forms.ModelChoiceField(
