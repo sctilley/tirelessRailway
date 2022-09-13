@@ -400,6 +400,7 @@ def home(request):
             'matchformset': formset,
             'mtgformats': mtgformats,
             'uservarients': uservarients,
+            'usernamelist': usernamelist
         }
 
         return render(request, 'home.html', context)
