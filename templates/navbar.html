@@ -27,6 +27,9 @@
           </li>
           {% if user.is_staff %}
           <li class="nav-item">
+            <a class="nav-link" href="{% url 'challenge' %}">Challenges</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'decks' %}">Deck Database</a>
           </li>
             <li class="nav-item">
@@ -44,9 +47,6 @@
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="{% url 'landingpage' %}">All Leagues</a></li>
             </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'challenge' %}">Challenges</a>
           </li>
         </ul>
       {% else %}

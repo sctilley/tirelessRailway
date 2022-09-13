@@ -55,6 +55,12 @@
                         {% endif %}   
                      </div>
                      <div class="col-2 center">
+                        <div>
+                           {% if league.tags.count > 0 %}
+                              <p><h5>Tags:</h5></p>
+                              {% for tag in league.tags.all %} <p>{{tag}}</p> {% endfor %}
+                           {% endif %}
+                        </div>
                         <div class="supercenter text-nowrap">
                            {% if league.wins == 5 %}
                               5-0

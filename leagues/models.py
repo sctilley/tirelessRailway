@@ -70,7 +70,7 @@ class League(models.Model):
     myFlavor = models.ForeignKey(
         Flavor, null=True, on_delete=models.CASCADE, related_name="myleagueflavor")
     isFinished = models.BooleanField('finished', default=False)
-    tag = models.ManyToManyField(Tag, related_name="leagues")
+    tags = models.ManyToManyField(Tag, related_name="leagues")
 
     def __str__(self):
         return f'{self.mtgFormat} League with {self.myDeck} by {self.mtgoUserName} on {self.dateCreated}'

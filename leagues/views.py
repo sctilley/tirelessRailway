@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Flavor, League, Match, Deck, MtgFormat, Archetype, Tag
-from .forms import LeagueForm, MatchForm, DeckForm, FlavorForm
+from .forms import LeagueForm, MatchForm, DeckForm, FlavorForm, TagForm
 from django.forms import inlineformset_factory
 import datetime
 from django.db.models import Count, F, Q, Case, When, Exists, OuterRef
@@ -101,6 +101,8 @@ def leaguedetail(request, pk):
 
     formset = Leagueinlineformset(instance=league)
 
+    addtag_form = TagForm()
+
     if request.method == "POST":
         print("post:", request.POST)
         if 'matchformset' in request.POST:
@@ -149,6 +151,7 @@ def leaguedetail(request, pk):
         'league': league,
         'wincount': wincount,
         'matchformset': formset,
+        'addtag_form': addtag_form
     }
 
     return render(request, "leaguedetail.html", context)
@@ -315,6 +318,9 @@ def home(request):
                 user=user).latest('dateCreated')
         except:
             currentleague = League.objects.none()
+
+        print("currentleague: ", currentleague)
+        print("tag check", currentleague.tags.all())
 
         uservarients = flavors.filter(deck=user.profile.recentDeck)
 
@@ -592,22 +598,18 @@ def listofarchetypes(request):
 
 def stats50s(request):
     user = request.user
-    print("Stats 50s here with a request.GET: ", request.GET)
 
     if "deckname" in request.GET:
         deckname = int(request.GET.get('deckname'))
 
     if "varientselect" in request.GET:
         varientselected = int(request.GET.get('varientselect'))
-        print("varientselected:", varientselected)
 
         if varientselected > 0:
             targetflavor = Flavor.objects.get(pk=varientselected)
-            print("target flavor is:", targetflavor)
         else:
             targetflavor = 0
     else:
-        print("no varientselected in request.GET", request.GET)
         varientselected = user.profile.recentFlavor.pk
         targetflavor = user.profile.recentFlavor
 
@@ -615,7 +617,6 @@ def stats50s(request):
         timeframe = int(request.GET.get('timeframe'))
         startdate = timezone.now()
         enddate = startdate - timedelta(days=timeframe)
-        print("TIMEFRAMEHEREEREREERE: ", timeframe, enddate)
 
     fiveohs = 0
     fourones = 0
@@ -638,10 +639,8 @@ def stats50s(request):
 
     try:
         myactivedeck = Deck.objects.get(pk=deckname)
-        print("success1")
     except:
         myactivedeck = user.profile.recentDeck
-        print("fail1")
 
     if varientselected > 0:
         try:
@@ -649,30 +648,21 @@ def stats50s(request):
                 myDeck=myactivedeck, myFlavor=targetflavor, dateCreated__gte=enddate)
             targetmatches = Match.objects.filter(
                 user=user, myDeck=myactivedeck, myFlavor=targetflavor, dateCreated__gte=enddate)
-            print("Varient Selected > 0, Try...1")
         except:
             targetleagues = userleagues.filter(
                 myDeck=myactivedeck, myFlavor=targetflavor)
             targetmatches = Match.objects.filter(
                 user=user, myDeck=myactivedeck, myFlavor=targetflavor)
-            print("Varient Selected > 0, Except...2")
     else:
         try:
             targetleagues = userleagues.filter(
                 myDeck=myactivedeck, dateCreated__gte=enddate)
             targetmatches = Match.objects.filter(
                 user=user, myDeck=myactivedeck, dateCreated__gte=enddate)
-            print("Varient Selected NOT > 0, Try...3")
         except:
             targetleagues = userleagues.filter(myDeck=myactivedeck)
             targetmatches = Match.objects.filter(
                 user=user, myDeck=myactivedeck)
-            print("Varient Selected NOT > 0, Except...4")
-
-    print("myactivedeck is: ", myactivedeck)
-    print("targetflavor is: ", targetflavor)
-    print("Target matches: ", targetmatches)
-    print("Target leagues: ", targetleagues)
 
     for league in targetleagues:
         if league.isFinished == True:
