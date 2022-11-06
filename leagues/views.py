@@ -14,6 +14,17 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
 
+def changedeck(request):
+    decks = Deck.objects.all().order_by('-name')
+    user = request.user
+
+    context = {
+        'decks': decks,
+    }
+
+    return render(request, 'changedeck.html', context)
+
+
 def challenge(request):
     decks = Deck.objects.all().order_by('-name')
     user = request.user

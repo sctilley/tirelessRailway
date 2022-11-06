@@ -3,17 +3,10 @@
   <!-- Container wrapper -->
   <div class="container-fluid">
     <!-- Toggle button -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-mdb-toggle="collapse"
-      data-mdb-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <i class="fas fa-bars"></i>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
+
 
     <!-- Collapsible wrapper -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -26,15 +19,18 @@
             <a class="nav-link" href="{% url 'home' %}">League Home</a>
           </li>
           {% if user.is_staff %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'challenge' %}">Challenges</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Admin
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="{% url 'decks' %}">Add Deck or Varient</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'changedeck' %}">Change Deck Classification</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'test' %}">test</a></li>
+            </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'decks' %}">Deck Database</a>
-          </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'test' %}">test</a>
-            </li>
           {% endif %}
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,7 +65,7 @@
       <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
       <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
       {% endif %}
-      </div>
+    </div>
     </div>
   </div>
 </nav>

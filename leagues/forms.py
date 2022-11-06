@@ -6,6 +6,15 @@ from django.forms import inlineformset_factory
 from crispy_forms.helper import FormHelper
 
 
+class ChangeDeckName(forms.ModelForm):
+    class Meta:
+        model = Deck
+
+        fields = (
+
+        )
+
+
 class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
