@@ -2,38 +2,6 @@
 <body onload="checkProfileReady()"></body>
 <h2 class="m-4 center">Profile</h2>
 <div class="d-flex justify-content-evenly flex-wrap">
-  {% if tagbutton == True %}
-    <div>
-      <div class="card m-2 border-info border-5" style="width: 38rem;">
-        <div class="card-header center">
-          <h2>Tags</h2>
-        </div>
-        <div class="card-body">
-          <div class="center">
-            <button type="button" class="btn btn-primary mt-4, mb-2" _="on click toggle .hidden on me then toggle .hidden on #tform">New Tag </button>
-          </div>
-          <form method="POST" class="hidden" id="tform">
-            <div class="col">
-              {% csrf_token %}
-              {{t_form|crispy}}
-            </div>
-            <button type="submit" class="btn btn-primary center mt-2"  name="t_form">
-              Submit
-            </button>
-          </form>
-        </div>
-        <div class="card-header center">
-          <h2>Existing Tags</h2>
-        </div>
-        <div class="card-body">
-          {% for tag in usertags %}
-          <li>{{tag.name}}</li>
-          {% endfor %}
-        </div>
-
-      </div>
-    </div>
-  {% endif %}
   <div>
     <div class="card m-2 border-success border-5" style="width: 38rem;">
       <div class="card-header">

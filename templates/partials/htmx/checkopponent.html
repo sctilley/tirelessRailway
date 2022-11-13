@@ -1,0 +1,47 @@
+<div>
+  {% if getmatches %}
+  <h4>{{theirusername}} History:</h4>
+  <div class="">
+    <table class="reporttable">
+      <tr class="matchform">
+        <th>{{theirusername}}'s deck</th>
+        <th>Date</th>
+        <th>Reported by</th>
+        
+      </tr>
+      {% for match in getmatches %}
+        <tr>
+          <td>{{match.theirDeck.name}}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</td>
+          <td>{{match.dateCreated|date:"N d, Y"}}</td>
+          <td>{{match.user}}</td>
+        </tr>
+      {% endfor %}
+
+    </table>
+  </div>
+
+
+
+  <!-- <div class="row row-no-wrap">
+    <div class="col">
+      {% for match in getmatches %}
+        <ul class="history">
+          <li>{{match.dateCreated|date:"N d, Y"}} &#x2022; by {{match.user}}: </li>
+        </ul>
+      {% endfor %}
+    </div>
+    <div class="col">
+      {% for match in getmatches %}
+      <ul class="history">
+        <li>{{match.theirDeck.name}}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</li>
+      </ul>
+    {% endfor %}
+    </div> -->
+
+  </div>
+
+  {% else %}
+  new player
+  {% endif %}
+
+</div>

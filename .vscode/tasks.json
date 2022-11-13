@@ -19,7 +19,8 @@
         "panel": "shared",
         "showReuseMessage": true,
         "clear": false,
-        "group": "servergroup"
+        "group": "servergroup",
+        "close": true
       }
     },
     {

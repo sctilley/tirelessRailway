@@ -1,93 +1,38 @@
-{% extends 'main.html' %} {% block content %} {% load crispy_forms_tags %}
+{% extends 'main.html' %} {% block content %} {% load static %}
 
-<h1 class="center m-3" id="homecheck" name="homecheck" value="5">MTGO League Tracker</h1>
-
-
-<div class="d-flex">
-    <div class="flex-grow-1">
-        <!-- Current League Card -->
-        {% if currentleague %}
-          {% if currentleague.isFinished is not True %}
-          <h2 class="center">Add Matches to your open league:</h2>
-            {% include 'matchform.html' %}
-          {% else %}
-            <h2 class="center">Your most recent league:</h2>
-              {% include 'matchform.html' %}
-          {% endif %}
-        {% endif %}
-        <div class="container">
-          <div class="card">
-            <div class="card-body center">
-              {% if currentleague.isFinished is not False %}
-                <button class="btn btn-primary btn-lg mt-2, mb-2"_="on click toggle .hidden on #leagueform">
-                New League
-                </button>
-                <form method="post" enctype="multipart/form-data" id="leagueform" class="hidden">
-                  {% csrf_token %}
-                  <div class="form-group">
-                    <div class="container thick mb-2">
-                      <div class="row">
-                        <div class="col center" id="listofformats" hx-include="#id_mtgFormat" hx-trigger="change, load" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
-                          {{league_form.mtgFormat|as_crispy_field}}
-                        </div>
-                        <div class="col center" id="listofdecks" hx-trigger="change, load" hx-include="#id_myDeck" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
-                          {{league_form.myDeck|as_crispy_field}}
-                        </div>
-                        <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
-                          {{league_form.myFlavor|as_crispy_field}}
-                        </div>
-                        <div class="col center hidden" id="listoftags">
-                          {{league_form.tag|as_crispy_field}}
-                          <a type="button" href="{% url 'profile' %}?sender=tags" name="firsttime" class="btn btn-outline-info mt-3" id="newtag">Add New Tag</a>
-                        </div>
-                        <div class="col center mt-4" id="tagdiv">
-                          <button type="button" class="btn btn-outline-primary mt-4, mb-2" _="on click toggle .hidden on #tagdiv then toggle .hidden on #listoftags">Use Tags </button>
-                          
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-                  <button class="btn btn-primary" type="submit" name="league_form">
-                    Submit
-                  </button>
-                </form>
-              {% else %}
-                <div>(Please finish your current league before starting a new one)</div>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      <div class="containter">
-        <h2 class="ok center m-5">Your Past Leagues: 
-          <select
-          name="formatselect"
-          id="fselect"
-          hx-trigger="change,load"
-          hx-get="{% url 'leaguescore' %}"
-          hx-target="#league-section"
-          >
-          <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
-          {% for mtgformats in mtgformats %}
-            <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
-          {% endfor %}
-        </select>
-          
-        </h2>
-        {% include 'partials/leagues.html' %}
-      </div>
-
-    </div>
-    <div class="d-none d-xl-block">
-        <div>
-          <h2 hx-trigger="load" hx-get="{% url 'stats50s' %}" hx-target="#stats50scolumn"></h2>
-        </div>
-      
-        <div class="mt-5" id="stats50scolumn">
-          stats here
-        </div>
-    </div>
+<div class="content">
+  <div class="banner">
+    <h1>MTGO Data Tracker</h1>
+    <h3>Like a spreadsheet, but better</h3>
+  </div>
 </div>
+
+
+<div class="content">
+  <div class="row">
+    <div class="col cardimage">
+      <a href="{% url 'league' %}"><img class="homebox" src="{% static 'leagues/images/grindstone.jpg' %}"></a>
+      <div class="text">Add League Matches</div>
+    </div>
+    <div class="col">
+      <a href="{% url 'data' %}"><img class="homebox" src="{% static 'leagues/images/orcish.jpg' %}"></a>
+      <div class="text">Data Analysis</div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="better">
+    <h2>Better than a spreadsheet</h2>
+    <p>
+      If you play a lot of magic on mtgo, it can be useful to keep track of your results. Fun too. This website is dedicated to helping you keep track of your mtgo league results. It will keep track of your league results (i.e. how many 5-0s you get, etc.), your specific matchup win percentages, and more.
+    </p>
+    <p>
+      See and compare data with other users.
+    </p>
+  </div>
+</div>
+
 
 
 {% endblock %}

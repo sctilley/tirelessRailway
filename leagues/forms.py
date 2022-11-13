@@ -59,13 +59,13 @@ class MatchForm(forms.ModelForm):
     game3 = forms.BooleanField(label='three', required=False, widget=forms.CheckboxInput(
         attrs={'class': 'largerCheckbox', 'title': 'This is game 3. Tick the box if you won that game'}))
     theirname = forms.CharField(
-        label="Their Username", widget=forms.TextInput(attrs={'list': 'usernamelist', 'autocomplete': 'off', 'hx-get': '/checkopponent', 'hx-target': '#namereceptor'}))
+        label="Their Username", widget=forms.TextInput(attrs={'list': 'usernamelist', 'autocomplete': 'off', 'hx-trigger': 'change', 'hx-get': '/checkopponent', 'hx-target': '#reporthere'}))
     theirArchetype = forms.ModelChoiceField(
         queryset=Archetype.objects.all(), label='Archetype', required=False, widget=forms.Select(attrs={'class': 'hidden', 'hx-get': '/listofdecksArche', 'hx-target': 'next select', 'hx-swap': 'innerHTML', 'title': "This is option, if you don't select it it will be automatically assinged to match the deck"}))
     theirDeck = forms.ModelChoiceField(
         queryset=Deck.objects.filter(mtgFormat=1).order_by('name'), label='Their Deck', widget=forms.Select(attrs={'hx-trigger': 'change', 'hx-get': '/listofflavors', 'hx-target': 'next select', 'hx-swap': 'innerHTML'}))
     theirFlavor = forms.ModelChoiceField(
-        required=False, queryset=Flavor.objects.all(), label='Variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavorsformatch', 'hx-target': 'this', 'hx-include': 'previous select'}))
+        required=False, queryset=Flavor.objects.all(), label='Variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavors', 'hx-target': 'this', 'hx-include': 'previous select'}))
     dateCreated = SplitDateTimeField(
         required=False, label='Date Played')
 
@@ -91,12 +91,10 @@ class LeagueForm(forms.ModelForm):
         queryset=Deck.objects.all(), label='My Deck', widget=forms.Select(attrs={}))
     myFlavor = forms.ModelChoiceField(
         queryset=Flavor.objects.all(), label='Varient', widget=forms.Select(attrs={}))
-    tag = forms.ModelMultipleChoiceField(
-        queryset=Tag.objects.all(), label='Tag', required=False, widget=forms.SelectMultiple)
 
     class Meta:
         model = League
-        fields = ('mtgFormat', 'myDeck', 'myFlavor', 'tag')
+        fields = ('mtgFormat', 'myDeck', 'myFlavor')
 
 
 class DeckForm(forms.ModelForm):
