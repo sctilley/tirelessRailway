@@ -19,27 +19,6 @@
 
     </table>
   </div>
-
-
-
-  <!-- <div class="row row-no-wrap">
-    <div class="col">
-      {% for match in getmatches %}
-        <ul class="history">
-          <li>{{match.dateCreated|date:"N d, Y"}} &#x2022; by {{match.user}}: </li>
-        </ul>
-      {% endfor %}
-    </div>
-    <div class="col">
-      {% for match in getmatches %}
-      <ul class="history">
-        <li>{{match.theirDeck.name}}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</li>
-      </ul>
-    {% endfor %}
-    </div> -->
-
-  </div>
-
   {% else %}
   new player
   {% endif %}
