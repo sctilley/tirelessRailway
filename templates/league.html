@@ -9,28 +9,28 @@
 <div class="content row">
   <div class="card">
     <form method="post" enctype="multipart/form-data" id="leagueform">
-    {% csrf_token %}
-      <div class="form-group">
-        <div class="row">
-          <div class="col center">
-            <h3>Start a new league:</h3>
-          </div>
-        </div>
+      {% csrf_token %}
+        <div class="form-group">
           <div class="row">
-            <div class="col center" id="listofformats" hx-include="#id_mtgFormat" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
-              {{l_form.mtgFormat|as_crispy_field}}
-            </div>
-            <div class="col center" id="listofdecks" hx-include="#id_myDeck" hx-trigger="change, load" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
-              {{l_form.myDeck|as_crispy_field}}
-            </div>
-            <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
-              {{l_form.myFlavor|as_crispy_field}}
+            <div class="col center">
+              <h3>Start a new league:</h3>
             </div>
           </div>
-      </div>
-    <button class="btn btn-primary" class="ctn" type="submit" name="leagueform">
-      Submit
-    </button>
+            <div class="row">
+              <div class="col center" id="listofformats" hx-include="#id_mtgFormat" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
+                {{l_form.mtgFormat|as_crispy_field}}
+              </div>
+              <div class="col center" id="listofdecks" hx-include="#id_myDeck" hx-trigger="change, load" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
+                {{l_form.myDeck|as_crispy_field}}
+              </div>
+              <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
+                {{l_form.myFlavor|as_crispy_field}}
+              </div>
+            </div>
+        </div>
+      <button class="btn btn-primary" class="ctn" type="submit" name="leagueform">
+        Submit
+      </button>
     </form>
   </div>
 
@@ -40,89 +40,89 @@
 <div class="content row">
   <div class="card col match-card">
       <form method="POST">
-    <fieldset {% if currentleague.isFinished is True %} disabled {% endif %}>
-      {% csrf_token %} {{ matchformset.management_form }}
-      <table class="matchtable">
-        <div class="row">
-          <h3>
-            Matches for 
-            {% if currentleague.myFlavor.name != "none/stock" %}
-              {{ currentleague.myFlavor }}
+        <fieldset {% if currentleague.isFinished is True %} disabled {% endif %}>
+          {% csrf_token %} {{ matchformset.management_form }}
+          <table class="matchtable">
+            <div class="row">
+              <h3>
+                Matches for 
+                {% if currentleague.myFlavor.name != "none/stock" %}
+                  {{ currentleague.myFlavor }}
+                {% endif %}
+                {{ currentleague.myDeck }} league 
+              </h3>
+              <h3>
+                {{ currentleague.dateCreated }}
+              </h3>
+            </div>
+            <div class="line"></div>
+            {% for form in matchformset %} {% if forloop.first %}
+            <thead>
+              <tr>
+                <th>#</th>
+                {% for field in form.visible_fields %}
+                <th class="">
+                  {% if field.name == "game1" %}
+                  <span title="These are games 1, 2, and 3. Tick the box if you won that game">1</span>
+                  {% elif field.name == "game2" %}
+                  <span title="These are games 1, 2, and 3. Tick the box if you won that game">2</span>
+                  {% elif field.name == "game3" %}
+                  <span title="These are games 1, 2, and 3. Tick the box if you won that game">3</span>
+                  {% else %}
+                    {{ field.label }}
+                  {% endif %}
+                </th>
+                {% endfor %}
+              </tr>
+            </thead>
             {% endif %}
-            {{ currentleague.myDeck }} league 
-          </h3>
-          <h3>
-            {{ currentleague.dateCreated }}
-          </h3>
-        </div>
-        <div class="line"></div>
-        {% for form in matchformset %} {% if forloop.first %}
-        <thead>
-          <tr>
-            <th>#</th>
-            {% for field in form.visible_fields %}
-            <th class="">
-              {% if field.name == "game1" %}
-              <span title="These are games 1, 2, and 3. Tick the box if you won that game">1</span>
-              {% elif field.name == "game2" %}
-              <span title="These are games 1, 2, and 3. Tick the box if you won that game">2</span>
-              {% elif field.name == "game3" %}
-              <span title="These are games 1, 2, and 3. Tick the box if you won that game">3</span>
-              {% else %}
-                {{ field.label }}
-              {% endif %}
-            </th>
-            {% endfor %}
-          </tr>
-        </thead>
-        {% endif %}
-        <tbody>
-          <tr class="matchform">
-            <td>{{ forloop.counter }}
-              {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-              {% endfor %}
-            </td>
-            {% for field in form.visible_fields %}
-            <td class="">
-              {% if field.name == "dateCreated" %}
-                <button type='button'>date</button>
-                {{ field.errors.as_ul }}
-                {{ field }}
-              {% elif field.name == "theirArchetype" %} 
-                <button type='button'>Archetype</button>
-                {{ field.errors.as_ul }}
-                {{ field }}
-              {% elif field.name == "theirname" %}
-                {{ field.errors.as_ul }}
-                {{ field }}
-                <datalist id="usernamelist">
-                  {% for match in usernamelist %}
-                    <option value="{{match.theirname}}"></option>
+            <tbody>
+              <tr class="matchform">
+                <td>{{ forloop.counter }}
+                  {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
                   {% endfor %}
-                </datalist>
-              {% else %}
-                {{ field.errors.as_ul }} 
-                {{ field }} 
-              {% endif %}
-              {{field.help_text}}
-            </td>
+                </td>
+                {% for field in form.visible_fields %}
+                <td class="">
+                  {% if field.name == "dateCreated" %}
+                    <button type='button'>date</button>
+                    {{ field.errors.as_ul }}
+                    {{ field }}
+                  {% elif field.name == "theirArchetype" %} 
+                    <button type='button'>Archetype</button>
+                    {{ field.errors.as_ul }}
+                    {{ field }}
+                  {% elif field.name == "theirname" %}
+                    {{ field.errors.as_ul }}
+                    {{ field }}
+                    <datalist id="usernamelist">
+                      {% for match in usernamelist %}
+                        <option value="{{match.theirname}}"></option>
+                      {% endfor %}
+                    </datalist>
+                  {% else %}
+                    {{ field.errors.as_ul }} 
+                    {{ field }} 
+                  {% endif %}
+                  {{field.help_text}}
+                </td>
+                {% endfor %}
+              </tr>
+            </tbody>
             {% endfor %}
-          </tr>
-        </tbody>
-        {% endfor %}
-      </table>
-      <div class="">
-        <div class="">
-          <button type="submit" class="ctn" name="matchformset">Save</button>
-          <button type="submit" class="ctn" name="delete">Drop</button>
-          <button type="submit" class="ctn" name="delete">Delete</button>
-        </div>
-      </div>
-    </fieldset>
-  </form>
-
+          </table>
+          <div class="">
+            <div class="">
+              <button type="submit" class="ctn" name="matchformset">Save</button>
+              <button type="submit" class="ctn" name="delete">Drop</button>
+              <button type="submit" class="ctn" name="delete">Delete</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
   </div>
+</div>
   <div class="card col reportbox" id="reportbox">
     <div class="header">
       <h3>Opponent Information Box</h3>
