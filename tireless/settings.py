@@ -12,10 +12,7 @@ DEBUG = True
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 ALLOWED_HOSTS = [
-    "tirelesstracker.herokuapp.com",
-    '127.0.0.1',
-    'lifeisaresource.com',
-    'www.lifeisaresource.com',
+    '*'
 ]
 
 
