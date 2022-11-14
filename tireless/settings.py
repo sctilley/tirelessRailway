@@ -40,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'livereload.middleware.LiveReloadScript',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'tireless.urls'
@@ -98,7 +99,7 @@ USE_I18N = True
 
 USE_TZ = False
 
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "leagues/static")]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 
@@ -122,12 +123,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
 
-# user = request.user
-# if user.last_login == None:
-#     LOGIN_REDIRECT_URL = 'profile'
-# else:
-#     LOGIN_REDIRECT_URL = 'home'
-
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 
@@ -141,10 +136,10 @@ EMAIL_HOST_USER = 'lifeisaresource@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 
-if os.getcwd() == '/app':
-    DEBUG = False
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
+# if os.getcwd() == '/app':
+#     DEBUG = False
+#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#     SECURE_SSL_REDIRECT = True
 
 import dj_database_url
 
