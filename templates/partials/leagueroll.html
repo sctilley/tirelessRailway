@@ -28,7 +28,7 @@
         <ol>
           {% for match in league.matches.all|dictsort:"dateCreated" %}
             <li>
-              {{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}
+              {{match.theirname}} on {{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %} {% if match.didjawin == 1%} (W) {% else %} (L) {% endif %}
             </li>
           {% endfor %}
         </ol>
