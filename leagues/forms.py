@@ -91,10 +91,11 @@ class LeagueForm(forms.ModelForm):
         queryset=Deck.objects.all(), label='My Deck', widget=forms.Select(attrs={}))
     myFlavor = forms.ModelChoiceField(
         queryset=Flavor.objects.all(), label='Varient', widget=forms.Select(attrs={}))
+    mtgoUserName = forms.CharField(label='Your MTGO user name', widget=forms.TextInput())
 
     class Meta:
         model = League
-        fields = ('mtgFormat', 'myDeck', 'myFlavor')
+        fields = ('mtgFormat', 'myDeck', 'myFlavor', 'mtgoUserName')
 
 
 class DeckForm(forms.ModelForm):

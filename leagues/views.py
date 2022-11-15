@@ -25,9 +25,7 @@ def home(request):
 
 
 def league(request):
-
     user = request.user
-
     try:
         currentleague = League.objects.filter(user=user).latest('dateCreated')
     except:
@@ -39,6 +37,7 @@ def league(request):
         'mtgFormat': user.profile.recentFormat,
         'myDeck': user.profile.recentDeck,
         'myFlavor': user.profile.recentFlavor,
+        'mtgoUserName': user.profile.mtgoUserName,
         'tag': user.profile.recentTag,
     }
 
@@ -61,7 +60,7 @@ def league(request):
             if l_form.is_valid():
                 league = l_form.save(commit=False)
                 league.user = request.user
-                league.mtgoUserName = user.profile.mtgoUserName
+                user.profile.mtgoUserName = league.mtgoUserName
                 user.profile.recentFormat = league.mtgFormat
                 user.profile.recentDeck = league.myDeck
                 user.profile.recentFlavor = league.myFlavor
@@ -116,6 +115,18 @@ def league(request):
 
     return render(request, 'league.html', context)
 
+def leagueroll(request):
+    print(request.GET)
+    lformat = request.GET['formatselect']
+    print("lformat: ", lformat)
+    user = request.user
+    leagueroll = League.objects.filter(user=user, mtgFormat=lformat, isFinished=True).annotate(wins=Count(
+        "matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
+
+    context = {
+        'leagueroll': leagueroll,
+    }
+    return render(request, 'partials/leagueroll.html', context)
 
 def data(request):
 
@@ -179,8 +190,11 @@ def listofflavors(request):
 
     listofflavors = Flavor.objects.filter(deck=ldeck).order_by('-isdefault', 'name')
 
-    currentdeck = user.profile.recentDeck
-    deck_match = currentdeck.id == int(ldeck)
+    try:
+        currentdeck = user.profile.recentDeck
+        deck_match = currentdeck.id == int(ldeck)
+    except:
+        deck_match = False
 
     if deck_match:
         currentflavor = user.profile.recentFlavor

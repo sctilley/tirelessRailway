@@ -16,8 +16,8 @@
               <h3>Start a new league:</h3>
             </div>
           </div>
-            <div class="row">
-              <div class="col center" id="listofformats" hx-include="#id_mtgFormat" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
+            <div class="row" style="margin: 20px 0px;">
+              <div class="col center" id="listofformats" hx-trigger="change, load" hx-include="#id_mtgFormat" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
                 {{l_form.mtgFormat|as_crispy_field}}
               </div>
               <div class="col center" id="listofdecks" hx-include="#id_myDeck" hx-trigger="change, load" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
@@ -25,6 +25,9 @@
               </div>
               <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
                 {{l_form.myFlavor|as_crispy_field}}
+              </div>
+              <div class="col center" id="mtgoUserName" >
+                {{l_form.mtgoUserName|as_crispy_field}}
               </div>
             </div>
         </div>
@@ -139,6 +142,24 @@
   <p>This website is dedicated to keeping track of mtgo league results. Every League on mtgo has five matches. You can add them here as you play them (the save button will save an incomplete league), or you can add them all at once.</p>
   <p>The default date and time will be set to now (on save), but if you played these matches a while ago you can manually change the date by clicking on the button.</p>
 </div>
+
+<div class="content row">
+  <h1 class="col">Your Past Leagues:</h1>
+</div>
+
+<div class="content">
+  <div class="card">
+    <select name="formatselect" id="fselect" hx-trigger="change, load" hx-get="{% url 'leagueroll' %}" hx-target="#leaguerolldiv">
+      <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
+      {% for mtgformats in mtgformats %}
+      <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  {% include 'partials/leagueroll.html' %}   
+</div>
+
 
 
 
