@@ -27,19 +27,53 @@
       </div>
       <div class="leaguecontent">
         <ol>
-          {% for match in league.matches.all|dictsort:"dateCreated" %}
-            <li>
-              {{match.theirname}} on {{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %} {% if match.didjawin == 1%} (W) {% else %} (L) {% endif %}
-            </li>
-          {% endfor %}
+           {% for match in league.matches.all|dictsort:"dateCreated" %}
+              <div class="table-responsive-sm">
+                 <table class="hovertable">
+                    <tr class="littlepoint">
+                       <td class="ccen" style="width: 5%">{{ forloop.counter }}.</td>
+                       <td style="width: 75%">
+                          <div class="center">{{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</div>
+                          <div class="smalltext center"><em>{{ match.theirname }}</em></div>
+                       </td>
+                       <td class="ccen">
+                          {% if match.didjawin == 1 %}
+                             Win
+                          {% else %}
+                             Loss 
+                          {% endif %}
+                       </td>
+                       <td class="ccen text-nowrap">
+                          {% if match.game1 == 1 %}
+                             {% if match.game2 == 1 %}
+                                2-0
+                             {% else %}
+                                {% if match.game3 == 1 %}
+                                   2-1
+                                {% else %}
+                                   1-2
+                                {% endif %}
+                             {% endif %}
+                          {% else %}
+                             {% if match.game2 == 1 %}
+                                {% if match.game3 == 1 %}
+                                   2-1
+                                {% else %}
+                                   1-2
+                                {% endif %}
+                             {% else %}
+                                0-2
+                             {% endif %}
+                          {% endif %}
+                       </td>
+                    </tr>
+                 </table>
+              </div>
+           {% endfor %}  
         </ol>
-
-      </div>
-      <div class="content row">
-
-      </div>
+     </div>
     </div>
-  {% endfor %}
+    {% endfor %}
   </div>
   <div class="card reportcard">
     <div class="">
@@ -51,7 +85,7 @@
     <div class="line">
 
     </div>
-    <table>
+    <table class="hovertable">
       <thead>
         <tr>
           <th>result</th>
@@ -96,7 +130,7 @@
         </tr>
       </tbody>
     </table>
-        <table class="table table-striped">
+    <table class="hovertable">
       <thead>
         <tr>
           <th class="text-center" colspan="2">Matches</th>
@@ -145,7 +179,6 @@
         </tbody>
     </table>
   </div>
-
 </div>
 
 {% else %}

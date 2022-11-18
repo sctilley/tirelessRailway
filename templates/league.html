@@ -79,14 +79,14 @@
             </thead>
             {% endif %}
             <tbody>
-              <tr class="matchform">
+              <tr>
                 <td>{{ forloop.counter }}
                   {% for hidden in form.hidden_fields %}
                     {{ hidden }}
                   {% endfor %}
                 </td>
                 {% for field in form.visible_fields %}
-                <td class="">
+                <td>
                   {% if field.name == "dateCreated" %}
                     <button type='button'>date</button>
                     {{ field.errors.as_ul }}

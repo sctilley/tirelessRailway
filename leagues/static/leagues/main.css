@@ -329,12 +329,6 @@ h2 {
     max-width: 500px;
     flex: 1;
 }
-
-
-
-table {
-    margin: 20px;
-}
   
 
 .content {
@@ -365,12 +359,13 @@ table {
 }
 
 .leaguecontent > ol {
-    padding-left: 40px;
 }
 
 .match-card {
     max-width: 740px;
 }
+
+
 
 fieldset {
     border-style: none;
@@ -386,6 +381,21 @@ table.reporttable {
 table.matchtable {
     border-collapse: separate;
     border-spacing: 8px;
+}
+
+table.hovertable {
+    border-collapse: collapse;
+}
+
+table.hovertable tr > td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+
+table.hovertable tr:hover {
+    background-color: var(--primary);
 }
 
 ul.history {
