@@ -149,12 +149,22 @@
 
 <div class="content">
   <div class="card">
-    <select name="formatselect" id="fselect" hx-trigger="change, load" hx-get="{% url 'leagueroll' %}" hx-target="#leaguerolldiv">
+    <select name="formatselect" id="fselect" hx-trigger="load" hx-get="{% url 'leagueroll' %}" hx-include="#dselect, #vselect" hx-target="#leaguerolldiv">
+      <option value="0">All Formats</option>
       <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
       {% for mtgformats in mtgformats %}
       <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
       {% endfor %}
     </select>
+    <select name="deckselect" id="dselect">
+      <option value="0">All Decks</option>
+      <option value="{{user.profile.recentDeck.id}}" selected>{{user.profile.recentDeck.name}}</option>
+    </select>
+    <select name="varientselect" id="vselect">
+      <option value="0">All Varients</option>
+      <option value="{{user.profile.recentFlavor.id}}" selected>{{user.profile.recentFlavor.name}}</option>
+    </select>
+    <button>Filter</button>
   </div>
 
   {% include 'partials/leagueroll.html' %}   

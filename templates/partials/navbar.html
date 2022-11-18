@@ -2,14 +2,26 @@
     <div class="nav-container">
         <h1>TRACKER</h1>
         <div class="menu">
-            <a href="{% url 'home' %}" class="is-active">Home</a>
-            <a href="{% url 'league' %}">Leagues</a>
-            <a href="{% url 'data' %}">Data</a>
-            <a href="###">About</a>
+            {% if user.is_staff %}
+            <div class="dropdown">
+                <button class="dropbtn nav-link">Staff
+                  <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                  <a href="#">Link 1</a>
+                  <a href="#">Link 2</a>
+                  <a href="#">Link 3</a>
+                </div>
+              </div>
+            {% endif %}
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
+            <a href="{% url 'league' %}" class="nav-link">Leagues</a>
+            <a href="{% url 'data' %}" class="nav-link">Data</a>
+            <a href="###" class="nav-link">About</a>
             {% if user.is_authenticated %}
-            <a href="{% url 'profile' %}">Profile</a>
+            <a href="{% url 'profile' %}" class="nav-link">Profile</a>
             {% else %}
-            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'login' %}" class="nav-link">Login</a>
             {% endif %}
         </div>
         

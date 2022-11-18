@@ -24,6 +24,7 @@ def home(request):
     return render(request, 'home.html', context)
 
 
+@login_required(login_url='login')
 def league(request):
     user = request.user
     try:
@@ -118,13 +119,121 @@ def league(request):
 def leagueroll(request):
     print(request.GET)
     lformat = request.GET['formatselect']
-    print("lformat: ", lformat)
+
+    if 'formatselect' in request.GET:
+        fselect = int(request.GET['formatselect'])
+
+    if 'deckselect' in request.GET:
+        dselect = int(request.GET['deckselect'])
+
+    if 'varientselect' in request.GET:
+        vselect = int(request.GET['varientselect'])
+    
+
     user = request.user
-    leagueroll = League.objects.filter(user=user, mtgFormat=lformat, isFinished=True).annotate(wins=Count(
+
+    fiveohs = 0
+    fourones = 0
+    threetwos = 0
+    twothrees = 0
+    onefours = 0
+    ohfives = 0
+    fiveohsper = 0
+    fouronesper = 0
+    threetwosper = 0
+    twothreesper = 0
+    onefoursper = 0
+    ohfivesper = 0
+
+
+    if user.profile.recentDeck:
+        targetleagues = League.objects.filter(
+            user=user, isFinished=True, 
+            mtgFormat=fselect, 
+            myDeck=dselect, 
+            myFlavor=vselect
+        )
+    else:
+        targetleagues = None
+
+    for league in targetleagues:
+        if league.isFinished == True:
+            wins = league.matches.filter(didjawin=1).count()
+            if wins == 5:
+                fiveohs += 1
+            elif wins == 4:
+                fourones += 1
+            elif wins == 3:
+                threetwos += 1
+            elif wins == 2:
+                twothrees += 1
+            elif wins == 1:
+                onefours += 1
+            else:
+                ohfives += 1
+
+    closedLeaguesNum = targetleagues.count()
+    if closedLeaguesNum > 0:
+        fiveohsper = (fiveohs / closedLeaguesNum)*100
+        fouronesper = (fourones / closedLeaguesNum)*100
+        threetwosper = (threetwos / closedLeaguesNum)*100
+        twothreesper = (twothrees / closedLeaguesNum)*100
+        onefoursper = (onefours / closedLeaguesNum)*100
+        ohfivesper = (ohfives / closedLeaguesNum)*100
+    else:
+        fiveohsper = 0
+        fouronesper = 0
+        threetwosper = 0
+        twothreesper = 0
+        onefoursper = 0
+        ohfivesper = 0
+    
+    targetmatches = Match.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect, myFlavor=vselect)
+
+    matchwinpercentage = 0
+    matchcount = 0
+    matcheswon = 0
+    matcheslost = 0
+    gamewinpercentage = 0
+    gamesplayed = 0
+    gameswon = 0
+    gameslost = 0
+
+    game1wins = targetmatches.filter(game1=1, myDeck=dselect).count()
+    game1losses = targetmatches.filter(game1=0, myDeck=dselect).count()
+    game2wins = targetmatches.filter(game2=1, myDeck=dselect).count()
+    game2losses = targetmatches.filter(game2=0, myDeck=dselect).count()
+    game3wins = targetmatches.filter(game3=1, myDeck=dselect).count()
+    game3losses = targetmatches.filter(game3=0, myDeck=dselect).count()
+
+    
+    leagueroll = League.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect, myFlavor=vselect, isFinished=True).annotate(wins=Count(
         "matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
 
     context = {
+        'matchcount': targetmatches.count(),
+        'matchwinpercentage': matchwinpercentage,
+        'matcheswon': targetmatches.filter(didjawin=1).count(),
+        'matcheslost': targetmatches.filter(didjawin=0).count(),
+        'gamesplayed': game1wins + game1losses + game2wins + game2losses + game3wins + game3losses,
+        'gameswon': game1wins + game2wins + game3wins,
+        'gameslost': game1losses + game2losses + game3losses,
+        'gamewinpercentage': gamewinpercentage,
+
         'leagueroll': leagueroll,
+        'targetleagues': targetleagues,
+        "fiveohs": fiveohs,
+        "fourones": fourones,
+        "threetwos": threetwos,
+        "twothrees": twothrees,
+        "onefours": onefours,
+        "ohfives": ohfives,
+        'fiveohsper': fiveohsper,
+        'fouronesper': fouronesper,
+        'threetwosper': threetwosper,
+        'twothreesper': twothreesper,
+        'onefoursper': onefoursper,
+        'ohfivesper': ohfivesper,
     }
     return render(request, 'partials/leagueroll.html', context)
 
