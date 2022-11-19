@@ -1,186 +1,175 @@
-<div id="leaguerolldiv">
-</div>
 {% if leagueroll %}
-<div class="rowg">
-  <div class="colbig">
-    {% for league in leagueroll %}
-    <div class="card leaguecard">
-      <div class="content row">
-        <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}:</b>
-        <p>
-          {% if league.wins == 5 %}
-          5-0
-          {% elif league.wins == 4 %}
-              4-1
-          {% elif league.wins == 3 %}
-              3-2
-          {% elif league.wins == 2 %}
-              2-3
-          {% elif league.wins == 1 %}
-              1-4
-          {% elif league.wins == 0 %}
-              0-5
-          {% else %}
-              {{league.wins}}
-          {% endif %}
-        </p>
+  <div class="rowg">
+    <div class="colbig">
+      {% for league in leagueroll %}
+      <div class="card leaguecard">
+        <div class="row">
+          <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}:</b>
+          <p>{{league.dateCreated}}</p>
+          <p class="score">
+            {% if league.wins == 5 %}
+            5-0
+            {% elif league.wins == 4 %}
+                4-1
+            {% elif league.wins == 3 %}
+                3-2
+            {% elif league.wins == 2 %}
+                2-3
+            {% elif league.wins == 1 %}
+                1-4
+            {% elif league.wins == 0 %}
+                0-5
+            {% else %}
+                {{league.wins}}
+            {% endif %}
+          </p>
+        </div>
+        <div class="line"></div>
+        <div class="leaguecontent"> 
+          <table class="hovertable">
+          {% for match in league.matches.all|dictsort:"dateCreated" %}
+            <tr>
+              <td>{{ forloop.counter }}.</td>
+              <td>
+                <div>{{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</div>
+                <div style="text-indent: 20px;"><em>{{ match.theirname }}</em></div>
+              </td>
+              <td>
+                {% if match.didjawin == 1 %}
+                    Win
+                {% else %}
+                    Loss 
+                {% endif %}
+              </td>
+              <td style="min-width: 40px">
+                {% if match.game1 == 1 %}
+                    {% if match.game2 == 1 %}
+                      2-0
+                    {% else %}
+                      {% if match.game3 == 1 %}
+                          2-1
+                      {% else %}
+                          1-2
+                      {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if match.game2 == 1 %}
+                      {% if match.game3 == 1 %}
+                          2-1
+                      {% else %}
+                          1-2
+                      {% endif %}
+                    {% else %}
+                      0-2
+                    {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}  
+          </table>
+          <div>
+            <button class="ctn">edit</button>
+          </div>
       </div>
-      <div class="leaguecontent">
-        <ol>
-           {% for match in league.matches.all|dictsort:"dateCreated" %}
-              <div class="table-responsive-sm">
-                 <table class="hovertable">
-                    <tr class="littlepoint">
-                       <td class="ccen" style="width: 5%">{{ forloop.counter }}.</td>
-                       <td style="width: 75%">
-                          <div class="center">{{ match.theirDeck }}{% if match.theirFlavor.name != "none/stock" %} -- {{match.theirFlavor}}{% endif %}</div>
-                          <div class="smalltext center"><em>{{ match.theirname }}</em></div>
-                       </td>
-                       <td class="ccen">
-                          {% if match.didjawin == 1 %}
-                             Win
-                          {% else %}
-                             Loss 
-                          {% endif %}
-                       </td>
-                       <td class="ccen text-nowrap">
-                          {% if match.game1 == 1 %}
-                             {% if match.game2 == 1 %}
-                                2-0
-                             {% else %}
-                                {% if match.game3 == 1 %}
-                                   2-1
-                                {% else %}
-                                   1-2
-                                {% endif %}
-                             {% endif %}
-                          {% else %}
-                             {% if match.game2 == 1 %}
-                                {% if match.game3 == 1 %}
-                                   2-1
-                                {% else %}
-                                   1-2
-                                {% endif %}
-                             {% else %}
-                                0-2
-                             {% endif %}
-                          {% endif %}
-                       </td>
-                    </tr>
-                 </table>
-              </div>
-           {% endfor %}  
-        </ol>
-     </div>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
-  <div class="card reportcard">
-    <div class="">
-      League Stats for:
-    </div>
-    <div>
-      Deckname
-    </div>
-    <div class="line">
 
-    </div>
-    <table class="hovertable">
-      <thead>
-        <tr>
-          <th>result</th>
-          <th>percent</th>
-          <th>number</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">5-0</th>
-          <td>{{ fiveohsper|floatformat:0 }}%</td>
-          <td>{{ fiveohs }}</td>
-        </tr>
-        <tr>
-          <th scope="row">4-1</th>
-          <td>{{ fouronesper|floatformat:0 }}%</td>
-          <td>{{ fourones }}</td>
-        </tr>
-        <tr>
-          <th scope="row">3-2</th>
-          <td>{{ threetwosper|floatformat:0 }}%</td>
-          <td>{{ threetwos }}</td>
-        </tr>
-        <tr>
-          <th scope="row">2-3</th>
-          <td>{{ twothreesper|floatformat:0 }}%</td>
-          <td>{{ twothrees }}</td>
-        </tr>
-        <tr>
-          <th scope="row">1-4</th>
-          <td>{{ onefoursper|floatformat:0 }}%</td>
-          <td>{{ onefours }}</td>
-        </tr>  
-        <tr>
-          <th scope="row">0-5</th>
-          <td>{{ ohfivesper|floatformat:0 }}%</td>
-          <td>{{ ohfives }}</td>
-        </tr>  
-        <tr>
-          <th scope="row" colspan="2"><small>Completed Leauges:</small></th>
-          <th>{{targetleagues.count}}</th>
-        </tr>
-      </tbody>
-    </table>
-    <table class="hovertable">
-      <thead>
-        <tr>
-          <th class="text-center" colspan="2">Matches</th>
-        </tr>
-      </thead>
-      <tr>
-      <th scope="row" colspan="1">Match Win %</th>
-      <th>{{matchwinpercentage|floatformat:0}}%</th>
-      </tr>
-      <tr>
-        <th scope="row">Played</th>
-        <td>{{matchcount}}</td>
-      </tr>
-      <tr>
-        <th scope="row">Won</th>
-        <td>{{matcheswon}}</td>
-      </tr>  
-      <tr>
-        <th scope="row">Lost</th>
-        <td>{{matcheslost}}</td>
-      </tr>  
 
-      <thead>
-        <tr>
-          <th class="text-center" colspan="2">Games</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row" colspan="1">Game Win %</th>
-          <th>{{gamewinpercentage|floatformat:0}}%</th>
-        </tr>
+    <!-- right card  -->
+    <div class="card reportcard">
+      <div style="text-align: center;">
+        League Stats for: 
+      </div>
+      <h3 style="text-align: center;">{{filterdeck}}</h3>
+      <div class="line">
+
+      </div>
+      <table class="hovertable">
+        <thead>
           <tr>
-            <th scope="row">Played</th>
-            <td>{{gamesplayed}}</td>
-
+            <th>result</th>
+            <th>percent</th>
+            <th>number</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>5-0</td>
+            <td>{{ fiveohsper|floatformat:0 }}%</td>
+            <td>{{ fiveohs }}</td>
           </tr>
           <tr>
-            <th scope="row">Won</th>
-            <td>{{gameswon}}</td>
+            <td>4-1</td>
+            <td>{{ fouronesper|floatformat:0 }}%</td>
+            <td>{{ fourones }}</td>
           </tr>
           <tr>
-            <th scope="row">Lost</th>
-            <td>{{gameslost}}</td>
+            <td>3-2</td>
+            <td>{{ threetwosper|floatformat:0 }}%</td>
+            <td>{{ threetwos }}</td>
           </tr>
+          <tr>
+            <td>2-3</td>
+            <td>{{ twothreesper|floatformat:0 }}%</td>
+            <td>{{ twothrees }}</td>
+          </tr>
+          <tr>
+            <td>1-4</td>
+            <td>{{ onefoursper|floatformat:0 }}%</td>
+            <td>{{ onefours }}</td>
+          </tr>  
+          <tr>
+            <td>0-5</td>
+            <td>{{ ohfivesper|floatformat:0 }}%</td>
+            <td>{{ ohfives }}</td>
+          </tr>  
         </tbody>
-    </table>
-  </div>
-</div>
 
+      </table>
+      <div>
+        <small>Completed Leagues: {{targetleagues.count}}</small>
+      </div>
+      <div class="line"></div>
+      <table class="hovertable">
+        <tr>
+        <th>Match Win %</th>
+        <th>{{matchwinpercentage|floatformat:0}}%</th>
+        </tr>
+        <tr>
+          <td>Played</td>
+          <td>{{matchcount}}</td>
+        </tr>
+        <tr>
+          <td>Won</td>
+          <td>{{matcheswon}}</td>
+        </tr>  
+        <tr>
+          <td>Lost</td>
+          <td>{{matcheslost}}</td>
+        </tr>  
+        <tbody>
+          <tr>
+            <th>Game Win %</th>
+            <th>{{gamewinpercentage|floatformat:0}}%</th>
+          </tr>
+            <tr>
+              <td>Played</td>
+              <td>{{gamesplayed}}</td>
+
+            </tr>
+            <tr>
+              <td>Won</td>
+              <td>{{gameswon}}</td>
+            </tr>
+            <tr>
+              <td>Lost</td>
+              <td>{{gameslost}}</td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
 {% else %}
   <h3>No Leagues Found</h3>
 {% endif %}

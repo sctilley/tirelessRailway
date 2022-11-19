@@ -358,7 +358,13 @@ h2 {
     text-align: left;
 }
 
-.leaguecontent > ol {
+.leaguecontent {
+    display: flex;
+    gap: 10px;
+}
+
+.leaguecontent > table {
+    flex: auto;
 }
 
 .match-card {
@@ -392,6 +398,10 @@ table.hovertable tr > td {
     text-align: left;
     border-bottom: 1px solid #ddd;
   }
+
+table.hovertable th {
+    padding: 8px;
+}
   
 
 table.hovertable tr:hover {
@@ -409,4 +419,10 @@ ul.history {
     border-color: var(--secondary);
     max-width: 800px;
     text-align: left;
+    height: fit-content;
+}
+
+p.score {
+    font-weight: 900;
+    font-size: larger;
 }

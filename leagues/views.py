@@ -206,11 +206,24 @@ def leagueroll(request):
     game3wins = targetmatches.filter(game3=1, myDeck=dselect).count()
     game3losses = targetmatches.filter(game3=0, myDeck=dselect).count()
 
+    if targetmatches.count() > 0:
+        matchwinpercentage = ((targetmatches.filter(didjawin=1).count(
+        )/targetmatches.count()))*100
+    else:
+        matchwinpercentage = 0
+
+    if targetmatches.count() > 0:
+        gamewinpercentage = ((targetmatches.filter(game1=1).count() + targetmatches.filter(game2=1).count() +
+                              targetmatches.filter(game3=1).count())/(game1wins + game1losses + game2wins + game2losses + game3wins + game3losses))*100
+    else:
+        gamewinpercentage = 0
+
     
     leagueroll = League.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect, myFlavor=vselect, isFinished=True).annotate(wins=Count(
         "matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
 
     context = {
+        'filterdeck': Deck.objects.get(pk=dselect),
         'matchcount': targetmatches.count(),
         'matchwinpercentage': matchwinpercentage,
         'matcheswon': targetmatches.filter(didjawin=1).count(),
