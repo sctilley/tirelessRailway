@@ -77,6 +77,7 @@ def league(request):
                 return redirect('league')
 
         if "matchformset" in request.POST:
+            print("matchformset trigger~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
             formset = Matchesinlineformset(
                 request.POST, instance=currentleague)
             if formset.is_valid():
@@ -104,11 +105,26 @@ def league(request):
                     if currentleague.matches.count() >= 5:
                         currentleague.isFinished = 1
                         currentleague.save()
+                    
 
                 return redirect('league')
             else:
                 print("errors be here")
                 print(formset.errors)
+
+        if "drop" in request.POST:
+            print("Dropform ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            currentleague.isFinished = 1
+            currentleague.save()
+
+            return redirect('league')
+
+        if "delete" in request.POST:
+            print("Delete form!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            currentleague.delete()
+            return redirect('league')
+
+
 
     context = {
         'usersdecks': usersdecks,

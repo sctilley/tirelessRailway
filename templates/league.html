@@ -1,4 +1,4 @@
-{% extends 'main.html' %} {% block content %}{% load crispy_forms_tags %}
+{% extends 'main.html' %} {% block content %}{% load crispy_forms_tags %}{% load static%}
 
 
 <div class="content row">
@@ -117,8 +117,18 @@
           <div class="">
             <div class="">
               <button type="submit" class="ctn" name="matchformset">Save</button>
-              <button type="submit" class="ctn" name="delete">Drop</button>
-              <button type="submit" class="ctn" name="delete">Delete</button>
+              <button type="button" class="ctn" name="drop" onclick="openDropPop()">Drop</button>
+              <button type="button" class="ctn" name="delete" onclick="openDeletePop()">Delete</button>
+            </div>
+            <div class="popup" id="droppopup">
+              <h2>Are you sure you want to drop?</h2>
+              <p>Dropping will close the league, the remaining matches will count as loses for scoring this league, but they won't otherwise affect your match win rate.</p>
+              <button type="submit" name="drop" value="1">Drop</button>
+            </div>
+            <div class="popup" id="deletepopup">
+              <h2>Are you sure you want to delete this league?</h2>
+              <p>The league and all of its matches will be deleted from the database.</p>
+              <button type="submit" name="delete" value="1">Delete</button>
             </div>
           </div>
         </fieldset>
@@ -172,7 +182,7 @@
 <div class="content" id="leaguerolldiv">
 </div>
 
-
+<script src="{% static 'leagues/popup.js' %}"></script>
 
 
 {% endblock %}
