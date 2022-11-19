@@ -30,7 +30,7 @@ body {
   .ctn {
     padding: 8px 15px;
     background: var(--primary);
-    border-radius: 30px;
+    border-radius: 20px;
     font-weight: bold;
     color: whitesmoke;
     border-style: none;

@@ -68,11 +68,17 @@
           {% endfor %}  
           </table>
           <div>
-            <button class="ctn">edit</button>
+            <button class="ctn" name="edit" onclick="openLeaguePop()">edit</button>
           </div>
-      </div>
+        </div>
       </div>
       {% endfor %}
+      <div class="popup leaguepop" id="leaguepopup">
+        <h2>Edit League</h2>
+        <div class="line"></div>
+        <p>edit here</p>
+        <button type="submit" name="drop" value="1">Drop</button>
+      </div>
     </div>
 
 
