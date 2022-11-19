@@ -396,12 +396,22 @@ table.hovertable {
 
 table.hovertable tr > td {
     padding: 8px 4px;
-    text-align: center;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  table.chovertable tr > td {
+    padding: 8px 4px;
+    text-align: left;
     border-bottom: 1px solid #ddd;
   }
 
 table.hovertable th {
     padding: 8px 4px;
+}
+
+table.hovertable tbody.center > tr > td {
+    text-align: center;
 }
   
 
