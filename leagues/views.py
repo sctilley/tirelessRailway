@@ -127,7 +127,10 @@ def leagueroll(request):
         dselect = int(request.GET['deckselect'])
 
     if 'varientselect' in request.GET:
-        vselect = int(request.GET['varientselect'])
+        try:
+            vselect = int(request.GET['varientselect'])
+        except:
+            vselect = 0
     
 
     user = request.user
@@ -145,16 +148,29 @@ def leagueroll(request):
     onefoursper = 0
     ohfivesper = 0
 
-
-    if user.profile.recentDeck:
+    if dselect == 0:
         targetleagues = League.objects.filter(
-            user=user, isFinished=True, 
+            user=user, 
+            isFinished=True, 
+            mtgFormat=fselect, 
+        )
+
+    elif vselect == 0:
+        targetleagues = League.objects.filter(
+            user=user, 
+            isFinished=True, 
+            mtgFormat=fselect, 
+            myDeck=dselect, 
+        )
+    else:
+        targetleagues = League.objects.filter(
+            user=user, 
+            isFinished=True, 
             mtgFormat=fselect, 
             myDeck=dselect, 
             myFlavor=vselect
         )
-    else:
-        targetleagues = None
+
 
     for league in targetleagues:
         if league.isFinished == True:
@@ -187,8 +203,13 @@ def leagueroll(request):
         twothreesper = 0
         onefoursper = 0
         ohfivesper = 0
-    
-    targetmatches = Match.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect, myFlavor=vselect)
+
+    if dselect == 0:
+        targetmatches = Match.objects.filter(user=user, mtgFormat=fselect)
+    elif vselect == 0:
+        targetmatches = Match.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect)
+    else:
+        targetmatches = Match.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect, myFlavor=vselect)
 
     matchwinpercentage = 0
     matchcount = 0
@@ -199,12 +220,12 @@ def leagueroll(request):
     gameswon = 0
     gameslost = 0
 
-    game1wins = targetmatches.filter(game1=1, myDeck=dselect).count()
-    game1losses = targetmatches.filter(game1=0, myDeck=dselect).count()
-    game2wins = targetmatches.filter(game2=1, myDeck=dselect).count()
-    game2losses = targetmatches.filter(game2=0, myDeck=dselect).count()
-    game3wins = targetmatches.filter(game3=1, myDeck=dselect).count()
-    game3losses = targetmatches.filter(game3=0, myDeck=dselect).count()
+    game1wins = targetmatches.filter(game1=1).count()
+    game1losses = targetmatches.filter(game1=0).count()
+    game2wins = targetmatches.filter(game2=1).count()
+    game2losses = targetmatches.filter(game2=0).count()
+    game3wins = targetmatches.filter(game3=1).count()
+    game3losses = targetmatches.filter(game3=0).count()
 
     if targetmatches.count() > 0:
         matchwinpercentage = ((targetmatches.filter(didjawin=1).count(
@@ -218,12 +239,18 @@ def leagueroll(request):
     else:
         gamewinpercentage = 0
 
-    
-    leagueroll = League.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect, myFlavor=vselect, isFinished=True).annotate(wins=Count(
-        "matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
 
-    filterdeck = Deck.objects.get(pk=dselect)
-    filterflavor = Flavor.objects.get(pk=vselect)
+    leagueroll = targetleagues.annotate(wins=Count("matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")     
+
+    if dselect == 0:
+        filterdeck = None
+    else:
+        filterdeck = Deck.objects.get(pk=dselect)
+
+    if vselect == 0:
+        filterflavor = None
+    else:
+        filterflavor = Flavor.objects.get(pk=vselect)
 
     context = {
         'filterdeck': filterdeck,
@@ -299,6 +326,7 @@ def listofdecks(request):
 def listofflavors(request):
     user = request.user
     ldeck = 0
+    allvarients = False
 
     if "mtgFormat" in request.GET:
         mtgformat = int(request.GET.get('mtgFormat'))
@@ -307,12 +335,15 @@ def listofflavors(request):
             ldeck = user.profile.recentDeck.id
             currentflavor = user.profile.recentFlavor
 
-    else:
-        for key in request.GET:
-            if request.GET[key]:
-                ldeck = request.GET[key]
-            else:
-                ldeck = 0
+    elif "deckselect" in request.GET:
+        allvarients = True
+
+
+    for key in request.GET:
+        if request.GET[key]:
+            ldeck = request.GET[key]
+        else:
+            ldeck = 0
 
     listofflavors = Flavor.objects.filter(deck=ldeck).order_by('-isdefault', 'name')
 
@@ -328,6 +359,7 @@ def listofflavors(request):
         currentflavor = None
 
     context = {
+        'allvarients': allvarients,
         'currentflavor': currentflavor,
         'listofflavors': listofflavors,
     }

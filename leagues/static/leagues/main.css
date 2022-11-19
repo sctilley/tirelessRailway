@@ -291,6 +291,7 @@ h2 {
 
 .rowg {
     display: flex;
+    flex-wrap: wrap-reverse;
     justify-content: flex-start;
     gap: 16px;
 
@@ -346,6 +347,7 @@ h2 {
     background-color: white;
     border-color: var(--secondary);
     max-width: 800px;
+    min-width: 350px;
     text-align: left;
 }
 
@@ -393,13 +395,13 @@ table.hovertable {
 }
 
 table.hovertable tr > td {
-    padding: 8px;
-    text-align: left;
+    padding: 8px 4px;
+    text-align: center;
     border-bottom: 1px solid #ddd;
   }
 
 table.hovertable th {
-    padding: 8px;
+    padding: 8px 4px;
 }
   
 
@@ -416,7 +418,7 @@ ul.history {
 .reportcard {
     background-color: white;
     border-color: var(--secondary);
-    max-width: 250px;
+    max-width: 220px;
     text-align: center;
     height: fit-content;
 }

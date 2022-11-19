@@ -53,9 +53,9 @@
                 {% endif %}
                 {{ currentleague.myDeck }} league 
               </h3>
-              <h3>
+              <p>
                 {{ currentleague.dateCreated }}
-              </h3>
+              </p>
             </div>
             <div class="line"></div>
             {% for form in matchformset %} {% if forloop.first %}
@@ -150,13 +150,12 @@
 <div class="content">
   <div class="card">
     <select name="formatselect" id="fselect" hx-trigger="load" hx-get="{% url 'leagueroll' %}" hx-include="#dselect, #vselect" hx-target="#leaguerolldiv">
-      <option value="0">All Formats</option>
       <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
       {% for mtgformats in mtgformats %}
       <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
       {% endfor %}
     </select>
-    <select name="deckselect" id="dselect">
+    <select name="deckselect" id="dselect" hx-trigger="change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
       <option value="0">All Decks</option>
       <option value="{{user.profile.recentDeck.id}}" selected>{{user.profile.recentDeck.name}}</option>
     </select>
@@ -164,7 +163,7 @@
       <option value="0">All Varients</option>
       <option value="{{user.profile.recentFlavor.id}}" selected>{{user.profile.recentFlavor.name}}</option>
     </select>
-    <button class="ctn">Filter</button>
+    <button class="ctn" hx-get="{% url 'leagueroll' %}" hx-include="#fselect, #dselect, #vselect" hx-target="#leaguerolldiv">Filter</button>
   </div>
 </div>
 
