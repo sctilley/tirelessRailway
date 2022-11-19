@@ -222,8 +222,12 @@ def leagueroll(request):
     leagueroll = League.objects.filter(user=user, mtgFormat=fselect, myDeck=dselect, myFlavor=vselect, isFinished=True).annotate(wins=Count(
         "matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
 
+    filterdeck = Deck.objects.get(pk=dselect)
+    filterflavor = Flavor.objects.get(pk=vselect)
+
     context = {
-        'filterdeck': Deck.objects.get(pk=dselect),
+        'filterdeck': filterdeck,
+        'filterflavor': filterflavor,
         'matchcount': targetmatches.count(),
         'matchwinpercentage': matchwinpercentage,
         'matcheswon': targetmatches.filter(didjawin=1).count(),

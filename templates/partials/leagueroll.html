@@ -77,98 +77,101 @@
 
 
     <!-- right card  -->
-    <div class="card reportcard">
-      <div style="text-align: center;">
-        League Stats for: 
-      </div>
-      <h3 style="text-align: center;">{{filterdeck}}</h3>
-      <div class="line">
+    <div class="colsmall">
+      <div class="card reportcard">
+        <h2 style="text-align: center;">{{filterdeck.name}}</h2>
+        {% if filterflavor %}
+          <p>({{filterflavor.name}})</p>
+        {% endif %}
+        <div class="line">
 
-      </div>
-      <table class="hovertable">
-        <thead>
-          <tr>
-            <th>result</th>
-            <th>percent</th>
-            <th>number</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>5-0</td>
-            <td>{{ fiveohsper|floatformat:0 }}%</td>
-            <td>{{ fiveohs }}</td>
-          </tr>
-          <tr>
-            <td>4-1</td>
-            <td>{{ fouronesper|floatformat:0 }}%</td>
-            <td>{{ fourones }}</td>
-          </tr>
-          <tr>
-            <td>3-2</td>
-            <td>{{ threetwosper|floatformat:0 }}%</td>
-            <td>{{ threetwos }}</td>
-          </tr>
-          <tr>
-            <td>2-3</td>
-            <td>{{ twothreesper|floatformat:0 }}%</td>
-            <td>{{ twothrees }}</td>
-          </tr>
-          <tr>
-            <td>1-4</td>
-            <td>{{ onefoursper|floatformat:0 }}%</td>
-            <td>{{ onefours }}</td>
-          </tr>  
-          <tr>
-            <td>0-5</td>
-            <td>{{ ohfivesper|floatformat:0 }}%</td>
-            <td>{{ ohfives }}</td>
-          </tr>  
-        </tbody>
-
-      </table>
-      <div>
-        <small>Completed Leagues: {{targetleagues.count}}</small>
-      </div>
-      <div class="line"></div>
-      <table class="hovertable">
-        <tr>
-        <th>Match Win %</th>
-        <th>{{matchwinpercentage|floatformat:0}}%</th>
-        </tr>
-        <tr>
-          <td>Played</td>
-          <td>{{matchcount}}</td>
-        </tr>
-        <tr>
-          <td>Won</td>
-          <td>{{matcheswon}}</td>
-        </tr>  
-        <tr>
-          <td>Lost</td>
-          <td>{{matcheslost}}</td>
-        </tr>  
-        <tbody>
-          <tr>
-            <th>Game Win %</th>
-            <th>{{gamewinpercentage|floatformat:0}}%</th>
-          </tr>
+        </div>
+        <table class="hovertable">
+          <thead>
             <tr>
-              <td>Played</td>
-              <td>{{gamesplayed}}</td>
-
+              <th>result</th>
+              <th>percent</th>
+              <th>number</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>5-0</td>
+              <td>{{ fiveohsper|floatformat:0 }}%</td>
+              <td>{{ fiveohs }}</td>
             </tr>
             <tr>
-              <td>Won</td>
-              <td>{{gameswon}}</td>
+              <td>4-1</td>
+              <td>{{ fouronesper|floatformat:0 }}%</td>
+              <td>{{ fourones }}</td>
             </tr>
             <tr>
-              <td>Lost</td>
-              <td>{{gameslost}}</td>
+              <td>3-2</td>
+              <td>{{ threetwosper|floatformat:0 }}%</td>
+              <td>{{ threetwos }}</td>
             </tr>
+            <tr>
+              <td>2-3</td>
+              <td>{{ twothreesper|floatformat:0 }}%</td>
+              <td>{{ twothrees }}</td>
+            </tr>
+            <tr>
+              <td>1-4</td>
+              <td>{{ onefoursper|floatformat:0 }}%</td>
+              <td>{{ onefours }}</td>
+            </tr>  
+            <tr>
+              <td>0-5</td>
+              <td>{{ ohfivesper|floatformat:0 }}%</td>
+              <td>{{ ohfives }}</td>
+            </tr>  
           </tbody>
-      </table>
+
+        </table>
+        <div>
+          <small>Completed Leagues: {{targetleagues.count}}</small>
+        </div>
+        <div class="line"></div>
+        <table class="hovertable">
+          <tr>
+          <th>Match Win %</th>
+          <th>{{matchwinpercentage|floatformat:0}}%</th>
+          </tr>
+          <tr>
+            <td>Played</td>
+            <td>{{matchcount}}</td>
+          </tr>
+          <tr>
+            <td>Won</td>
+            <td>{{matcheswon}}</td>
+          </tr>  
+          <tr>
+            <td>Lost</td>
+            <td>{{matcheslost}}</td>
+          </tr>  
+          <tbody>
+            <tr>
+              <th>Game Win %</th>
+              <th>{{gamewinpercentage|floatformat:0}}%</th>
+            </tr>
+              <tr>
+                <td>Played</td>
+                <td>{{gamesplayed}}</td>
+
+              </tr>
+              <tr>
+                <td>Won</td>
+                <td>{{gameswon}}</td>
+              </tr>
+              <tr>
+                <td>Lost</td>
+                <td>{{gameslost}}</td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
     </div>
+
   </div>
 {% else %}
   <h3>No Leagues Found</h3>
