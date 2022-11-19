@@ -157,7 +157,9 @@
     </select>
     <select name="deckselect" id="dselect" hx-trigger="change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
       <option value="0">All Decks</option>
-      <option value="{{user.profile.recentDeck.id}}" selected>{{user.profile.recentDeck.name}}</option>
+      {% for deck in usersdecks %}
+      <option value="{{deck.id}}">{{deck.name}}</option>
+      {% endfor %}
     </select>
     <select name="varientselect" id="vselect">
       <option value="0">All Varients</option>

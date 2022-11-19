@@ -34,6 +34,11 @@ def league(request):
 
     usernamelist = Match.objects.all().values("theirname").distinct().order_by(Lower("theirname"))
 
+
+    userdeckslist = League.objects.values_list('myDeck_id').distinct()
+    usersdecks = Deck.objects.filter(id__in=userdeckslist)
+
+
     initial_data = {
         'mtgFormat': user.profile.recentFormat,
         'myDeck': user.profile.recentDeck,
@@ -106,7 +111,7 @@ def league(request):
                 print(formset.errors)
 
     context = {
-
+        'usersdecks': usersdecks,
         'l_form': l_form,
         'currentleague': currentleague,
         'matchformset': m_formset,

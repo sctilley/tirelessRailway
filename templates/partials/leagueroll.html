@@ -79,7 +79,12 @@
     <!-- right card  -->
     <div class="colsmall">
       <div class="card reportcard">
+        {% if filterdeck %}
         <h2 style="text-align: center;">{{filterdeck.name}}</h2>
+        {% else %}
+        <h2 style="text-align: center;">All Decks</h2>
+        {% endif %}
+
         {% if filterflavor %}
           <p>({{filterflavor.name}})</p>
         {% endif %}
@@ -134,7 +139,7 @@
         <div class="line"></div>
         <table class="hovertable">
           <tr>
-          <th>Match Win %</th>
+          <th>Match Wins:</th>
           <th>{{matchwinpercentage|floatformat:0}}%</th>
           </tr>
           <tr>
@@ -151,7 +156,7 @@
           </tr>  
           <tbody>
             <tr>
-              <th>Game Win %</th>
+              <th>Game Wins</th>
               <th>{{gamewinpercentage|floatformat:0}}%</th>
             </tr>
               <tr>
