@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.home, name="home"),
     path('league/', views.league, name="league"),
     path('data/', views.data, name="data"),
+    path('decks/', views.decks, name="decks"),
 ]
 
 htmx_urlpatters = [

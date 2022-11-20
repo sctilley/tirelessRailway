@@ -4,6 +4,7 @@
       {% for league in leagueroll %}
       <div class="card leaguecard">
         <div class="row">
+          <img class="header-img" src="{{ league.myDeck.image.url }}" />
           <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}:</b>
           <p>{{league.dateCreated}}</p>
           <p class="score">
@@ -27,7 +28,7 @@
         <div class="line"></div>
         <div class="leaguecontent"> 
           <table class="hovertable">
-          {% for match in league.matches.all|dictsort:"dateCreated" %}
+          {% for match in league.matches.all %}
             <tr>
               <td>{{ forloop.counter }}.</td>
               <td>

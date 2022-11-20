@@ -312,6 +312,17 @@ def data(request):
 
     return render(request, 'data.html')
 
+def decks(request):
+    Decks = Deck.objects.all()
+
+    context = {
+        'Decks': Decks,
+    }
+
+    return render(request, 'decks.html', context)
+
+
+
 
 # HTMX STUFF:
 

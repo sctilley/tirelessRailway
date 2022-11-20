@@ -4,6 +4,7 @@
     --secondary: #7B19F7;
     --light: #EEEEEE;
     --dark: #140e0e;
+    --highlight: rgb(184, 255, 255);
 
 }
 
@@ -106,7 +107,7 @@ nav {
     right: 0;
     z-index: 99;
 
-    background-color: aqua;
+    background-color: var(--highlight);
     padding: 16px 32px;
     border-bottom: 3px solid var(--primary);
 
@@ -351,6 +352,22 @@ h2 {
     text-align: left;
 }
 
+.header-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 100%;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+
+
+
+
+
+
+
+
 .colbig {
     flex: 3;
 }
@@ -395,7 +412,7 @@ table.hovertable {
 }
 
 table.hovertable tr > td {
-    padding: 8px 4px;
+    padding: 4px 4px;
     text-align: left;
     border-bottom: 1px solid #ddd;
   }
