@@ -76,9 +76,17 @@ def league(request):
                 return redirect('league')
 
         if "matchformset" in request.POST:
-            print("matchformset trigger~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            formset = Matchesinlineformset(
-                request.POST, instance=currentleague)
+            print("matchformset trigger~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", request.POST)
+
+            leagueid = request.POST.get('matchformset', False)
+            print("leagueid ~~~ is type", type(leagueid))
+            if leagueid:
+                leaguehere = League.objects.get(pk=int(leagueid))
+                formset = Matchesinlineformset(request.POST, instance=leaguehere)
+
+            else:
+                formset = Matchesinlineformset(request.POST, instance=currentleague)
+
             if formset.is_valid():
                 new_instances = formset.save(commit=False)
                 for new_instance in new_instances:

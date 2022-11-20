@@ -8,10 +8,6 @@ function openLeaguePop(){
   leaguePopup.style.top = (document.body.scrollTop + document.documentElement.scrollTop + 300)+"px";
   leaguePopup.classList.add('open-popup');
   event.stopPropagation()
-  html.addEventListener("click", function (e){
-    if (e.target !== leaguePopup)
-      leaguePopup.classList.remove('open-popup')
-  })
 }
 
 function openDropPop(){
@@ -35,16 +31,11 @@ function openDeletePop(){
   })
 }
 
-// Add an event listener for a
-        // click to the html document
-// html.addEventListener("click", function (e) {
-//   if (e.target !== dropPopup)
-//     dropPopup.classList.remove('open-popup');
 
-//   if (e.target !== deletePopup)
-//     deletePopup.classList.remove('open-popup')
-  
-//   let leaguePopup = document.getElementById("leaguepopup");
-//   if (e.target !== leaguePopup)
-//     leaguePopup.classList.remove('open-popup')
-// });
+function closeAllPops(){
+  console.log("closing pops...")
+  let pops = document.getElementsByClassName("popup");
+  for (let i = 0; i < pops.length; i++) {
+    pops[i].classList.remove('open-popup');
+  }
+}

@@ -1,19 +1,19 @@
 {% load crispy_forms_tags %}
 <div class="card col match-card">
   <form method="POST">
-    <fieldset {% if currentleague.isFinished is True %} disabled {% endif %}>
+    <fieldset>
       {% csrf_token %} {{ matchformset.management_form }}
       <table class="matchtable">
         <div class="row">
           <h3>
             Matches for 
-            {% if currentleague.myFlavor.name != "none/stock" %}
-              {{ currentleague.myFlavor }}
+            {% if editleague.myFlavor.name != "none/stock" %}
+              {{ editleague.myFlavor }}
             {% endif %}
-            {{ currentleague.myDeck }} league 
+            {{ editleague.myDeck }} league 
           </h3>
           <p>
-            {{ currentleague.dateCreated }}
+            {{ editleague.dateCreated }}
           </p>
         </div>
         <div class="line"></div>
@@ -75,7 +75,7 @@
       </table>
       <div class="">
         <div class="">
-          <button type="submit" class="ctn" name="matchformset">Save</button>
+          <button type="submit" class="ctn" name="matchformset" value="{{editleague.id}}">Save</button>
           <button type="button" class="ctn" name="drop" onclick="openDropPop()">Drop</button>
           <button type="button" class="ctn" name="delete" onclick="openDeletePop()">Delete</button>
         </div>

@@ -46,6 +46,5 @@ function openArch(){
 }
 
 
-
 console.log("javascrip working now");
 
