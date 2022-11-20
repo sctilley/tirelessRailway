@@ -44,7 +44,6 @@ def league(request):
         'myDeck': user.profile.recentDeck,
         'myFlavor': user.profile.recentFlavor,
         'mtgoUserName': user.profile.mtgoUserName,
-        'tag': user.profile.recentTag,
     }
 
     l_form = LeagueForm(initial=initial_data)
@@ -138,7 +137,6 @@ def league(request):
     return render(request, 'league.html', context)
 
 def leagueroll(request):
-    print(request.GET)
     lformat = request.GET['formatselect']
 
     if 'formatselect' in request.GET:
@@ -345,6 +343,7 @@ def listofdecks(request):
 
 
 def listofflavors(request):
+    # print("List of Flavors request.GET ~~~ ", request.GET)
     user = request.user
     ldeck = 0
     allvarients = False
@@ -358,7 +357,6 @@ def listofflavors(request):
 
     elif "deckselect" in request.GET:
         allvarients = True
-
 
     for key in request.GET:
         if request.GET[key]:
@@ -379,9 +377,41 @@ def listofflavors(request):
     else:
         currentflavor = None
 
+
     context = {
         'allvarients': allvarients,
         'currentflavor': currentflavor,
+        'listofflavors': listofflavors,
+    }
+
+    return render(request, 'partials/htmx/listofflavors.html', context)
+
+def listofflavorsformatch(request):
+    user = request.user
+    currentleague = League.objects.filter(user=user).latest('dateCreated')
+
+    for key, value in request.GET.items():
+
+        if "flavor" in key.lower():
+            try:
+                flavorvalue = int(request.GET[key])
+                specialflavor = Flavor.objects.get(id=flavorvalue)
+            except:
+                flavorvalue = 0
+                specialflavor = None
+
+        if "deck" in key.lower():
+            try:
+                deckvalue = int(request.GET[key])
+                listofflavors = Flavor.objects.filter(
+                    deck=deckvalue).exclude(id=specialflavor.id).order_by('-isdefault')
+
+            except:
+                deckvalue = 0
+                listofflavors = None
+
+    context = {
+        'specialflavor': specialflavor,
         'listofflavors': listofflavors,
     }
 

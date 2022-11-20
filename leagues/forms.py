@@ -65,7 +65,7 @@ class MatchForm(forms.ModelForm):
     theirDeck = forms.ModelChoiceField(
         queryset=Deck.objects.filter(mtgFormat=1).order_by('name'), label='Their Deck', widget=forms.Select(attrs={'hx-trigger': 'change', 'hx-get': '/listofflavors', 'hx-target': 'next select', 'hx-swap': 'innerHTML'}))
     theirFlavor = forms.ModelChoiceField(
-        required=False, queryset=Flavor.objects.all(), label='Variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavors', 'hx-target': 'this', 'hx-include': 'previous select'}))
+        required=False, queryset=Flavor.objects.all(), label='Variant', widget=forms.Select(attrs={'hx-trigger': 'load', 'hx-get': '/listofflavorsformatch', 'hx-target': 'this', 'hx-include': 'previous select'}))
     dateCreated = SplitDateTimeField(
         required=False, label='Date Played')
 

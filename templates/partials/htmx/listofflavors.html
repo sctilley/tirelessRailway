@@ -2,9 +2,14 @@
   <option value="0">All Varients</option>
 {% endif %}
 
-{% if currentflavor != None %}
+{% if specialflavor %}
+    <option value = "{{ specialflavor.id }}">{{specialflavor.name}}</option>
+{% endif %}
+
+{% if currentflavor %}
     <option value = "{{ currentflavor.id }}">{{currentflavor.name}}</option>
 {% endif %}
+
 
 {% if listofflavors %}
   {% for flavor in listofflavors %}

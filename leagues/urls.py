@@ -13,6 +13,7 @@ urlpatterns = [
 htmx_urlpatters = [
     path('listofdecks/', views.listofdecks, name='listofdecks'),
     path('listofflavors/', views.listofflavors, name='listofflavors'),
+    path('listofflavorsformatch/', views.listofflavorsformatch, name='listofflavorsformatch'),
     path('checkopponent/', views.checkopponent, name='checkopponent'),
     path('leagueroll/', views.leagueroll, name='leagueroll'),
 ]

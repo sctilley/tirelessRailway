@@ -170,12 +170,16 @@
     <select name="deckselect" id="dselect" hx-trigger="change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
       <option value="0">All Decks</option>
       {% for deck in usersdecks %}
-      <option value="{{deck.id}}">{{deck.name}}</option>
+        {% if deck.id == currentleague.myDeck.id %}
+          <option value="{{deck.id}}" selected>{{deck.name}}</option>
+        {% else %}
+        <option value="{{deck.id}}">{{deck.name}}</option>
+        {% endif %}
       {% endfor %}
     </select>
     <select name="varientselect" id="vselect">
       <option value="0">All Varients</option>
-      <option value="{{user.profile.recentFlavor.id}}" selected>{{user.profile.recentFlavor.name}}</option>
+      <option value="{{currentleague.myFlavor.id}}" selected>{{currentleague.myFlavor.name}}</option>
     </select>
     <button class="ctn" hx-get="{% url 'leagueroll' %}" hx-include="#fselect, #dselect, #vselect" hx-target="#leaguerolldiv">Filter</button>
   </div>
