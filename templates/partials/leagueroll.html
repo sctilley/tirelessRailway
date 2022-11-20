@@ -68,7 +68,7 @@
           {% endfor %}  
           </table>
           <div>
-            <button class="ctn" name="edit" onclick="openLeaguePop()">edit</button>
+            <button class="ctn" name="edit" onclick="openLeaguePop()" hx-trigger="click" hx-get="{% url 'leagueedit' %}?league={{league.id}}" hx-target ="#leagueeditcontent">edit</button>
           </div>
         </div>
       </div>
@@ -76,8 +76,9 @@
       <div class="popup leaguepop" id="leaguepopup">
         <h2>Edit League</h2>
         <div class="line"></div>
-        <p>edit here</p>
-        <button type="submit" name="drop" value="1">Drop</button>
+        <div id="leagueeditcontent">
+          Content here
+        </div>
       </div>
     </div>
 

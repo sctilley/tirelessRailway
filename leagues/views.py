@@ -308,31 +308,43 @@ def data(request):
 # HTMX STUFF:
 
 def listofdecks(request):
+    print(request.GET)
     user = request.user
-    for key in request.GET:
-        lformat = request.GET[key]
-    try:
-        listofdecks = Deck.objects.filter(mtgFormat=lformat).order_by('name')
-    except:
-        listofdecks = None
-    try:
-        currentformat = user.profile.recentFormat.id
-    except:
-        currentformat = 999
+    currentdeck = None
 
-    if lformat:
-        formatvaluechecker = int(lformat)
+    if "arch" in request.GET:
+        for key in request.GET:
+            archtype = request.GET[key]
+    
+        print("archtype ", archtype)
+        listofdecks = Deck.objects.filter(archetype=archtype).order_by('name')
+
+
     else:
-        formatvaluechecker = 0
+        for key in request.GET:
+            lformat = request.GET[key]
+        try:
+            listofdecks = Deck.objects.filter(mtgFormat=lformat).order_by('name')
+        except:
+            listofdecks = None
+        try:
+            currentformat = user.profile.recentFormat.id
+        except:
+            currentformat = 999
 
-    has_format = 'mtgFormat' in request.GET
-    format_matches = currentformat == formatvaluechecker
+        if lformat:
+            formatvaluechecker = int(lformat)
+        else:
+            formatvaluechecker = 0
 
-    if has_format and format_matches:
-        currentdeck = user.profile.recentDeck
-        listofdecks = Deck.objects.filter(mtgFormat=lformat).order_by('name')
-    else:
-        currentdeck = None
+        has_format = 'mtgFormat' in request.GET
+        format_matches = currentformat == formatvaluechecker
+
+        if has_format and format_matches:
+            currentdeck = user.profile.recentDeck
+            listofdecks = Deck.objects.filter(mtgFormat=lformat).order_by('name')
+        else:
+            currentdeck = None
 
     context = {
         'listofdecks': listofdecks,
@@ -417,6 +429,9 @@ def listofflavorsformatch(request):
 
     return render(request, 'partials/htmx/listofflavors.html', context)
 
+
+
+
 def checkopponent(request):
     print("check opponent")
     print(request.GET)
@@ -449,3 +464,23 @@ def checkopponent(request):
         'theirflavorfield': theirflavorfield,
     }
     return render(request, 'partials/htmx/checkopponent.html', context)
+
+def leagueedit(request):
+    print("reqeuest.GET for leagueedit is---------", request.GET)
+    for key in request.GET:
+        leagueid = request.GET[key]
+        editleague = League.objects.get(pk=request.GET[key])
+
+    Matchesinlineformset = inlineformset_factory(
+        League, Match, form=MatchForm, extra=5, can_delete=False, max_num=5)
+    
+    e_formset = Matchesinlineformset(instance=editleague)
+
+    
+
+    context = {
+        'editleague': editleague,
+        'matchformset': e_formset,
+    }
+
+    return render(request, 'partials/htmx/leagueedit.html', context)

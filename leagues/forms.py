@@ -61,7 +61,7 @@ class MatchForm(forms.ModelForm):
     theirname = forms.CharField(
         label="Their Username", widget=forms.TextInput(attrs={'list': 'usernamelist', 'autocomplete': 'off', 'hx-trigger': 'change', 'hx-get': '/checkopponent', 'hx-target': '#reporthere'}))
     theirArchetype = forms.ModelChoiceField(
-        queryset=Archetype.objects.all(), label='Archetype', required=False, widget=forms.Select(attrs={'class': 'hidden', 'hx-get': '/listofdecksArche', 'hx-target': 'next select', 'hx-swap': 'innerHTML', 'title': "This is option, if you don't select it it will be automatically assinged to match the deck"}))
+        queryset=Archetype.objects.filter(mtgFormat=1).order_by('name'), label='Archetype', required=False, widget=forms.Select(attrs={'class': 'hidden', 'hx-get': '/listofdecks?arch=1', 'hx-target': 'next select', 'hx-swap': 'innerHTML', 'title': "This is option, if you don't select it it will be automatically assinged to match the deck"}))
     theirDeck = forms.ModelChoiceField(
         queryset=Deck.objects.filter(mtgFormat=1).order_by('name'), label='Their Deck', widget=forms.Select(attrs={'hx-trigger': 'change', 'hx-get': '/listofflavors', 'hx-target': 'next select', 'hx-swap': 'innerHTML'}))
     theirFlavor = forms.ModelChoiceField(
