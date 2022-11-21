@@ -547,8 +547,8 @@ class DeckUpdateView(UpdateView):
         'dateCreated',
         'image',
         ]
-    success_url ="/"
+    success_url ="/decks"
 
 class DeckDeleteView(DeleteView):
     model = Deck
-    success_url ="/"
+    success_url ="/decks"
