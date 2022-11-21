@@ -11,6 +11,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.timezone import make_aware, timedelta
 
+from django.views.generic.edit import UpdateView, DeleteView
+
 from .forms import DeckForm, FlavorForm, LeagueForm, MatchForm, TagForm
 from .models import Archetype, Deck, Flavor, League, Match, MtgFormat, Tag
 
@@ -313,15 +315,48 @@ def data(request):
     return render(request, 'data.html')
 
 def decks(request):
-    Decks = Deck.objects.all()
+    Decks = Deck.objects.all().order_by("-dateCreated")
+
+    deck_form = DeckForm()
+    flavor_form = FlavorForm()
+
+    if request.method == "POST":
+        if 'deckForm' in request.POST:
+            deck_form = DeckForm(request.POST, request.FILES)
+
+            if deck_form.is_valid():
+                deck = deck_form.save(commit=False)
+                deck.dateCreated = datetime.now()
+                deck.save()
+                vt = request.POST['varienttext']
+
+                if vt:
+                    if "makedefault" in request.POST:
+                        Flavor.objects.create(
+                            name=vt, deck=deck, isdefault=True)
+                    else:
+                        Flavor.objects.create(
+                            name=vt, deck=deck, isdefault=False)
+
+                else:
+                    Flavor.objects.create(
+                        name="none/stock", deck=deck, isdefault=True)
+
+                return redirect('decks')
+        else:
+            flavor_form = FlavorForm(request.POST)
+            oldflavor = Flavor.objects.filter(isdefault=True)
+            oldflavor.isdefault = False
+            flavor_form.save()
+            return redirect('decks')
 
     context = {
         'Decks': Decks,
+        'deck_form': deck_form,
+        'flavor_form': flavor_form,
     }
 
     return render(request, 'decks.html', context)
-
-
 
 
 # HTMX STUFF:
@@ -448,9 +483,6 @@ def listofflavorsformatch(request):
 
     return render(request, 'partials/htmx/listofflavors.html', context)
 
-
-
-
 def checkopponent(request):
     print("check opponent")
     print(request.GET)
@@ -503,3 +535,20 @@ def leagueedit(request):
     }
 
     return render(request, 'partials/htmx/leagueedit.html', context)
+
+
+
+class DeckUpdateView(UpdateView):
+    model = Deck
+    fields = [
+        'name',
+        'mtgFormat',
+        'archetype',
+        'dateCreated',
+        'image',
+        ]
+    success_url ="/"
+
+class DeckDeleteView(DeleteView):
+    model = Deck
+    success_url ="/"

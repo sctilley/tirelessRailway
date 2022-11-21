@@ -43,7 +43,7 @@ class Flavor(models.Model):
 
     name = models.CharField(max_length=30, default='none')
     deck = models.ForeignKey(
-        Deck, null=True, on_delete=models.CASCADE)
+        Deck, null=True, on_delete=models.CASCADE, related_name="flavors")
     isdefault = models.BooleanField('default', default=False)
 
     def __str__(self):
