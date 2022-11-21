@@ -1,0 +1,8 @@
+{% if afilter %}
+    <option value = "0">All Archetypes</option>
+{% else %}
+    <option value="na">-------</option>
+{% endif %}
+{% for archetype in listofarchetypes %}
+<option value="{{ archetype.id }}">{{ archetype.name }}</option>
+{% endfor %}

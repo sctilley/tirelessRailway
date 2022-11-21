@@ -315,9 +315,17 @@ def data(request):
     return render(request, 'data.html')
 
 def decks(request):
+    user = request.user
+    mtgformats = MtgFormat.objects.all()
+    archtypes = Archetype.objects.all()
     Decks = Deck.objects.all().order_by("-dateCreated")
 
-    deck_form = DeckForm()
+    initial_data = {
+        'mtgFormat': user.profile.recentFormat,
+    }
+
+
+    deck_form = DeckForm(initial=initial_data)
     flavor_form = FlavorForm()
 
     if request.method == "POST":
@@ -351,6 +359,8 @@ def decks(request):
             return redirect('decks')
 
     context = {
+        'mtgformats': mtgformats,
+
         'Decks': Decks,
         'deck_form': deck_form,
         'flavor_form': flavor_form,
@@ -360,9 +370,32 @@ def decks(request):
 
 
 # HTMX STUFF:
+def listofarchetypes(request):
+
+    for key in request.GET:
+            archevalue = request.GET[key]
+
+    if "filter" in request.GET:
+        afilter = True
+    else:
+        afilter = False
+
+    if archevalue:
+        listofarchetypes = Archetype.objects.filter(mtgFormat=int(archevalue))
+
+    else:
+        listofarchetypes = Archetype.objects.all()
+
+
+
+    context = {
+        'afilter': afilter,
+        'listofarchetypes': listofarchetypes,
+    }
+
+    return render(request, 'partials/htmx/listofarchetypes.html', context)
 
 def listofdecks(request):
-    print(request.GET)
     user = request.user
     currentdeck = None
 
@@ -370,7 +403,6 @@ def listofdecks(request):
         for key in request.GET:
             archtype = request.GET[key]
     
-        print("archtype ", archtype)
         listofdecks = Deck.objects.filter(archetype=archtype).order_by('name')
 
 
@@ -406,7 +438,6 @@ def listofdecks(request):
     }
 
     return render(request, 'partials/htmx/listofdecks.html', context)
-
 
 def listofflavors(request):
     # print("List of Flavors request.GET ~~~ ", request.GET)
@@ -535,6 +566,26 @@ def leagueedit(request):
     }
 
     return render(request, 'partials/htmx/leagueedit.html', context)
+
+def decktable(request):
+    
+    fselect = int(request.GET.get('formatselect'))
+    aselect = int(request.GET.get('archeselect'))
+    print(fselect, aselect)
+
+    if fselect and aselect > 0:
+        Decks = Deck.objects.filter(mtgFormat=fselect, archetype=aselect).order_by("-dateCreated")
+    elif fselect > 0:
+        Decks = Deck.objects.filter(mtgFormat=fselect).order_by("-dateCreated")
+    else:
+        Decks = Deck.objects.all().order_by("-dateCreated")
+    
+
+    context = {
+    'Decks': Decks,
+    }
+
+    return render(request, 'partials/htmx/decktable.html', context)
 
 
 
