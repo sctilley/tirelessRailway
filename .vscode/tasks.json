@@ -19,8 +19,8 @@
         "panel": "shared",
         "showReuseMessage": true,
         "clear": false,
-        "group": "servergroup",
-        "close": true
+        "close": true,
+        "group": "newservergroup",
       }
     },
     {

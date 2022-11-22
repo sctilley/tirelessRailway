@@ -1,0 +1,45 @@
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>Image</th>
+      <th>Date</th>
+      <th>Format</th>
+      <th>Deck</th>
+      <th>Varient</th>
+      <th>User</th>
+      <th>MTGO user Name</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for league in Leagues %}
+    <tr>
+      <td><img class="header-img" src="{{ league.image.url }}" /></td>
+      <td>{{league.dateCreated|date:"SHORT_DATE_FORMAT"}}</td>
+      <td>{{league.mtgFormat}}</td>
+      <td>{{league.myDeck}}</td>
+      <td>{{league.myFlavor}}</td>
+      <td>{{league.user}}</td>
+      <td>{{league.mtgoUserName}}</td>
+      <td>
+        {% if league.wins == 5 %}
+        5-0
+        {% elif league.wins == 4 %}
+            4-1
+        {% elif league.wins == 3 %}
+            3-2
+        {% elif league.wins == 2 %}
+            2-3
+        {% elif league.wins == 1 %}
+            1-4
+        {% elif league.wins == 0 %}
+            0-5
+        {% else %}
+            {{league.wins}}
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+
+</table>

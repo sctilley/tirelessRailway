@@ -10,6 +10,7 @@ urlpatterns = [
     path('league/', views.league, name="league"),
     path('data/', views.data, name="data"),
     path('decks/', views.decks, name="decks"),
+    path('leaguedata/', views.leaguedata, name="leaguedata"),
     path('decks/<pk>/update', DeckUpdateView.as_view(), name="deckupdate"),
     path('decks/<pk>/delete', DeckDeleteView.as_view(), name="deckdelete"),
 ]
@@ -23,6 +24,8 @@ htmx_urlpatters = [
     path('leagueedit/', views.leagueedit, name='leagueedit'),
     path('decktable/', views.decktable, name='decktable'),
     path('listofarchetypes/', views.listofarchetypes, name='listofarchetypes'),
+    path('leaguetable/', views.leaguetable, name='leaguetable'),
+    path('metatable/', views.metatable, name='metatable'),
 ]
 
 urlpatterns += htmx_urlpatters

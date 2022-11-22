@@ -1,5 +1,37 @@
 {% extends 'main.html' %} {% block content %}
 
-<h1>Data Page</h1>
+<div class="content row">
+  <h1 class="col">MTGO League Meta</h1>
+</div>
+
+<div class="content">
+  <div class="card">
+    <select name="formatselect" id="fselect" hx-trigger="change" hx-get="{% url 'leagueroll' %}" hx-include="#dselect, #vselect" hx-target="#leaguerolldiv">
+      <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
+      {% for mtgformats in mtgformats %}
+      <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+      {% endfor %}
+    </select>
+    <select name="deckselect" id="dselect" hx-trigger="load, change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
+      <option value="0">All Decks</option>
+      {% for deck in usersdecks %}
+        {% if deck.id == currentleague.myDeck.id %}
+          <option value="{{deck.id}}" selected>{{deck.name}}</option>
+        {% else %}
+        <option value="{{deck.id}}">{{deck.name}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <select name="varientselect" id="vselect">
+      <option value="0">All Varients</option>
+      <option value="{{currentleague.myFlavor.id}}" selected>{{currentleague.myFlavor.name}}</option>
+    </select>
+    <button class="ctn" hx-get="{% url 'metatable' %}" hx-trigger="load, click" hx-include="#fselect, #dselect, #vselect" hx-target="#metatabletarget">Filter</button>
+  </div>
+</div>
+
+<div class="content" id="metatabletarget">
+  Loading Meta Table...
+</div>
 
 {% endblock %}

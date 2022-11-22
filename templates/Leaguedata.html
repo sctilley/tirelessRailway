@@ -1,0 +1,35 @@
+{% extends 'main.html' %} {% block content %}{% load crispy_forms_tags %}{% load static %}
+<div class="content">
+  <div class="banner">
+    <h1>All Leagues</h1>
+  </div>
+</div>
+<div class="content">
+  <div class="card">
+    <select name="formatselect" id="fselect">
+      {% for mtgformats in mtgformats %}
+      <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+      {% endfor %}
+    </select>
+    <select name="archeselect" id="aselect">
+      <option value="0">All Users</option>
+      {% for archetype in listofarchetypes %}
+        {% if deck.id == currentleague.myDeck.id %}
+          <option value="{{deck.id}}">{{deck.name}}</option>
+        {% else %}
+        <option value="{{deck.id}}">{{deck.name}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <button class="ctn" hx-get="{% url 'leaguetable' %}" hx-trigger="load, click" hx-include="#fselect" hx-target="#tableplace">Filter</button>
+  </div>
+  <div class="tableplace" id="tableplace">
+    Loading Leagues...
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

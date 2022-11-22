@@ -16,7 +16,14 @@
       {% endif %}
       <a href="{% url 'home' %}" class="nav-link">Home</a>
       <a href="{% url 'league' %}" class="nav-link">Leagues</a>
-      <a href="{% url 'data' %}" class="nav-link">Data</a>
+      <div class="dropdown">
+        <button class="dropbtn nav-link">Data</button>
+        <div class="dropdown-content">
+          <a href="{% url 'decks' %}">Decks</a>
+          <a href="{% url 'leaguedata' %}" class="nav-link">Leagues</a>
+          <a href="{% url 'data' %}" class="nav-link">Meta Data</a>
+        </div>
+      </div>
       <a href="###" class="nav-link">About</a>
       {% if user.is_authenticated %}
       <a href="{% url 'profile' %}" class="nav-link">Profile</a>

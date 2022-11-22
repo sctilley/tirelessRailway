@@ -22,15 +22,14 @@
       <td>{{deck.dateCreated|date:"SHORT_DATE_FORMAT"}}</td>
       <td>{% for flavor in deck.flavors.all %} 
         <p>{{flavor}}</p> 
-        
         {% endfor%}</td>
       {% if user.is_staff %}
       <td>
         <p>
-          <a href="{{deck.id}}/update"><button>edit</button></a>
+          <a href="{{deck.id}}/update"><button class="button">edit</button></a>
         </p>
         <p>
-          <a href="{{deck.id}}/delete"><button>delete</button></a>
+          <a href="{{deck.id}}/delete"><button class="button deletebutton">delete</button></a>
         </p>
       </td>
       {% endif %}

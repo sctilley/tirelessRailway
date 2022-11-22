@@ -368,6 +368,14 @@ def decks(request):
 
     return render(request, 'decks.html', context)
 
+def leaguedata(request):
+    mtgformats = MtgFormat.objects.all()
+
+    context = {
+        'mtgformats': mtgformats,
+    }
+
+    return render(request, 'leaguedata.html', context)
 
 # HTMX STUFF:
 def listofarchetypes(request):
@@ -587,7 +595,30 @@ def decktable(request):
 
     return render(request, 'partials/htmx/decktable.html', context)
 
+def leaguetable(request):
+    fselect = int(request.GET.get('formatselect'))
 
+    print(fselect)
+
+    if fselect > 0:
+        Leagues = League.objects.filter(mtgFormat=fselect).annotate(wins=Count("matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
+    else:
+        Leagues = League.objects.all().annotate(wins=Count("matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
+    
+
+    context = {
+    'Leagues': Leagues,
+    }
+
+    return render(request, 'partials/htmx/leaguetable.html', context)
+
+def metatable(request):
+
+    context = {
+
+    }
+
+    return render(request, 'partials/htmx/metatable.html', context)
 
 class DeckUpdateView(UpdateView):
     model = Deck

@@ -24,7 +24,6 @@
           {% endfor %}
         </select>
         <button class="ctn" hx-get="{% url 'decktable' %}" hx-trigger="load, click" hx-include="#fselect, #aselect" hx-target="#tableplace">Filter</button>
-
       </div>
       <div class="tableplace" id="tableplace">
         Loading Decks...
