@@ -13,6 +13,7 @@ urlpatterns = [
     path('leaguedata/', views.leaguedata, name="leaguedata"),
     path('decks/<pk>/update', DeckUpdateView.as_view(), name="deckupdate"),
     path('decks/<pk>/delete', DeckDeleteView.as_view(), name="deckdelete"),
+    path('test/', views.test, name="test"),
 ]
 
 htmx_urlpatters = [

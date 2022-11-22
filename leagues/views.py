@@ -377,6 +377,13 @@ def leaguedata(request):
 
     return render(request, 'leaguedata.html', context)
 
+def test(request):
+
+    context = {
+
+    }
+
+    return render(request, 'test.html', context)
 # HTMX STUFF:
 def listofarchetypes(request):
 

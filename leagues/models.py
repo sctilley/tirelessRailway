@@ -86,23 +86,6 @@ class Tourneytype(models.Model):
         return self.name
 
 
-class Tournament(models.Model):
-    tourneyType = models.ForeignKey(
-        Tourneytype, null=True, on_delete=models.CASCADE, related_name="type")
-    mtgFormat = models.ForeignKey(
-        MtgFormat, null=True, on_delete=models.CASCADE, related_name="mformat2")
-    mtgoUserName = models.CharField(max_length=40, null=True)
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    dateCreated = models.DateTimeField(default=timezone.now)
-    myDeck = models.ForeignKey(
-        Deck, null=True, on_delete=models.CASCADE, related_name="mydeckname2")
-    myFlavor = models.ForeignKey(
-        Flavor, null=True, on_delete=models.CASCADE, related_name="myleagueflavor2")
-    isFinished = models.BooleanField('finished', default=False)
-
-    def __str__(self):
-        return str(self.mtgFormat)
-
 
 class Match(models.Model):
 
@@ -128,8 +111,6 @@ class Match(models.Model):
         MtgFormat, null=True, on_delete=models.CASCADE, related_name="mtgFormat")
     league = models.ForeignKey(
         League, null=True, on_delete=models.CASCADE, related_name="matches")
-    tourney = models.ForeignKey(
-        Tournament, null=True, on_delete=models.CASCADE, related_name="matches")
 
     def __str__(self):
         return f'Match vs: {self.theirname} by {self.user} on {self.dateCreated} (league id {self.league.pk})'
