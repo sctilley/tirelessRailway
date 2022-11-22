@@ -79,13 +79,6 @@ class League(models.Model):
         return reverse('leaguedetail', kwargs={'pk': self.pk})
 
 
-class Tourneytype(models.Model):
-    name = models.CharField(max_length=120)
-
-    def __str__(self):
-        return self.name
-
-
 
 class Match(models.Model):
 
