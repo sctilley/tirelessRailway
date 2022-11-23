@@ -311,8 +311,46 @@ def leagueroll(request):
     return render(request, 'partials/leagueroll.html', context)
 
 def data(request):
+    user = request.user
+    filterformat = 1
+    timeframe = 90
+    deckvalue = 2
+    filterdeck = deckvalue
+    startdate = timezone.now()
+    enddate = startdate - timedelta(days=timeframe)
 
-    return render(request, 'data.html')
+    # if varientselect > 0:
+    #     filterprofile = {
+    #         "user": user,
+    #         "myDeck": filterdeck,
+    #         "myFlavor": varientselect,
+
+    #     }
+    # else:
+    filterprofile = {
+            "user": user,
+            "myDeck": filterdeck,
+
+        }
+
+    
+    num_matches = Match.objects.filter(mtgFormat=filterformat).count()
+    targetmatches = Match.objects.filter(mtgFormat=filterformat, dateCreated__gte=enddate)
+
+    topdecks = targetmatches.values("theirDeck__name").annotate(
+        popularity=Count("theirDeck"),
+        percentpopularity=100 * F("popularity") / num_matches, 
+        mynumgames=Count("theirDeck", filter=Q(**filterprofile)),
+        mywingames=Count("theirDeck", filter=Q(**filterprofile, didjawin=1)),
+        mylossgames=Count("theirDeck", filter=Q(**filterprofile, didjawin=0)),
+        mwp=Case(When(mynumgames=0, then=0), default=100 * F("mywingames") / F("mynumgames")),
+    ).order_by("-popularity")[:50]
+
+    context = {
+        'topdecks': topdecks,
+    }
+
+    return render(request, 'data.html', context)
 
 def decks(request):
     user = request.user
@@ -620,9 +658,43 @@ def leaguetable(request):
     return render(request, 'partials/htmx/leaguetable.html', context)
 
 def metatable(request):
+    user = request.user
+    filterformat = 1
+    timeframe = 90
+    deckvalue = 2
+    filterdeck = deckvalue
+    startdate = timezone.now()
+    enddate = startdate - timedelta(days=timeframe)
+
+    # if varientselect > 0:
+    #     filterprofile = {
+    #         "user": user,
+    #         "myDeck": filterdeck,
+    #         "myFlavor": varientselect,
+
+    #     }
+    # else:
+    filterprofile = {
+            "user": user,
+            "myDeck": filterdeck,
+
+        }
+
+    
+    num_matches = Match.objects.filter(mtgFormat=filterformat).count()
+    targetmatches = Match.objects.filter(mtgFormat=filterformat, dateCreated__gte=enddate)
+
+    topdecks = targetmatches.values("theirDeck__name").annotate(
+        popularity=Count("theirDeck"),
+        percentpopularity=100 * F("popularity") / num_matches, 
+        mynumgames=Count("theirDeck", filter=Q(**filterprofile)),
+        mywingames=Count("theirDeck", filter=Q(**filterprofile, didjawin=1)),
+        mylossgames=Count("theirDeck", filter=Q(**filterprofile, didjawin=0)),
+        mwp=Case(When(mynumgames=0, then=0), default=100 * F("mywingames") / F("mynumgames")),
+    ).order_by("-popularity")[:50]
 
     context = {
-
+        'topdecks': topdecks,
     }
 
     return render(request, 'partials/htmx/metatable.html', context)

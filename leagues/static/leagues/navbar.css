@@ -1,4 +1,54 @@
 /* navbar */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+
+  background-color: var(--highlight);
+  padding: 16px 32px;
+  border-bottom: 3px solid var(--primary);
+}
+
+.nav-container {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav h1 {
+  color: var(--primary);
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.menu {
+  display: none;
+  flex: 1 1 0%;
+  justify-content: flex-end;
+  margin: 0 -16px;
+}
+
+.menu a {
+  color: black;
+  margin: 0px 10px;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  display: block;
+  padding: 16px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+  transition: 0.3s;
+  border-radius: 99px;
+}
+
+.menu a.is-active, .menu a:hover {
+  background-color: var(--primary);
+}
 
 /* The dropdown container */
 .dropdown {
@@ -47,43 +97,18 @@
   text-align: left;
 }
 
-/* Add a grey background color to dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
   display: block;
 }
 
-.nav-container {
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-}
-
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 99;
-
-  background-color: var(--highlight);
-  padding: 16px 32px;
-  border-bottom: 3px solid var(--primary);
-
-
-}
 
 .hamburger {
   display: block;
   position: relative;
   z-index: 1;
-
   user-select: none;
-
   appearance: none;
   border: none;
   outline: none;
@@ -163,38 +188,7 @@ nav {
   transform: translateX(15px);
 }
 
-nav h1 {
-  color: var(--primary);
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: 2px;
-}
 
-.menu {
-  display: none;
-  flex: 1 1 0%;
-  justify-content: flex-end;
-  margin: 0 -16px;
-}
-
-.menu a {
-  color: black;
-  margin: 0px 10px;
-  border: none;
-  outline: none;
-  background-color: inherit;
-  display: block;
-  padding: 16px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 18px;
-  transition: 0.3s;
-  border-radius: 99px;
-}
-
-.menu a.is-active, .menu a:hover {
-  background-color: var(--primary);
-}
 
 @media (min-width: 768px) {
   .hamburger {

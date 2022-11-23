@@ -1,1 +1,53 @@
 meta table here
+
+<table class="styled-table" style="max-width: 800px">
+  <thead>
+      <tr>
+      <th>Meta</th>
+      <th>Deck Name</th>
+      <th>Meta Share*</th>
+      <th>Win % </th>
+      <th>Played</th>
+      <th>Wins</th>
+      <th>Losses</th>  
+      </tr>
+  </thead>
+  <tbody>
+    {% for deck in topdecks %}
+      {% if deck.mynumgames != 0 %}
+        <tr>
+            <th scope="row" class="center">{{ forloop.counter }}</th>
+            <td>{{ deck.theirDeck__name }}</td>
+            {% if deck.percentpopularity > 9 %}
+                <td>{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} decks </small></td>
+            {% else %}
+                <td class="center">&nbsp;{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} deck{% if deck.popularity > 1 %}s{% endif %} </small></td>
+            {% endif %}
+            <td class="center">{{ deck.mwp }}</td>
+
+            <td class="center">
+                {{ deck.mynumgames }}
+            </td>
+            <td class="center">
+                {{deck.mywingames}}
+            </td>
+            <td class="center">
+                {{deck.mylossgames}}
+            </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+    <tfoot>
+        <tr>
+            <td></td>
+            <td><a href="#" onclick="download_table_as_csv('statstable');">Download as CSV</a></td>
+            <td>&nbsp;<small>total: {{ num_decks }} decks</small></td>
+            <td></td>
+            <td></td>
+            
+            <td></td>
+
+        </tr>
+    </tfoot>
+  </tbody>
+</table>
