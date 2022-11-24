@@ -14,7 +14,7 @@
   <tbody>
     {% for league in Leagues %}
     <tr>
-      <td><img class="header-img" src="{{ league.image.url }}" /></td>
+      <td><img class="header-img" src="{{ league.myDeck.image.url }}" /></td>
       <td>{{league.dateCreated|date:"SHORT_DATE_FORMAT"}}</td>
       <td>{{league.mtgFormat}}</td>
       <td>{{league.myDeck}}</td>
