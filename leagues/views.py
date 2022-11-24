@@ -312,42 +312,21 @@ def leagueroll(request):
 
 def data(request):
     user = request.user
-    filterformat = 1
-    timeframe = 90
-    deckvalue = 2
-    filterdeck = deckvalue
-    startdate = timezone.now()
-    enddate = startdate - timedelta(days=timeframe)
+    userdeckslist = League.objects.filter(user=user).values_list('myDeck_id').distinct()
+    usersdecks = Deck.objects.filter(id__in=userdeckslist)
 
-    # if varientselect > 0:
-    #     filterprofile = {
-    #         "user": user,
-    #         "myDeck": filterdeck,
-    #         "myFlavor": varientselect,
+    try:
+        currentleague = League.objects.filter(user=user).latest('dateCreated')
+    except:
+        currentleague = League.objects.none()
 
-    #     }
-    # else:
-    filterprofile = {
-            "user": user,
-            "myDeck": filterdeck,
 
-        }
-
-    
-    num_matches = Match.objects.filter(mtgFormat=filterformat).count()
-    targetmatches = Match.objects.filter(mtgFormat=filterformat, dateCreated__gte=enddate)
-
-    topdecks = targetmatches.values("theirDeck__name").annotate(
-        popularity=Count("theirDeck"),
-        percentpopularity=100 * F("popularity") / num_matches, 
-        mynumgames=Count("theirDeck", filter=Q(**filterprofile)),
-        mywingames=Count("theirDeck", filter=Q(**filterprofile, didjawin=1)),
-        mylossgames=Count("theirDeck", filter=Q(**filterprofile, didjawin=0)),
-        mwp=Case(When(mynumgames=0, then=0), default=100 * F("mywingames") / F("mynumgames")),
-    ).order_by("-popularity")[:50]
 
     context = {
-        'topdecks': topdecks,
+        'usersdecks': usersdecks,
+        'currentleague': currentleague,
+
+        
     }
 
     return render(request, 'data.html', context)
@@ -422,6 +401,9 @@ def test(request):
     }
 
     return render(request, 'test.html', context)
+
+
+
 # HTMX STUFF:
 def listofarchetypes(request):
 
@@ -512,7 +494,16 @@ def listofflavors(request):
         if request.GET[key]:
             ldeck = request.GET[key]
         else:
-            ldeck = 0
+            ldeck = 0   
+
+    print("ldeck ~~ ", ldeck)
+
+    if "specialflavor" in request.GET:
+        specialflavor = user.profile.recentFlavor
+    else:
+        specialflavor = False
+
+
 
     listofflavors = Flavor.objects.filter(deck=ldeck).order_by('-isdefault', 'name')
 
@@ -532,6 +523,7 @@ def listofflavors(request):
         'allvarients': allvarients,
         'currentflavor': currentflavor,
         'listofflavors': listofflavors,
+        'specialflavor': specialflavor,
     }
 
     return render(request, 'partials/htmx/listofflavors.html', context)
@@ -658,29 +650,47 @@ def leaguetable(request):
     return render(request, 'partials/htmx/leaguetable.html', context)
 
 def metatable(request):
+    print("METATABLE REQUEST.GET ~~~~ ", request.GET)
+
+    filterformat = int(request.GET.get('formatselect'))
+    filterdeck = int(request.GET.get('deckselect'))
+    filtervarient = int(request.GET.get('varientselect'))
+    filtertime = int(request.GET.get('timeselect'))
+    print(filterformat, filterdeck, filtervarient, filtertime)
+
     user = request.user
-    filterformat = 1
-    timeframe = 90
-    deckvalue = 2
-    filterdeck = deckvalue
+    try:
+        yourdeck = Deck.objects.get(pk=filterdeck)
+    except:
+        yourdeck = None
+
+    if yourdeck:
+        try:
+            yourflavor = yourdeck.flavors.get(pk=filtervarient)
+        except:
+            yourflavor = None
+
+    timeframe = filtertime
     startdate = timezone.now()
     enddate = startdate - timedelta(days=timeframe)
 
-    # if varientselect > 0:
-    #     filterprofile = {
-    #         "user": user,
-    #         "myDeck": filterdeck,
-    #         "myFlavor": varientselect,
-
-    #     }
-    # else:
-    filterprofile = {
+    if filterdeck > 0:
+        if filtervarient > 0:
+            filterprofile = {
+                "user": user,
+                "myDeck": filterdeck,
+                "myFlavor" : filtervarient,            
+            }
+        else:
+            filterprofile = {
+                "user": user,
+                "myDeck": filterdeck,            
+            }
+    else:
+        filterprofile = {
             "user": user,
-            "myDeck": filterdeck,
-
         }
-
-    
+        
     num_matches = Match.objects.filter(mtgFormat=filterformat).count()
     targetmatches = Match.objects.filter(mtgFormat=filterformat, dateCreated__gte=enddate)
 
@@ -695,6 +705,11 @@ def metatable(request):
 
     context = {
         'topdecks': topdecks,
+        'yourformat': MtgFormat.objects.get(pk=filterformat),
+        'yourdeck': yourdeck,
+        'yourflavor': yourflavor,
+        'filtertime': filtertime,
+        'num_matches': num_matches,
     }
 
     return render(request, 'partials/htmx/metatable.html', context)
