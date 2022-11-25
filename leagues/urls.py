@@ -14,6 +14,8 @@ urlpatterns = [
     path('decks/<pk>/update', DeckUpdateView.as_view(), name="deckupdate"),
     path('decks/<pk>/delete', DeckDeleteView.as_view(), name="deckdelete"),
     path('test/', views.test, name="test"),
+    path('deckupdate/', views.deckupdate, name="deckupdate"),
+
 ]
 
 htmx_urlpatters = [

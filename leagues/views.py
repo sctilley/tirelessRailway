@@ -402,6 +402,16 @@ def test(request):
 
     return render(request, 'test.html', context)
 
+def deckupdate(request):
+
+    decks = Deck.objects.all().order_by("-dateCreated")
+
+    context = {
+        'decks': decks,
+
+    }
+
+    return render(request, 'deckupdate.html', context)
 
 
 # HTMX STUFF:
@@ -693,8 +703,8 @@ def metatable(request):
             "user": user,
         }
         
-    num_matches = Match.objects.filter(mtgFormat=filterformat).count()
     targetmatches = Match.objects.filter(mtgFormat=filterformat, dateCreated__gte=enddate)
+    num_matches = targetmatches.count()
 
     topdecks = targetmatches.values("theirDeck__name").annotate(
         popularity=Count("theirDeck"),
@@ -726,6 +736,12 @@ class DeckUpdateView(UpdateView):
         'image',
         ]
     success_url ="/decks"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["deck_list"] = Deck.objects.all().order_by("-dateCreated")
+        return context
+
 
 class DeckDeleteView(DeleteView):
     model = Deck

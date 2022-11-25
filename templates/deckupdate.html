@@ -1,16 +1,11 @@
 {% extends 'main.html' %} {% block content %}{% load crispy_forms_tags %}{% load static %}
 
 <div class="content">
-  <h1>Edit Deck</h1>
+  <div class="banner">
+    <h1>New Deck Update View</h1>
+  </div>
 </div>
-{% if user.is_staff %}
-<div class="content">
-  <form method="post"> 
-    {% csrf_token %} 
-    {{ form.as_p }} 
-    <input type="submit" value="Save">
-  </form> 
-</div>
+
 <div class="content">
   <h2>Deck Doctor</h2>
   <div class="card leaguecard">
@@ -18,18 +13,14 @@
       Change this deck, {{deck}}, including all it's varients, into a varient of another deck:
       {% csrf_token %} 
       <select name="deckdoctor" id="">
-        <option value="1">List of Decks here</option>
+        {% for deck in decks %}
+        <option value="deck.id">{{deck.name}}</option>
+        {% endfor %}
       </select>
       <input type="submit" value="Save">
     </form>
   </div>
 </div>
 
-
-{% else %}
-<div class="content">
-  <p>Sorry, only staff can edit decks</p>
-</div>
-{% endif %}
 
 {% endblock %}
