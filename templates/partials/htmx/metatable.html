@@ -4,13 +4,15 @@
 <table class="styled-table" style="max-width: 800px">
   <thead>
       <tr>
-      <th>Meta</th>
-      <th>Deck Name</th>
-      <th>Meta Share*</th>
-      <th>Win % </th>
-      <th>Played</th>
-      <th>Wins</th>
-      <th>Losses</th>  
+        <th>Meta</th>
+        <th>Deck Name</th>
+        <th>Meta Share*</th>
+        {% if yourdeck %}
+        <th>Win % </th>
+        <th>Played</th>
+        <th>Wins</th>
+        <th>Losses</th>  
+        {% endif %}
       </tr>
   </thead>
   <tbody>
@@ -24,17 +26,12 @@
             {% else %}
                 <td class="center">&nbsp;{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} deck{% if deck.popularity > 1 %}s{% endif %} </small></td>
             {% endif %}
+            {% if yourdeck %}
             <td class="center">{{ deck.mwp }}</td>
-
-            <td class="center">
-                {{ deck.mynumgames }}
-            </td>
-            <td class="center">
-                {{deck.mywingames}}
-            </td>
-            <td class="center">
-                {{deck.mylossgames}}
-            </td>
+            <td class="center">{{ deck.mynumgames }}</td>
+            <td class="center">{{deck.mywingames}}</td>
+            <td class="center">{{deck.mylossgames}}</td>
+            {% endif %}
         </tr>
       {% endif %}
     {% endfor %}

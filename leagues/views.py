@@ -669,6 +669,8 @@ def metatable(request):
             yourflavor = yourdeck.flavors.get(pk=filtervarient)
         except:
             yourflavor = None
+    else:
+        yourflavor = None
 
     timeframe = filtertime
     startdate = timezone.now()
