@@ -17,7 +17,7 @@
 }
 
 body {
-    padding-top: 100px;
+    padding-top: 80px;
 }
 
 .line {
@@ -61,14 +61,10 @@ body {
 
 /* body */
 
-/* flex stuff */
-
 div.container {
     display: flex;
 
 }
-
-
 
 div.banner {
     text-align: center;
@@ -144,7 +140,7 @@ h2 {
   
 
 .content {
-    padding: 16px;
+    padding: 25px 16px;
 }
 
 .hidden {

@@ -1,37 +1,40 @@
 {% extends 'main.html' %} {% block content %} {% load static %}
 
-<div class="content">
-  <div class="banner">
-    <h1>MTGO Data Tracker</h1>
-    <h3>Like a spreadsheet, but better</h3>
-  </div>
-</div>
-
-
-<div class="content">
-  <div class="row">
-    <div class="col cardimage">
-      <a href="{% url 'league' %}"><img class="homebox" src="{% static 'leagues/images/grindstone.jpg' %}"></a>
-      <div class="text">Add League Matches</div>
-    </div>
-    <div class="col">
-      <a href="{% url 'data' %}"><img class="homebox" src="{% static 'leagues/images/orcish.jpg' %}"></a>
-      <div class="text">Data Analysis</div>
+<div class="homebackground">
+  <div class="content">
+    <div class="banner">
+      <h1>MTGO Data Tracker</h1>
+      <h3>Like a spreadsheet, but better</h3>
     </div>
   </div>
-</div>
-
-<div class="content">
-  <div class="better">
-    <h2>Better than a spreadsheet</h2>
-    <p>
-      If you play a lot of magic on mtgo, it can be useful to keep track of your results. Fun too. This website is dedicated to helping you keep track of your mtgo league results. It will keep track of your league results (i.e. how many 5-0s you get, etc.), your specific matchup win percentages, and more.
-    </p>
-    <p>
-      See and compare data with other users.
-    </p>
+  
+  
+  <div class="content">
+    <div class="row">
+      <div class="col cardimage">
+        <a href="{% url 'league' %}"><img class="homebox" src="{% static 'leagues/images/grindstone.jpg' %}"></a>
+        <div class="text">Add League Matches</div>
+      </div>
+      <div class="col">
+        <a href="{% url 'data' %}"><img class="homebox" src="{% static 'leagues/images/orcish.jpg' %}"></a>
+        <div class="text">Data Analysis</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="content">
+    <div class="better">
+      <h2>Better than a spreadsheet</h2>
+      <p>
+        If you play a lot of magic on mtgo, it can be useful to keep track of your results. Fun too. This website is dedicated to helping you keep track of your mtgo league results. It will keep track of your league results (i.e. how many 5-0s you get, etc.), your specific matchup win percentages, and more.
+      </p>
+      <p>
+        See and compare data with other users.
+      </p>
+    </div>
   </div>
 </div>
+
 
 
 

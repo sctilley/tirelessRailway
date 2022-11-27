@@ -312,21 +312,21 @@ def leagueroll(request):
 
 def data(request):
     user = request.user
-    userdeckslist = League.objects.filter(user=user).values_list('myDeck_id').distinct()
-    usersdecks = Deck.objects.filter(id__in=userdeckslist)
+    try:
+        userdeckslist = League.objects.filter(user=user).values_list('myDeck_id').distinct()
+        usersdecks = Deck.objects.filter(id__in=userdeckslist)
+    except:
+        usersdecks = None
 
     try:
         currentleague = League.objects.filter(user=user).latest('dateCreated')
     except:
         currentleague = League.objects.none()
 
-
-
     context = {
+        'mtgformats': MtgFormat.objects.all(),
         'usersdecks': usersdecks,
         'currentleague': currentleague,
-
-        
     }
 
     return render(request, 'data.html', context)
@@ -648,9 +648,9 @@ def leaguetable(request):
     print(fselect)
 
     if fselect > 0:
-        Leagues = League.objects.filter(mtgFormat=fselect).annotate(wins=Count("matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
+        Leagues = League.objects.filter(mtgFormat=fselect, isFinished=1).annotate(wins=Count("matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
     else:
-        Leagues = League.objects.all().annotate(wins=Count("matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
+        Leagues = League.objects.filter(isFinished=1).annotate(wins=Count("matches", filter=Q(matches__didjawin=1))).order_by("-dateCreated")
     
 
     context = {
@@ -699,9 +699,13 @@ def metatable(request):
                 "myDeck": filterdeck,            
             }
     else:
-        filterprofile = {
-            "user": user,
-        }
+        if request.user.is_authenticated:
+            filterprofile = {
+                "user": user,
+            }
+        else:
+            filterprofile = {
+            }
         
     targetmatches = Match.objects.filter(mtgFormat=filterformat, dateCreated__gte=enddate)
     num_matches = targetmatches.count()
