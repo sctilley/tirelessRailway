@@ -5,52 +5,55 @@
 </div>
 
 <div class="content">
-  <div class="card" style="max-width: 700px;">
-    <div class="row">
-      <div class="col center">
-        <select name="formatselect" id="fselect">
-          {% if user.profile.recentFormat.id %}
-          <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
-          {% endif %}
-          {% for mtgformats in mtgformats %}
-          <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
-          {% endfor %}
-        </select>
-        <select name="deckselect" id="dselect" hx-trigger="change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
-          <option value="0">All Decks</option>
-          {% for deck in usersdecks %}
-            {% if deck.id == currentleague.myDeck.id %}
-              <option value="{{deck.id}}" selected>{{deck.name}}</option>
-            {% else %}
-            <option value="{{deck.id}}">{{deck.name}}</option>
+  <div class="tealcard" style="max-width: 700px;">
+    <div class="form-group">
+      <div class="row">
+        <div class="col">
+          <select name="formatselect" id="fselect">
+            {% if user.profile.recentFormat.id %}
+            <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
             {% endif %}
-          {% endfor %}
-        </select>
-        <select name="varientselect" id="vselect">
-          <option value="0">All Varients</option>
-          {% if currentleague.myFlavor.id %}
-          <option value="{{currentleague.myFlavor.id}}" selected>{{currentleague.myFlavor.name}}</option>
-          {% endif %}
-        </select>
-        <select id="tselect" name="timeselect">
-          <option value=7>One Week</option>
-          <option value=14>Two Weeks</option>
-          <option value=21>Three Weeks</option>
-          <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
-          <option value=30>One Month</option>
-          <option value=60>Two Months</option>
-          <option value=90 selected>Three Months</option>
-          <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
-          <option value=180>Six Months</option>
-          <option value=365>One Year</option>
-          <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
-          <option value=90000>All Time</option>
-        </select>
+            {% for mtgformats in mtgformats %}
+            <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+            {% endfor %}
+          </select>
+          <select name="deckselect" id="dselect" hx-trigger="change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
+            <option value="0">All Decks</option>
+            {% for deck in usersdecks %}
+              {% if deck.id == currentleague.myDeck.id %}
+                <option value="{{deck.id}}" selected>{{deck.name}}</option>
+              {% else %}
+              <option value="{{deck.id}}">{{deck.name}}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+          <select name="varientselect" id="vselect">
+            <option value="0">All Varients</option>
+            {% if currentleague.myFlavor.id %}
+            <option value="{{currentleague.myFlavor.id}}" selected>{{currentleague.myFlavor.name}}</option>
+            {% endif %}
+          </select>
+          <select id="tselect" name="timeselect">
+            <option value=7>One Week</option>
+            <option value=14>Two Weeks</option>
+            <option value=21>Three Weeks</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=30>One Month</option>
+            <option value=60>Two Months</option>
+            <option value=90 selected>Three Months</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=180>Six Months</option>
+            <option value=365>One Year</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=90000>All Time</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <button class="ctn" hx-get="{% url 'metatable' %}" hx-trigger="load, click" hx-include="#fselect, #dselect, #vselect, #tselect" hx-target="#metatabletarget">Filter</button>
       </div>
     </div>
-    <div class="row">
-      <button class="ctn" hx-get="{% url 'metatable' %}" hx-trigger="load, click" hx-include="#fselect, #dselect, #vselect, #tselect" hx-target="#metatabletarget">Filter</button>
-    </div>
+
   </div>
 </div>
 

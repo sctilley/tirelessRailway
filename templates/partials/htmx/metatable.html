@@ -17,7 +17,6 @@
   </thead>
   <tbody>
     {% for deck in topdecks %}
-      {% if deck.mynumgames != 0 %}
         <tr>
             <th scope="row" class="center">{{ forloop.counter }}</th>
             <td>{{ deck.theirDeck__name }}</td>
@@ -27,13 +26,16 @@
                 <td class="center">&nbsp;{{ deck.percentpopularity }}% <span>&#8226;</span> <small>{{ deck.popularity }} deck{% if deck.popularity > 1 %}s{% endif %} </small></td>
             {% endif %}
             {% if yourdeck %}
+            {% if deck.mynumgames > 0 %}
             <td class="center">{{ deck.mwp }}</td>
+            {% else %}
+            <td> -- </td>
+            {% endif %}
             <td class="center">{{ deck.mynumgames }}</td>
-            <td class="center">{{deck.mywingames}}</td>
-            <td class="center">{{deck.mylossgames}}</td>
+            <td class="center">{{ deck.mywingames }}</td>
+            <td class="center">{{ deck.mylossgames }}</td>
             {% endif %}
         </tr>
-      {% endif %}
     {% endfor %}
     <tfoot>
         <tr>
