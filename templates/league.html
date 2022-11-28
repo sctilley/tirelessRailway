@@ -2,31 +2,31 @@
 
 
 <div class="content row">
-  <h1 class="col">Add League Data</h1>
+  <h1>Add League Data</h1>
 </div>
 
 {% if currentleague.isFinished is not False %}
 <div class="content row">
-  <div class="card">
+  <div class="col-9 tealcard">
     <form method="post" enctype="multipart/form-data" id="leagueform">
       {% csrf_token %}
         <div class="form-group">
           <div class="row">
-            <div class="col center">
+            <div class="col">
               <h3>Start a new league:</h3>
             </div>
           </div>
             <div class="row" style="margin: 20px 0px;">
-              <div class="col center" id="listofformats" hx-trigger="change, load" hx-include="#id_mtgFormat" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
+              <div class="col" id="listofformats" hx-trigger="change, load" hx-include="#id_mtgFormat" hx-get="{% url 'listofdecks' %}" hx-target="#id_myDeck" hx-swap="innerHTML">
                 {{l_form.mtgFormat|as_crispy_field}}
               </div>
-              <div class="col center" id="listofdecks" hx-include="#id_myDeck" hx-trigger="change, load" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
+              <div class="col" id="listofdecks" hx-include="#id_myDeck" hx-trigger="change, load" hx-get="{% url 'listofflavors' %}" hx-target="#id_myFlavor" hx-swap="innerHTML">
                 {{l_form.myDeck|as_crispy_field}}
               </div>
-              <div class="col center" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
+              <div class="col" id="listofflavors" hx-trigger="change from:#listofformats" hx-get="{% url 'listofflavors' %}" hx-include="#id_mtgFormat" hx-target="#id_myFlavor" hx-swap="innerHTML">
                 {{l_form.myFlavor|as_crispy_field}}
               </div>
-              <div class="col center" id="mtgoUserName" >
+              <div class="col" id="mtgoUserName" >
                 {{l_form.mtgoUserName|as_crispy_field}}
               </div>
             </div>
@@ -39,149 +39,176 @@
 </div>
 
 {% else %}
-<div class="content row">
-  <div class="card col match-card">
-      <form method="POST">
-        <fieldset {% if currentleague.isFinished is True %} disabled {% endif %}>
-          {% csrf_token %} {{ matchformset.management_form }}
-          <table class="matchtable">
-            <div class="row">
-              <h3>
-                Matches for 
-                {% if currentleague.myFlavor.name != "none/stock" %}
-                  {{ currentleague.myFlavor }}
-                {% endif %}
-                {{ currentleague.myDeck }} league 
-              </h3>
-              <p>
-                {{ currentleague.dateCreated }}
-              </p>
-            </div>
-            <div class="line"></div>
-            {% for form in matchformset %} {% if forloop.first %}
-            <thead>
-              <tr>
-                <th>#</th>
-                {% for field in form.visible_fields %}
-                <th class="">
-                  {% if field.name == "game1" %}
-                  <span title="These are games 1, 2, and 3. Tick the box if you won that game">1</span>
-                  {% elif field.name == "game2" %}
-                  <span title="These are games 1, 2, and 3. Tick the box if you won that game">2</span>
-                  {% elif field.name == "game3" %}
-                  <span title="These are games 1, 2, and 3. Tick the box if you won that game">3</span>
-                  {% else %}
-                    {{ field.label }}
+<div class="content">
+  <div class="row d-flex justify-content-lg-evenly">
+    <div class="col tealcard" style="max-width: 850px;">
+        <form method="POST">
+          <fieldset {% if currentleague.isFinished is True %} disabled {% endif %}>
+            {% csrf_token %} {{ matchformset.management_form }}
+            <table class="matchtable">
+              <div class="row">
+                <h3>
+                  Matches for 
+                  {% if currentleague.myFlavor.name != "none/stock" %}
+                    {{ currentleague.myFlavor }}
                   {% endif %}
-                </th>
-                {% endfor %}
-              </tr>
-            </thead>
-            {% endif %}
-            <tbody>
-              <tr>
-                <td>{{ forloop.counter }}
-                  {% for hidden in form.hidden_fields %}
-                    {{ hidden }}
+                  {{ currentleague.myDeck }} league 
+                </h3>
+                <p>
+                  {{ currentleague.dateCreated }}
+                </p>
+              </div>
+              <div class="line"></div>
+              {% for form in matchformset %} {% if forloop.first %}
+              <thead>
+                <tr>
+                  <th>#</th>
+                  {% for field in form.visible_fields %}
+                  <th class="">
+                    {% if field.name == "game1" %}
+                    <span title="These are games 1, 2, and 3. Tick the box if you won that game">1</span>
+                    {% elif field.name == "game2" %}
+                    <span title="These are games 1, 2, and 3. Tick the box if you won that game">2</span>
+                    {% elif field.name == "game3" %}
+                    <span title="These are games 1, 2, and 3. Tick the box if you won that game">3</span>
+                    {% else %}
+                      {{ field.label }}
+                    {% endif %}
+                  </th>
                   {% endfor %}
-                </td>
-                {% for field in form.visible_fields %}
-                <td>
-                  {% if field.name == "dateCreated" %}
-                    <button type='button' id="datebutton{{ forloop.parentloop.counter }}">date</button>
-                    {{ field.errors.as_ul }}
-                    {{ field }}
-                  {% elif field.name == "theirArchetype" %} 
-                    <button type='button' id="archbutton{{ forloop.parentloop.counter }}">Arch</button>
-                    {{ field.errors.as_ul }}
-                    {{ field }}
-                  {% elif field.name == "theirname" %}
-                    {{ field.errors.as_ul }}
-                    {{ field }}
-                    <datalist id="usernamelist">
-                      {% for match in usernamelist %}
-                        <option value="{{match.theirname}}"></option>
-                      {% endfor %}
-                    </datalist>
-                  {% else %}
-                    {{ field.errors.as_ul }} 
-                    {{ field }} 
-                  {% endif %}
-                  {{field.help_text}}
-                </td>
-                {% endfor %}
-              </tr>
-            </tbody>
-            {% endfor %}
-          </table>
-          <div class="">
+                </tr>
+              </thead>
+              {% endif %}
+              <tbody>
+                <tr>
+                  <td>{{ forloop.counter }}
+                    {% for hidden in form.hidden_fields %}
+                      {{ hidden }}
+                    {% endfor %}
+                  </td>
+                  {% for field in form.visible_fields %}
+                  <td>
+                    {% if field.name == "dateCreated" %}
+                      <button type='button' id="datebutton{{ forloop.parentloop.counter }}">date</button>
+                      {{ field.errors.as_ul }}
+                      {{ field }}
+                    {% elif field.name == "theirArchetype" %} 
+                      <button type='button' id="archbutton{{ forloop.parentloop.counter }}">Arch</button>
+                      {{ field.errors.as_ul }}
+                      {{ field }}
+                    {% elif field.name == "theirname" %}
+                      {{ field.errors.as_ul }}
+                      {{ field }}
+                      <datalist id="usernamelist">
+                        {% for match in usernamelist %}
+                          <option value="{{match.theirname}}"></option>
+                        {% endfor %}
+                      </datalist>
+                    {% else %}
+                      {{ field.errors.as_ul }} 
+                      {{ field }} 
+                    {% endif %}
+                    {{field.help_text}}
+                  </td>
+                  {% endfor %}
+                </tr>
+              </tbody>
+              {% endfor %}
+            </table>
             <div class="">
-              <button type="submit" class="ctn" name="matchformset">Save</button>
-              <button type="button" class="ctn" name="drop" onclick="openDropPop()">Drop</button>
-              <button type="button" class="ctn" name="delete" onclick="openDeletePop()">Delete</button>
+              <div class="">
+                <button type="submit" class="ctn" name="matchformset">Save</button>
+                <button type="button" class="ctn" name="drop" onclick="openDropPop()">Drop</button>
+                <button type="button" class="ctn" name="delete" onclick="openDeletePop()">Delete</button>
+              </div>
+              <div class="popup" id="droppopup">
+                <h2>Are you sure you want to drop?</h2>
+                <div class="line"></div>
+                <p style="text-align: left;">Dropping will close the league, the remaining matches will count as loses for scoring this league, but they won't otherwise affect your match win rate.</p>
+                <button type="submit" name="drop" value="1">Drop</button>
+              </div>
+              <div class="popup" id="deletepopup">
+                <h2>Are you sure you want to delete this league?</h2>
+                <div class="line"></div>
+                <p style="text-align: left;">The league and all of its matches will be deleted from the database.</p>
+                <button type="submit" name="delete" value="1">Delete</button>
+              </div>
             </div>
-            <div class="popup" id="droppopup">
-              <h2>Are you sure you want to drop?</h2>
-              <div class="line"></div>
-              <p style="text-align: left;">Dropping will close the league, the remaining matches will count as loses for scoring this league, but they won't otherwise affect your match win rate.</p>
-              <button type="submit" name="drop" value="1">Drop</button>
-            </div>
-            <div class="popup" id="deletepopup">
-              <h2>Are you sure you want to delete this league?</h2>
-              <div class="line"></div>
-              <p style="text-align: left;">The league and all of its matches will be deleted from the database.</p>
-              <button type="submit" name="delete" value="1">Delete</button>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-  </div>
-  <div class="card col reportbox" id="reportbox">
-    <div class="header">
-      <h3>Opponent Information Box</h3>
+          </fieldset>
+        </form>
     </div>
-    <div class="line"></div>
-    <div id="reporthere">
-      <p>After you enter your opponent's MTGO user name you can find out information about their history here</p>
+    <div class="col tealcard" id="reportbox" style="max-width: 500px; min-width: 400px;">
+      <div class="header">
+        <h3>Opponent Information Box</h3>
+      </div>
+      <div class="line"></div>
+      <div id="reporthere">
+        <p>After you enter your opponent's MTGO user name you can find out information about their history here</p>
+      </div>
     </div>
   </div>
 </div>
 {% endif %}
+
 <div class="content">
-  <h2>
-    About leagues
-  </h2>
-  <p>This website is dedicated to keeping track of mtgo league results. Every League on mtgo has five matches. You can add them here as you play them (the save button will save an incomplete league), or you can add them all at once.</p>
-  <p>The default date and time will be set to now (on save), but if you played these matches a while ago you can manually change the date by clicking on the button.</p>
+  <div class="row">
+    <div class="col-xl-10">
+      <h2>
+        About leagues
+      </h2>
+      <p>This website is dedicated to keeping track of mtgo league results. Every League on mtgo has five matches. You can add them here as you play them (the save button will save an incomplete league), or you can add them all at once.</p>
+      <p>The default date and time will be set to now (on save), but if you played these matches a while ago you can manually change the date by clicking on the button.</p>
+    </div>
+  </div>
 </div>
+
 
 <div class="content row">
   <h1 class="col">Your Past Leagues:</h1>
 </div>
 
-<div class="content">
-  <div class="card">
-    <select name="formatselect" id="fselect" hx-trigger="load" hx-get="{% url 'leagueroll' %}" hx-include="#dselect, #vselect" hx-target="#leaguerolldiv">
-      <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
-      {% for mtgformats in mtgformats %}
-      <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
-      {% endfor %}
-    </select>
-    <select name="deckselect" id="dselect" hx-trigger="change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
-      <option value="0">All Decks</option>
-      {% for deck in usersdecks %}
-        {% if deck.id == currentleague.myDeck.id %}
-          <option value="{{deck.id}}" selected>{{deck.name}}</option>
-        {% else %}
-        <option value="{{deck.id}}">{{deck.name}}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-    <select name="varientselect" id="vselect">
-      <option value="0">All Varients</option>
-      <option value="{{currentleague.myFlavor.id}}" selected>{{currentleague.myFlavor.name}}</option>
-    </select>
-    <button class="ctn" hx-get="{% url 'leagueroll' %}" hx-include="#fselect, #dselect, #vselect" hx-target="#leaguerolldiv">Filter</button>
+<div class="content row">
+  <div class="col-xl-9">
+    <div class="tealcard">
+      <form>
+        <div class="row">
+          <div class="col">
+            <label for="fselect" class="form-label">Format</label>
+            <select class="form-control" name="formatselect" id="fselect" hx-trigger="load" hx-get="{% url 'leagueroll' %}" hx-include="#dselect, #vselect" hx-target="#leaguerolldiv">
+              <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
+              {% for mtgformats in mtgformats %}
+              <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col">
+            <label for="dselect" class="form-label">Deck</label>
+            <select class="form-control" name="deckselect" id="dselect" hx-trigger="change" hx-get="{% url 'listofflavors' %}" hx-target="#vselect" hx-swap="innerHTML">
+              <option value="0">All Decks</option>
+              {% for deck in usersdecks %}
+                {% if deck.id == currentleague.myDeck.id %}
+                  <option value="{{deck.id}}" selected>{{deck.name}}</option>
+                {% else %}
+                <option value="{{deck.id}}">{{deck.name}}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col">
+            <label for="vselect" class="form-label">Varient</label>
+            <select class="form-control" name="varientselect" id="vselect">
+              <option value="0">All Varients</option>
+              <option value="{{currentleague.myFlavor.id}}" selected>{{currentleague.myFlavor.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button class="ctn" hx-get="{% url 'leagueroll' %}" hx-include="#fselect, #dselect, #vselect" hx-target="#leaguerolldiv">Filter</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 

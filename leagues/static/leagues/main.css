@@ -9,15 +9,7 @@
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
     font-family: sans-serif;
-
-}
-
-body {
-    padding-top: 80px;
 }
 
 .line {
@@ -61,14 +53,6 @@ body {
 
 /* body */
 
-div.container {
-    display: flex;
-
-}
-
-div.banner {
-    text-align: center;
-}
 
 div.randomsub {
     display: flex;
@@ -96,14 +80,6 @@ h2 {
     color: var(--secondary);
 }
 
-.row {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    gap: 20px;
-}
 
 .rowg {
     display: flex;
@@ -113,50 +89,31 @@ h2 {
 
 }
 
-.row-no-wrap {
-    flex-flow: nowrap;
-    gap: 1px;
-}
-
-.row-no-space-between {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    width: 100%;
-    justify-content: flex-start;
-    gap: 20px;
-}
-  
-.col {
-    margin: 0px auto;
-  }
-
-.reportbox {
-    align-self: stretch;
-    min-width: 400px;
-    max-width: 500px;
-    flex: 1;
-}
-  
 
 .content {
     padding: 25px 16px;
+    margin: 0;
 }
 
 .hidden {
     display: none;
 }
 
-.card {
+.tealcard {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
     padding: 12px;
     text-align: center;
     background-color: rgb(184, 255, 255);
     border-style: solid;
-    border-width: 4px 4px 4px 4px;
+    border-width: 2px;
     border-color: var(--primary);
     border-radius: 0.3rem;
     margin-bottom: 20px;
+    margin: 20px;
+}
+
+.header {
+    margin: 8px 0px 8px 8px;
 }
 
 .leaguecard {
@@ -165,6 +122,7 @@ h2 {
     max-width: 800px;
     min-width: 350px;
     text-align: left;
+    margin-bottom: 12px;
 }
 
 .header-img {
@@ -172,24 +130,10 @@ h2 {
     height: 50px;
     object-fit: cover;
     border-radius: 100%;
-    margin-right: 1rem;
-    flex-shrink: 0;
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--primary);
   }
-
-
-
-
-
-
-
-
-.colbig {
-    flex: 3;
-}
-
-.colsmall {
-    flex: 1;
-}
 
 .leaguecontent {
     display: flex;
@@ -198,10 +142,6 @@ h2 {
 
 .leaguecontent > table {
     flex: auto;
-}
-
-.match-card {
-    max-width: 740px;
 }
 
 

@@ -1,0 +1,26 @@
+/* navbar */
+nav {
+  background-color: var(--highlight);
+  border-bottom: 3px solid var(--primary);
+  color: black;
+}
+/* The dropdown container */
+
+
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover{
+  border-radius: 20px;
+  background-color: var(--primary);
+  
+}
+
+.navbar a {
+  color: black;
+}
+
+a.is-active {
+  color: var(--primary);
+  font-weight: bold;
+}
+

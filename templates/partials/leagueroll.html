@@ -1,29 +1,38 @@
 {% if leagueroll %}
-  <div class="rowg">
-    <div class="colbig">
+  <div class="row justify-content-xl-around">
+    <div class="col-12 col-lg-9">
       {% for league in leagueroll %}
       <div class="card leaguecard">
-        <div class="row">
-          <img class="header-img" src="{{ league.myDeck.image.url }}">
-          <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}:</b>
-          <p>{{league.dateCreated}}</p>
-          <p class="score">
-            {% if league.wins == 5 %}
-            5-0
-            {% elif league.wins == 4 %}
-                4-1
-            {% elif league.wins == 3 %}
-                3-2
-            {% elif league.wins == 2 %}
-                2-3
-            {% elif league.wins == 1 %}
-                1-4
-            {% elif league.wins == 0 %}
-                0-5
-            {% else %}
-                {{league.wins}}
-            {% endif %}
-          </p>
+        <div class="row header">
+          <div class="col-1 d-flex align-items-center justify-content-center">
+            <img class="header-img" src="{{ league.myDeck.image.url }}">
+          </div>
+          <div class="col-6 d-flex align-items-center justify-content-center">
+            <b>{{ league.mtgFormat}} &#8226; {{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}:</b>
+          </div>
+          <div class="col-4 d-flex align-items-center justify-content-center">
+            <span>{{league.dateCreated}}</span>
+          </div>
+          <div class="col-1 d-flex align-items-center justify-content-center">
+            <b class="score">
+              {% if league.wins == 5 %}
+              5-0
+              {% elif league.wins == 4 %}
+                  4-1
+              {% elif league.wins == 3 %}
+                  3-2
+              {% elif league.wins == 2 %}
+                  2-3
+              {% elif league.wins == 1 %}
+                  1-4
+              {% elif league.wins == 0 %}
+                  0-5
+              {% else %}
+                  {{league.wins}}
+              {% endif %}
+            </b>
+          </div>
+        
         </div>
         <div class="line"></div>
         <div class="leaguecontent"> 
@@ -68,7 +77,7 @@
             </tr>
           {% endfor %}  
           </table>
-          <div>
+          <div style="margin-right: 4px;">
             <button class="ctn" name="edit" onclick="openLeaguePop()" hx-trigger="click" hx-get="{% url 'leagueedit' %}?league={{league.id}}" hx-target ="#leagueeditcontent">edit</button>
           </div>
         </div>
@@ -83,19 +92,24 @@
       </div>
     </div>
 
+    <div class="w-100 d-lg-none"></div>
+
 
     <!-- right card  -->
-    <div class="colsmall">
+    <div class="col">
       <div class="card reportcard">
-        {% if filterdeck %}
-        <h2 style="text-align: center;">{{filterdeck.name}}</h2>
-        {% else %}
-        <h2 style="text-align: center;">All Decks</h2>
-        {% endif %}
+        <div class="header">
+          {% if filterdeck %}
+          <h2 style="text-align: center;">{{filterdeck.name}}</h2>
+          {% else %}
+          <h2 style="text-align: center;">All Decks</h2>
+          {% endif %}
+  
+          {% if filterflavor %}
+            <p>({{filterflavor.name}})</p>
+          {% endif %}
+        </div>
 
-        {% if filterflavor %}
-          <p>({{filterflavor.name}})</p>
-        {% endif %}
         <div class="line">
 
         </div>
