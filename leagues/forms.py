@@ -53,11 +53,11 @@ class SplitDateTimeField(forms.SplitDateTimeField):
 class MatchForm(forms.ModelForm):
 
     game1 = forms.BooleanField(label='one', required=False, widget=forms.CheckboxInput(
-        attrs={'class': 'largerCheckbox', 'title': 'This is game 1. Tick the box if you won that game'}))
+        attrs={'class': 'largerCheckbox', 'title': 'This is game 1. Tick the box if you won.'}))
     game2 = forms.BooleanField(label='two', required=False, widget=forms.CheckboxInput(
-        attrs={'class': 'largerCheckbox', 'title': 'This is game 2. Tick the box if you won that game'}))
+        attrs={'class': 'largerCheckbox', 'title': 'This is game 2. Tick the box if you won.'}))
     game3 = forms.BooleanField(label='three', required=False, widget=forms.CheckboxInput(
-        attrs={'class': 'largerCheckbox', 'title': 'This is game 3. Tick the box if you won that game'}))
+        attrs={'class': 'largerCheckbox', 'title': 'This is game 3. Tick the box if you won.'}))
     theirname = forms.CharField(
         label="Their Username", widget=forms.TextInput(attrs={'list': 'usernamelist', 'autocomplete': 'off', 'hx-trigger': 'change', 'hx-get': '/checkopponent', 'hx-target': '#reporthere'}))
     theirArchetype = forms.ModelChoiceField(
@@ -100,7 +100,7 @@ class LeagueForm(forms.ModelForm):
 
 class DeckForm(forms.ModelForm):
     mtgFormat = forms.ModelChoiceField(
-        queryset=MtgFormat.objects.all(), label='Format', widget=forms.Select(attrs={'hx-ext': 'debug', 'hx-trigger': 'load, change', 'hx-get': '/listofarchetypes', 'hx-target': '#id_archetype'}))
+        queryset=MtgFormat.objects.all(), label='Format', widget=forms.Select(attrs={'hx-ext': 'debug', 'hx-trigger': 'load, change', 'hx-get': '/listofarchetypes', 'hx-include': 'deckdoctor', 'hx-target': '#id_archetype'}))
     archetype = forms.ModelChoiceField(
         queryset=Archetype.objects.all(), label='Archetype', widget=forms.Select(attrs={'hx-get': '/listofflavors', 'hx-target': 'next td'}))
 

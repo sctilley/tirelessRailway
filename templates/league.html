@@ -42,7 +42,7 @@
 <div class="content">
   <div class="row d-flex justify-content-lg-evenly">
     <div class="col tealcard" style="max-width: 850px;">
-        <form method="POST">
+        <form method="POST" class="">
           <fieldset {% if currentleague.isFinished is True %} disabled {% endif %}>
             {% csrf_token %} {{ matchformset.management_form }}
             <table class="matchtable">
@@ -134,6 +134,10 @@
                 <button type="submit" name="delete" value="1">Delete</button>
               </div>
             </div>
+            <div style="text-align: left;">
+              <br><small>*Date/time will automatically be today/now, but you can click the button to select a different date/time</small></br>
+              <br><small>*Archetype will be filled in automatically based on the deck you select, but you can start by manually filling out archetype if you want</small></br>
+            </div>
           </fieldset>
         </form>
     </div>
@@ -217,6 +221,7 @@
 </div>
 
 <script src="{% static 'leagues/popup.js' %}"></script>
+<script src="{% static 'leagues/date-arch.js' %}"></script>
 
 
 {% endblock %}

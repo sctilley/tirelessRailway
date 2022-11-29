@@ -10,13 +10,13 @@ nav {
 
 /* Add a red background color to navbar links on hover */
 .navbar a:hover{
-  border-radius: 20px;
   background-color: var(--primary);
   
 }
 
 .navbar a {
   color: black;
+  border-radius: 20px;
 }
 
 a.is-active {
@@ -24,3 +24,10 @@ a.is-active {
   font-weight: bold;
 }
 
+.navtabs-custom {
+  border: none;
+  border-top: 3px solid var(--primary);
+  border-left: 3px solid var(--primary);
+  border-right: 3px solid var(--primary);
+  border-radius: 5px;
+}

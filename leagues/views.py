@@ -413,6 +413,33 @@ def deckupdate(request):
 
     return render(request, 'deckupdate.html', context)
 
+def deckdoctor(request, id):
+    deck = Deck.objects.get(id=id)
+
+    decks = Deck.objects.all().order_by("-dateCreated")
+    deck_form = DeckForm(instance=deck)
+
+    if request.method == "POST":
+        print(request.POST)
+        deck_form = DeckForm(request.POST, instance=deck)
+        if deck_form.is_valid():
+            deck_form.save()
+
+            return redirect('decks')
+
+
+
+    context = {
+        'deck_form' : deck_form,
+        'deck' : deck,
+        'decks': decks,
+
+    }
+
+    return render(request, 'deckdoctor.html', context)
+
+
+
 
 # HTMX STUFF:
 def listofarchetypes(request):
@@ -663,16 +690,27 @@ def metatable(request):
     print("METATABLE REQUEST.GET ~~~~ ", request.GET)
 
     filterformat = int(request.GET.get('formatselect'))
-    filterdeck = int(request.GET.get('deckselect'))
-    filtervarient = int(request.GET.get('varientselect'))
+    try:
+        filterdeck = int(request.GET.get('deckselect'))
+    except:
+        filterdeck = 0
+    try:
+        filtervarient = int(request.GET.get('varientselect'))
+    except:
+        filtervarient = 0
+
     filtertime = int(request.GET.get('timeselect'))
+
     print(filterformat, filterdeck, filtervarient, filtertime)
 
     user = request.user
     try:
         yourdeck = Deck.objects.get(pk=filterdeck)
     except:
-        yourdeck = None
+        if filterdeck == 9999:
+            yourdeck = "ALL"
+        else:
+            yourdeck = None
 
     if yourdeck:
         try:
@@ -687,7 +725,12 @@ def metatable(request):
     enddate = startdate - timedelta(days=timeframe)
 
     if filterdeck > 0:
-        if filtervarient > 0:
+        if filterdeck > 9998:
+            filterprofile = {
+                "user": user,
+            }
+            print("here~~~~~~~~~~~~~~~~~~~~~~~~~")
+        elif filtervarient > 0:
             filterprofile = {
                 "user": user,
                 "myDeck": filterdeck,

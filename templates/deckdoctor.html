@@ -1,0 +1,45 @@
+{% extends 'main.html' %} {% block content %}{% load crispy_forms_tags %}{% load static %}
+
+<div class="content">
+  <h1>Deck Doctor</h1>
+  <h3>For deck: {{deck}}</h3>
+</div>
+{% if user.is_staff %}
+
+<div class="content">
+  <div class="leaguecard">
+    <div class="form-group">
+      <form method="post" enctype="multipart/form-data"> 
+        <div class="deckdoctor" id="deckdoctor" name="deckdoctor" value="1">
+  
+        </div>
+        {% csrf_token %} 
+        {{ deck_form|crispy }} 
+        <input type="submit" value="Save">
+      </form> 
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <h2>Deck Doctor</h2>
+  <div class="card leaguecard">
+    <form method="post">
+      Change this deck, {{deck}}, including all it's varients, into a varient of another deck:
+      {% csrf_token %} 
+      <select name="deckdoctor" id="">
+        <option value="1">List of Decks here</option>
+      </select>
+      <input type="submit" value="Save">
+    </form>
+  </div>
+</div>
+
+
+{% else %}
+<div class="content">
+  <p>Sorry, only staff can edit decks</p>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -209,3 +209,10 @@ p.score {
     font-weight: 900;
     font-size: larger;
 }
+
+.pinkborderbottom {
+    border-bottom: 3px solid var(--primary);
+    border-left: 3px solid var(--primary);
+    border-right: 3px solid var(--primary);
+    border-radius: 5px;
+}

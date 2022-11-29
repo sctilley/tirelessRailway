@@ -1,5 +1,5 @@
 
-<h2>{{yourformat.name}} {% if yourdeck %} on {{yourdeck.name}} {% if yourflavor %} -- {{yourflavor}} {% endif %}{% endif %} over the past {{filtertime}} days</h2>
+<h2>{{yourformat.name}}{% if yourdeck %}{% if yourdeck == "ALL" %}, all your decks, {% else %} on {{yourdeck.name}} {% endif %} {% if yourflavor %} -- {{yourflavor}} {% endif %}{% endif %} over the past {{filtertime}} days</h2>
 
 <table class="styled-table" style="max-width: 800px">
   <thead>
