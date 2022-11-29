@@ -1,18 +1,18 @@
 from django.urls import path
 from . import views
-from .views import DeckUpdateView, DeckDeleteView
+from .views import DeckDeleteView
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
 from django.conf import settings
 
 urlpatterns = [
     path('', views.home, name="home"),
+    path('about/', views.about, name="about"),
     path('league/', views.league, name="league"),
     path('data/', views.data, name="data"),
     path('decks/', views.decks, name="decks"),
     path('leaguedata/', views.leaguedata, name="leaguedata"),
     path('decks/<int:id>/update', views.deckdoctor, name="deckdoctor"),
-    path('decks/<pk>/delete', DeckDeleteView.as_view(), name="deckdelete"),
     path('test/', views.test, name="test"),
     path('deckupdate/', views.deckupdate, name="deckupdate"),
 

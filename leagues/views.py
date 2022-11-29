@@ -146,6 +146,13 @@ def league(request):
 
     return render(request, 'league.html', context)
 
+def about(request):
+    context = {
+
+    }
+
+    return render(request, 'about.html', context)
+
 def leagueroll(request):
     lformat = request.GET['formatselect']
 
@@ -772,23 +779,6 @@ def metatable(request):
     }
 
     return render(request, 'partials/htmx/metatable.html', context)
-
-class DeckUpdateView(UpdateView):
-    model = Deck
-    fields = [
-        'name',
-        'mtgFormat',
-        'archetype',
-        'dateCreated',
-        'image',
-        ]
-    success_url ="/decks"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["deck_list"] = Deck.objects.all().order_by("-dateCreated")
-        return context
-
 
 class DeckDeleteView(DeleteView):
     model = Deck
