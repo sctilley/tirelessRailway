@@ -12,6 +12,12 @@
       <button class="btn btn-outline-info mt-3" type="submit">Log in</button>
     </div>
   </form>
+  <div class="mt-2">
+    <small class="text-muted">
+      <a href="{% url 'password_reset' %}">Forgot Password?</a>
+    </small>
+  </div>
+
   <div class="boder-top pt-3">
     <small class="text-muted">
       Need an account? <a class="ml-2" href="{% url 'register' %}">Register</a>

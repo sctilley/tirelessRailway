@@ -100,7 +100,7 @@ class LeagueForm(forms.ModelForm):
 
 class DeckForm(forms.ModelForm):
     mtgFormat = forms.ModelChoiceField(
-        queryset=MtgFormat.objects.all(), label='Format', widget=forms.Select(attrs={'hx-ext': 'debug', 'hx-trigger': 'load, change', 'hx-get': '/listofarchetypes', 'hx-include': 'deckdoctor', 'hx-target': '#id_archetype'}))
+        queryset=MtgFormat.objects.all(), label='Format', widget=forms.Select(attrs={'hx-ext': 'debug', 'hx-trigger': 'load, change', 'hx-get': '/listofarchetypes', 'hx-include': '#deckdoctor', 'hx-target': '#id_archetype'}))
     archetype = forms.ModelChoiceField(
         queryset=Archetype.objects.all(), label='Archetype', widget=forms.Select(attrs={'hx-get': '/listofflavors', 'hx-target': 'next td'}))
 
