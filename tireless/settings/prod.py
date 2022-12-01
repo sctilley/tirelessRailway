@@ -1,3 +1,3 @@
 # SECURE_SSL_REDIRECT = True
 
-DEBUG = TRUE
+DEBUG = True
