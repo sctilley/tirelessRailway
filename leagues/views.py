@@ -46,6 +46,7 @@ def league(request):
         'myDeck': user.profile.recentDeck,
         'myFlavor': user.profile.recentFlavor,
         'mtgoUserName': user.profile.mtgoUserName,
+        'mtgformats': MtgFormat.objects.all(),
     }
 
     l_form = LeagueForm(initial=initial_data)
@@ -154,10 +155,14 @@ def about(request):
     return render(request, 'about.html', context)
 
 def leagueroll(request):
+    print(request.GET)
     lformat = request.GET['formatselect']
 
     if 'formatselect' in request.GET:
-        fselect = int(request.GET['formatselect'])
+        try:
+            fselect = int(request.GET['formatselect'])
+        except:
+            fselect = 0
 
     if 'deckselect' in request.GET:
         dselect = int(request.GET['deckselect'])

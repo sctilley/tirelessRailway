@@ -180,7 +180,8 @@
             <label for="fselect" class="form-label">Format</label>
             <select class="form-control" name="formatselect" id="fselect" hx-trigger="load" hx-get="{% url 'leagueroll' %}" hx-include="#dselect, #vselect" hx-target="#leaguerolldiv">
               <option value="{{user.profile.recentFormat.id}}" selected>{{user.profile.recentFormat.name}}</option>
-              {% for mtgformats in mtgformats %}
+              <option value="1">test</option>
+              {% for mtgformat in mtgformats %}
               <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
               {% endfor %}
             </select>
