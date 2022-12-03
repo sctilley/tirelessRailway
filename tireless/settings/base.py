@@ -130,6 +130,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'lifeisaresource@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
+INTERNAL_IPS = (
+    '127.0.0.1',
+)
+
 
 import dj_database_url
 
