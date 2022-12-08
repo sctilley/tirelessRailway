@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col">
         <div class="tealcard">
-          <select name="formatselect" id="fselect" hx-trigger="load" hx-get="{% url 'listofarchetypes' %}?filter=0" hx-target="#aselect" hx-ext="debug">
+          <select name="mtgFormat" id="fselect" hx-trigger="load" hx-get="{% url 'listofarchetypes' %}?filter=0" hx-target="#aselect">
             {% for mtgformats in mtgformats %}
             <option value="{{mtgformats.id}}">{{mtgformats.name}}</option>
             {% endfor %}
@@ -36,7 +36,7 @@
         <div class="banner" style="margin-bottom: 16px;">
           <h1>Add Deck</h1>
         </div>
-        <div class="card leaguecard">
+        <div class="card leaguecard p-2">
           <form method="POST" enctype="multipart/form-data" name="deckForm">
             {% csrf_token %}
             <fieldset class="form-group">
@@ -59,7 +59,7 @@
             </div>
           </form>
         </div>
-        <div class="card leaguecard">
+        <div class="card leaguecard p-2">
           <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <fieldset class="form-group">

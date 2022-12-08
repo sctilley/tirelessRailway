@@ -7,32 +7,127 @@
 {% if user.is_staff %}
 
 <div class="content">
-  <div class="leaguecard">
+  <div class="card leaguecard p-3">
     <div class="form-group">
-      <form method="post" enctype="multipart/form-data"> 
+      <form method="post" enctype="multipart/form-data" id="basedeck"> 
         <div class="deckdoctor" id="deckdoctor" name="deckdoctor" value="1">
-  
+          <h2>Base Deck Form</h2>
         </div>
         {% csrf_token %} 
         {{ deck_form|crispy }} 
-        <input type="submit" value="Save">
+        <button type="submit" class="mt-3" name="basedeck" for="#basedeck">Save</button>
       </form> 
     </div>
   </div>
 </div>
 
 <div class="content">
-  <h2>Deck Doctor</h2>
-  <div class="card leaguecard">
-    <form method="post">
-      Change this deck, {{deck}}, including all it's varients, into a varient of another deck:
-      {% csrf_token %} 
-      <select name="deckdoctor" id="">
-        <option value="1">List of Decks here</option>
-      </select>
-      <input type="submit" value="Save">
-    </form>
+  <div class="row">
+    <div class="col">
+      <h2>Deck Doctor: for {{deck}}</h2>
+      <h3>including varients:</h3>
+      <div>
+        {% for flavor in deck.flavors.all %}
+        <li>{{flavor.name}}</li>
+        {% endfor %}
+      </div>
+    </div>
   </div>
+
+  <div class="card leaguecard p-3">
+    <h2>Fold deck into deck</h2>
+    <div class="form-group">
+      <form method="POST" enctype="multipart/form-data" id="deckfold">
+        <div class="mb-3">
+          Change this deck, {{deck}}, including all it's varients, into a varient of another deck:
+        </div>
+        {% csrf_token %} 
+        <div class="mb-3">
+          <label class="form-label" for="foldinto">Fold into this deck:</label>
+          <select class="form-control" name="foldinto" id="foldinto">
+            <option value="1">-------</option>
+            {% for deck in decks %}
+            <option value="{{deck.id}}">{{deck.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="newname">New name for this varient:</label>
+          <input class="form-control type="text" id="newname" name="newname" value="{{deck.name}}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="tselect">Affect instances of this deck from the past:</label>
+          <select class="form-control" id="tselect" name="timeselect">
+            <option value=7>One Week</option>
+            <option value=14>Two Weeks</option>
+            <option value=21>Three Weeks</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=30>One Month</option>
+            <option value=60>Two Months</option>
+            <option value=90>Three Months</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=180>Six Months</option>
+            <option value=365>One Year</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=99999 selected>All Time</option>
+          </select>
+        </div>
+        <button type="submit" class="mt-3" name="deckfold">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card leaguecard p-3">
+    <h2>Fold varient into varient</h2>
+    <div class="form-group">
+      <form method="POST" enctype="multipart/form-data" id="varientfold">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label" for="varient1select">Select Varient for {{deck}}:</label>
+          <select class="form-control" name="varient1select" id="varient1select">
+            <option value="1">-------</option>
+            {% for flavor in deck.flavors.all %}
+            <option value="{{flavor.id}}">{{flavor.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="varient1select">Target Varient:</label>
+          <select class="form-control" name="varient2select" id="varient2select">
+            <option value="1">-------</option>
+            {% for flavor in deck.flavors.all %}
+            <option value="{{flavor.id}}">{{flavor.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="tselect">Affect instances of this deck from the past:</label>
+          <select class="form-control" id="tselect" name="timeselect">
+            <option value=7>One Week</option>
+            <option value=14>Two Weeks</option>
+            <option value=21>Three Weeks</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=30>One Month</option>
+            <option value=60>Two Months</option>
+            <option value=90>Three Months</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=180>Six Months</option>
+            <option value=365>One Year</option>
+            <option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option>
+            <option value=99999 selected>All Time</option>
+          </select>
+        </div>
+        <button type="submit" class="mt-3" name="varientfold">Save</button>
+        
+
+      </form>
+    </div>
+
+
+
+
+  </div>
+
 </div>
 
 

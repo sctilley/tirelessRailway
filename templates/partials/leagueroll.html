@@ -9,7 +9,7 @@
             <img class="header-img" src="{{ league.myDeck.image.url }}">
           </div>
           <div class="col-7 d-flex align-items-center justify-content-center">
-            <b>{{ league.mtgFormat}}&emsp; &#8226; &emsp;{{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}:</b>
+            <b>{{ league.mtgFormat}}&emsp; &#8226; &emsp;{{league.myDeck}}{% if league.myFlavor.name != "none/stock" %} -- {{league.myFlavor}}{% endif %}</b>
           </div>
           <div class="col-3 d-flex align-items-center justify-content-center">
             <span>{{league.dateCreated|date:"M j, Y"}}</span>

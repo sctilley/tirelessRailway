@@ -27,7 +27,7 @@ class Deck(models.Model):
     mtgFormat = models.ForeignKey(
         MtgFormat, null=True, on_delete=models.CASCADE)
     archetype = models.ForeignKey(
-        Archetype, null=True, on_delete=models.CASCADE)
+        Archetype, null=True, on_delete=models.CASCADE, related_name='decks')
     dateCreated = models.DateTimeField(default=timezone.now)
     image = models.ImageField(default='defaultdeck.jpg', upload_to='deckpics')
 
@@ -89,7 +89,7 @@ class Match(models.Model):
     theirDeck = models.ForeignKey(
         Deck, verbose_name="Their Deck", null=True, on_delete=models.CASCADE, related_name="theirdeck")
     theirFlavor = models.ForeignKey(
-        Flavor, verbose_name="Their Deck Details", null=True, on_delete=models.CASCADE, related_name="theirdetails")
+        Flavor, verbose_name="Their Flavor", null=True, on_delete=models.CASCADE, related_name="theirdetails")
     myDeck = models.ForeignKey(
         Deck, null=True, on_delete=models.CASCADE, related_name="mydeck")
     myFlavor = models.ForeignKey(

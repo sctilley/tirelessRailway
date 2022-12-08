@@ -1,5 +1,7 @@
 {% if afilter %}
     <option value = "0">All Archetypes</option>
+{% elif specialarchetype %}
+    <option value = "specialarchetype.id">{{specialarchetype.name}}</option>
 {% else %}
     <option value="na">-------</option>
 {% endif %}

@@ -42,9 +42,9 @@ def league(request):
 
 
     initial_data = {
-        'mtgFormat': user.profile.recentFormat,
-        'myDeck': user.profile.recentDeck,
-        'myFlavor': user.profile.recentFlavor,
+        'mtgFormat': League.objects.filter(user=user).latest('dateCreated').mtgFormat,
+        'myDeck': League.objects.filter(user=user).latest('dateCreated').myDeck,
+        'myFlavor': League.objects.filter(user=user).latest('dateCreated').myFlavor,
         'mtgoUserName': user.profile.mtgoUserName,
         'mtgformats': MtgFormat.objects.all(),
     }
@@ -427,19 +427,83 @@ def deckupdate(request):
 
 def deckdoctor(request, id):
     deck = Deck.objects.get(id=id)
+    mtgformat = deck.mtgFormat
 
-    decks = Deck.objects.all().order_by("-dateCreated")
+    decks = Deck.objects.filter(mtgFormat=mtgformat).order_by("name")
     deck_form = DeckForm(instance=deck)
 
     if request.method == "POST":
-        print(request.POST)
-        deck_form = DeckForm(request.POST, instance=deck)
-        if deck_form.is_valid():
-            deck_form.save()
+        print("deck doctor post request here ~~~~~~", request.POST)
+
+        if "basedeck" in request.POST:
+            deck_form = DeckForm(request.POST, request.FILES, instance=deck)
+            if deck_form.is_valid():
+                deck_form.save()
+
+                return redirect('decks')
+        
+        if "deckfold" in request.POST:
+            tselect = int(request.POST.get('timeselect'))
+            foldinto = int(request.POST.get('foldinto'))
+            newflavorname = request.POST.get('newname')
+            print("folddeck", tselect, foldinto, newflavorname)
+
+            newdeck = Deck.objects.get(id=foldinto)
+
+            flavor_of_the_moment = Flavor.objects.get_or_create(name=newflavorname, deck=newdeck)
+            assignflavor = Flavor.objects.get(name=newflavorname)
+            print("Flavor of the moment is ~~~~", flavor_of_the_moment, assignflavor)
+
+            startdate = timezone.now()
+            enddate = startdate - timedelta(days=tselect)
+
+            targetmatches = Match.objects.filter(Q(myDeck=deck) | Q(theirDeck=deck), dateCreated__gte=enddate)
+
+            for match in targetmatches:
+                if match.myDeck == deck:
+                    print("new deck is............ ", newdeck)
+                    match.myDeck = newdeck
+                    match.myFlavor = assignflavor
+                    match.save()
+
+                    if match.league.myDeck == deck:
+                        match.league.myDeck = newdeck
+                        match.league.myFlavor = assignflavor
+                        match.league.save()
+
+                if match.theirDeck == deck:
+                    match.theirDeck = newdeck
+                    match.theirFlavor = assignflavor
+                    match.save()
+
+
 
             return redirect('decks')
 
+        if "varientfold" in request.POST:
+            varient1select = int(request.POST.get('varient1select'))
+            varient2select = int(request.POST.get('varient2select'))
+            tselect = int(request.POST.get('timeselect'))
+            startdate = timezone.now()
+            enddate = startdate - timedelta(days=tselect)
 
+            targetmatches = Match.objects.filter(Q(theirFlavor=varient1select) | Q(myFlavor=varient1select), dateCreated__gte=enddate)
+            print("targetmatches ~~~ ", targetmatches)
+    
+            for match in targetmatches:
+                if match.theirFlavor.id == varient1select:
+                    match.theirFlavor = Flavor.objects.get(id=varient2select)
+                    match.save()
+                    
+                elif match.myFlavor.id == varient1select:
+                    match.myFlavor = Flavor.objects.get(id=varient2select)
+                    match.save()
+
+                    match.league.myFlavor = Flavor.objects.get(id=varient2select)
+                    match.league.save()
+  
+
+            return redirect('decks')
 
     context = {
         'deck_form' : deck_form,
@@ -455,17 +519,28 @@ def deckdoctor(request, id):
 
 # HTMX STUFF:
 def listofarchetypes(request):
+    print("list of archetypes", request.GET)
 
-    for key in request.GET:
-            archevalue = request.GET[key]
+    if "mtgFormat" in request.GET:
+        formatvalue = int(request.GET.get('mtgFormat'))
+        
+    specialarchetype = None
+    if "name" in request.GET:
+        try:
+            deckname = request.GET.get('name')
+            specialarchetype = Deck.objects.get(name=deckname).archetype
+
+        except:
+            specialarchetype = None
+
 
     if "filter" in request.GET:
         afilter = True
     else:
         afilter = False
 
-    if archevalue:
-        listofarchetypes = Archetype.objects.filter(mtgFormat=int(archevalue))
+    if formatvalue:
+        listofarchetypes = Archetype.objects.filter(mtgFormat=formatvalue)
 
     else:
         listofarchetypes = Archetype.objects.all()
@@ -475,6 +550,7 @@ def listofarchetypes(request):
     context = {
         'afilter': afilter,
         'listofarchetypes': listofarchetypes,
+        'specialarchetype': specialarchetype,
     }
 
     return render(request, 'partials/htmx/listofarchetypes.html', context)
@@ -511,7 +587,7 @@ def listofdecks(request):
         format_matches = currentformat == formatvaluechecker
 
         if has_format and format_matches:
-            currentdeck = user.profile.recentDeck
+            currentdeck = League.objects.filter(user=user).latest('dateCreated').myDeck
             listofdecks = Deck.objects.filter(mtgFormat=lformat).order_by('name')
         else:
             currentdeck = None
@@ -533,8 +609,8 @@ def listofflavors(request):
         mtgformat = int(request.GET.get('mtgFormat'))
 
         if user.profile.recentFormat.id == mtgformat:
-            ldeck = user.profile.recentDeck.id
-            currentflavor = user.profile.recentFlavor
+            ldeck = League.objects.filter(user=user).latest('dateCreated').myDeck.id
+            currentflavor = League.objects.filter(user=user).latest('dateCreated').myFlavor
 
     elif "deckselect" in request.GET:
         allvarients = True
@@ -545,10 +621,9 @@ def listofflavors(request):
         else:
             ldeck = 0   
 
-    print("ldeck ~~ ", ldeck)
 
     if "specialflavor" in request.GET:
-        specialflavor = user.profile.recentFlavor
+        specialflavor = League.objects.filter(user=user).latest('dateCreated').myFlavor
     else:
         specialflavor = False
 
@@ -609,13 +684,9 @@ def listofflavorsformatch(request):
     return render(request, 'partials/htmx/listofflavors.html', context)
 
 def checkopponent(request):
-    print("check opponent")
-    print(request.GET)
     for key in request.GET:
         theirusername = request.GET[key]
         keyvalue = key
-
-    print("theirusername: ", theirusername)
 
     theirdeckfield = keyvalue.replace("theirname", "theirDeck")
     theirflavorfield = keyvalue.replace("theirname", "theirFlavor")
@@ -663,7 +734,7 @@ def leagueedit(request):
 
 def decktable(request):
     
-    fselect = int(request.GET.get('formatselect'))
+    fselect = int(request.GET.get('mtgFormat'))
     aselect = int(request.GET.get('archeselect'))
     print(fselect, aselect)
 
