@@ -12,6 +12,7 @@
   color: #333;
   visibility: hidden;
   transition: transform 0.4s, top 0.4s;
+  z-index: 999;
 
 }
 
@@ -19,7 +20,7 @@
   width: 800px;
 } 
 
-.popup button {
+.pop-button {
   width: 100%;
   margin-top: 50px;
   padding: 10px 0;
@@ -31,7 +32,6 @@
   border-radius: 4px;
   cursor: pointer;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
-
 }
 
 .open-popup {

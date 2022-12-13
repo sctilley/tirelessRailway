@@ -1,5 +1,5 @@
 {% load crispy_forms_tags %}
-<div class="card col match-card">
+<div class="card col">
   <form method="POST">
     <fieldset>
       {% csrf_token %} {{ matchformset.management_form }}
@@ -47,11 +47,11 @@
             {% for field in form.visible_fields %}
             <td>
               {% if field.name == "dateCreated" %}
-                <button type='button'>date</button>
+                <button type='button' id="datebuttonxxx{{ forloop.parentloop.counter }}" onclick="clickshow(this.id)">date</button>
                 {{ field.errors.as_ul }}
                 {{ field }}
               {% elif field.name == "theirArchetype" %} 
-                <button type='button'>Archetype</button>
+                <button type='button' id="archbuttonxxx{{ forloop.parentloop.counter }}" onclick="clickshow(this.id)">Archetype</button>
                 {{ field.errors.as_ul }}
                 {{ field }}
               {% elif field.name == "theirname" %}
@@ -75,7 +75,7 @@
       </table>
       <div class="">
         <div class="">
-          <button type="submit" class="ctn" name="matchformset" value="{{editleague.id}}">Update and Save</button>
+          <button type="submit" class="ctn" name="matchformset" value="{{editleague.id}}" style="margin-right: 20px;">Update and Save</button>
           <button type="button" class="ctn" name="delete" onclick="openDeletePop()">Delete this league (can not undo)</button>
         </div>
         <div class="popup" id="deletepopup">
