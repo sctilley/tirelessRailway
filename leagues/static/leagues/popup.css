@@ -8,7 +8,7 @@
   left: 50%;
   transform: translate(-50%, -50%) scale(0.1);
   text-align: center;
-  padding: 25px;
+  padding: 10px;
   color: #333;
   visibility: hidden;
   transition: transform 0.4s, top 0.4s;
@@ -17,7 +17,7 @@
 }
 
 .leaguepop {
-  width: 800px;
+  width:850px;
 } 
 
 .pop-button {
